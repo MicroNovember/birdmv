@@ -87,3 +87,43 @@ searchInput.addEventListener("input", () => {
   resultSection.appendChild(content);
   container.appendChild(resultSection);
 });
+
+function showContinueWatching() {
+  const keys = Object.keys(localStorage).filter(k => k.startsWith("watch_"));
+  if (keys.length === 0) return;
+
+  const section = document.createElement("section");
+  section.className = "accordion";
+  section.id = "continue";
+
+  const heading = document.createElement("h2");
+  heading.className = "accordion-header";
+  heading.textContent = "🎞️ ดูต่อ";
+
+  const content = document.createElement("div");
+  content.className = "accordion-content show";
+
+  keys.forEach(k => {
+    const watch = JSON.parse(localStorage.getItem(k));
+    if (watch.duration > 60 && watch.currentTime < watch.duration - 30) {
+      const div = document.createElement("div");
+      div.className = "movie";
+      div.innerHTML = `
+        <a href="player.html?name=${encodeURIComponent(watch.name)}&url=${encodeURIComponent(watch.url)}&image=${encodeURIComponent(watch.image)}">
+          <img src="${watch.image}" alt="${watch.name}">
+          <h4 title="${watch.name}">${watch.name}</h4>
+          <span class="info">ดูถึง ${Math.floor(watch.currentTime)} วินาที</span>
+        </a>
+      `;
+      content.appendChild(div);
+    }
+  });
+
+  if (content.children.length > 0) {
+    section.appendChild(heading);
+    section.appendChild(content);
+    container.prepend(section);
+  }
+}
+
+showContinueWatching();
