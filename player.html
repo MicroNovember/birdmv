@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <title>กำลังเล่นหนัง...</title>
+  <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
+  <style>
+    body {
+      background: #000;
+      color: #fff;
+      font-family: sans-serif;
+      padding: 20px;
+      text-align: center;
+    }
+    video {
+      width: 90%;
+      max-width: 900px;
+      border-radius: 10px;
+    }
+    h1 { font-size: 20px; }
+  </style>
+</head>
+<body>
+  <h1 id="title">กำลังโหลด...</h1>
+  <video id="video" controls playsinline></video>
+
+  <script>
+    const qs = new URLSearchParams(location.search);
+    const name = qs.get("name");
+    const url = qs.get("url");
+    const subtitle = qs.get("subtitle");
+    document.getElementById("title").textContent = name || "กำลังเล่นวิดีโอ";
+
+    const video = document.getElementById("video");
+
+    if (Hls.isSupported()) {
+      const hls = new Hls();
+      hls.loadSource(url);
+      hls.attachMedia(video);
+      hls.on(Hls.Events.MANIFEST_PARSED, () => {
+        const player = new Plyr(video, {
+          speed: { selected: 1.0, options: [0.75, 1, 1.25, 1.5, 2] },
+        });
+        if (subtitle) {
+          const track = document.createElement('track');
+          track.src = subtitle;
+          track.kind = 'subtitles';
+          track.label = 'ซับไทย';
+          track.srclang = 'th';
+          track.default = true;
+          video.appendChild(track);
+        }
+      });
+    } else {
+      video.src = url;
+      new Plyr(video);
+    }
+  </script>
+</body>
+</html>
