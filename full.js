@@ -1,42 +1,58 @@
-const params = new URLSearchParams(location.search);
-const category = params.get("category");
-const title = params.get("title") || "ดูทั้งหมด";
-const page = parseInt(params.get("page") || "1");
+const qs = new URLSearchParams(location.search);
+const category = qs.get("category");
+const title = qs.get("title") || "";
+const perPage = parseInt(qs.get("perPage") || "24"); // ✅ ค่าเริ่มต้น 24
+let currentPage = parseInt(qs.get("page") || "1");
 
-const MOVIES_PER_PAGE = 36;
-const file = `data/${category}.json`;
-document.getElementById("title").textContent = title;
+document.title = title;
+document.getElementById("page-title").textContent = title;
 
-fetch(file)
+fetch(`data/${category}.json`)
   .then(res => res.json())
-  .then(data => {
-    const totalPages = Math.ceil(data.length / MOVIES_PER_PAGE);
-    const container = document.getElementById("movie-list");
-    const pag = document.getElementById("pagination");
+  .then(movies => {
+    const movieList = document.getElementById("movie-list");
+    const pagination = document.getElementById("pagination");
 
-    const start = (page - 1) * MOVIES_PER_PAGE;
-    const end = start + MOVIES_PER_PAGE;
-    const movies = data.slice(start, end);
+    // ✅ ดึงค่า perPageSelect ถ้ามี
+    const perPageSelect = document.getElementById("perPageSelect");
+    if (perPageSelect) {
+      perPageSelect.value = perPage;
+      perPageSelect.addEventListener("change", e => {
+        const selected = e.target.value;
+        qs.set("perPage", selected);
+        qs.set("page", "1");
+        location.search = qs.toString();
+      });
+    }
 
-    movies.forEach(movie => {
+    // แสดงเฉพาะช่วงหนังตามหน้าปัจจุบัน
+    const start = (currentPage - 1) * perPage;
+    const end = start + perPage;
+    const pageMovies = movies.slice(start, end);
+
+    pageMovies.forEach(movie => {
       const div = document.createElement("div");
       div.className = "movie";
       div.innerHTML = `
         <a href="player.html?name=${encodeURIComponent(movie.name)}&url=${encodeURIComponent(movie.url)}&image=${encodeURIComponent(movie.image)}&subtitle=${encodeURIComponent(movie.subtitle || '')}">
           <img src="${movie.image}" alt="${movie.name}">
-          <h4>${movie.name}</h4>
+          <h4 title="${movie.name}">${movie.name}</h4>
+          <span class="info">${movie.info || ""}</span>
         </a>
       `;
-      container.appendChild(div);
+      movieList.appendChild(div);
     });
 
+    // ✅ สร้างปุ่มเปลี่ยนหน้า
+    const totalPages = Math.ceil(movies.length / perPage);
     for (let i = 1; i <= totalPages; i++) {
       const btn = document.createElement("button");
       btn.textContent = i;
-      if (i === page) btn.classList.add("active");
-      btn.onclick = () => {
-        location.href = `full.html?category=${category}&title=${encodeURIComponent(title)}&page=${i}`;
-      };
-      pag.appendChild(btn);
+      if (i === currentPage) btn.className = "active";
+      btn.addEventListener("click", () => {
+        qs.set("page", i);
+        location.search = qs.toString();
+      });
+      pagination.appendChild(btn);
     }
   });

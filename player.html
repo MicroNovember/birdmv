@@ -2,53 +2,79 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8" />
-  <title>กำลังเล่นหนัง...</title>
+  <title>ⲦⲉⲁⲙⲦⲁlⲕ Player</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
-  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-  <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
   <style>
-    body {
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
       background: #000;
-      color: #fff;
-      font-family: sans-serif;
-      padding: 20px;
-      text-align: center;
+      overflow: hidden;
     }
+
+    #wrapper {
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #000;
+    }
+
     video {
-      width: 90%;
-      max-width: 900px;
-      border-radius: 10px;
+      max-width: 100vw;
+      max-height: 100vh;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      background-color: #000;
     }
-    h1 { font-size: 20px; }
+
+    #title {
+      position: absolute;
+      top: 10px;
+      left: 20px;
+      color: white;
+      font-size: 16px;
+      background: rgba(0, 0, 0, 0.6);
+      padding: 6px 12px;
+      border-radius: 6px;
+      z-index: 10;
+    }
   </style>
 </head>
 <body>
-  <h1 id="title">กำลังโหลด...</h1>
-  <video id="video" controls playsinline></video>
+  <div id="title">⏳ กำลังโหลด...</div>
+  <div id="wrapper">
+    <video id="video" playsinline controls></video>
+  </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
   <script>
     const qs = new URLSearchParams(location.search);
-    const name = qs.get("name");
+    const name = qs.get("name") || "วิดีโอ";
     const url = qs.get("url");
     const subtitle = qs.get("subtitle");
-    document.getElementById("title").textContent = name || "กำลังเล่นวิดีโอ";
+
+    document.getElementById("title").textContent = name;
 
     const video = document.getElementById("video");
 
-    if (Hls.isSupported()) {
+    if (Hls.isSupported() && url.endsWith(".m3u8")) {
       const hls = new Hls();
       hls.loadSource(url);
       hls.attachMedia(video);
       hls.on(Hls.Events.MANIFEST_PARSED, () => {
-        const player = new Plyr(video, {
-          speed: { selected: 1.0, options: [0.75, 1, 1.25, 1.5, 2] },
-        });
+        new Plyr(video);
         if (subtitle) {
-          const track = document.createElement('track');
+          const track = document.createElement("track");
+          track.kind = "subtitles";
+          track.label = "ซับไทย";
+          track.srclang = "th";
           track.src = subtitle;
-          track.kind = 'subtitles';
-          track.label = 'ซับไทย';
-          track.srclang = 'th';
           track.default = true;
           video.appendChild(track);
         }
@@ -56,6 +82,15 @@
     } else {
       video.src = url;
       new Plyr(video);
+      if (subtitle) {
+        const track = document.createElement("track");
+        track.kind = "subtitles";
+        track.label = "ซับไทย";
+        track.srclang = "th";
+        track.src = subtitle;
+        track.default = true;
+        video.appendChild(track);
+      }
     }
   </script>
 </body>

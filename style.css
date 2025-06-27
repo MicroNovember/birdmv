@@ -1,26 +1,32 @@
 /* Reset */
 body {
   margin: 0;
-  background: #111;
-  color: #fff;
   font-family: sans-serif;
+  background: #000;
+  color: white;
 }
+
 
 /* Header */
 header {
-  background: #000;
   padding: 10px 20px;
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 20px;
 }
+
 header img {
-  height: 40px;
+  width: 40px;
+  height: auto;
 }
+
 header h1 {
-  flex: 1;
-  font-size: 1.4em;
+  font-size: 20px;
+  margin: 0;
 }
+
+
+
 header input {
   padding: 6px;
   width: 180px;
@@ -28,15 +34,59 @@ header input {
   border: none;
 }
 
-/* Menu Buttons */
-.menu {
-  background: #000;
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-  padding: 10px;
-  flex-wrap: wrap;
+#searchInput {
+  flex-grow: 1;
+  max-width: 320px; /* ✅ จำกัดไม่เกิน 320px */
+  padding: 8px 12px;
+  font-size: 16px;
+  border-radius: 6px;
+  border: none;
 }
+
+
+
+/* Menu Buttons */
+
+.menu {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  padding: 14px 10px;
+  background: #111;
+  overflow-x: auto;
+  white-space: nowrap;
+  scroll-behavior: smooth;
+}
+
+.menu a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 14px;
+  text-decoration: none;
+  color: white;
+  font-weight: 600;
+  transition: transform 0.2s, background 0.2s;
+  border-radius: 10px;
+  min-width: 70px;
+}
+
+.menu a:hover {
+  background-color: #222;
+  transform: scale(1.05);
+}
+
+.menu-icon {
+  font-size: 30px;
+  margin-bottom: 4px;
+}
+
+.menu-label {
+  font-size: 16px;
+}
+
+
+
 .menu button {
   background: #333;
   color: #fff;
@@ -90,6 +140,16 @@ header input {
   font-size: 13px;
   margin: 5px 0;
   color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.movie .info {
+  font-size: 12px;
+  color: #bbb;
+  display: block;
+  margin-top: -4px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
