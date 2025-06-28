@@ -33,7 +33,8 @@ sections.forEach(({ file, id, title }) => {
     const content = document.createElement("div");
     content.className = "accordion-content show"; // เปิดไว้ตอนโหลด
 
-    data.slice(0, 36).forEach(movie => {
+	// จำนวนเรื่อง ที่แสดงใน สไลด์
+    data.slice(0, 10).forEach(movie => {
       const div = document.createElement("div");
       div.className = "movie";
       div.innerHTML = `
@@ -91,6 +92,8 @@ searchInput.addEventListener("input", () => {
 function showContinueWatching() {
   const keys = Object.keys(localStorage).filter(k => k.startsWith("watch_"));
   if (keys.length === 0) return;
+  
+  
 
   const section = document.createElement("section");
   section.className = "accordion";
@@ -105,17 +108,21 @@ function showContinueWatching() {
 
   keys.forEach(k => {
     const watch = JSON.parse(localStorage.getItem(k));
-    if (watch.duration > 60 && watch.currentTime < watch.duration - 30) {
-      const div = document.createElement("div");
-      div.className = "movie";
-      div.innerHTML = `
-        <a href="player.html?name=${encodeURIComponent(watch.name)}&url=${encodeURIComponent(watch.url)}&image=${encodeURIComponent(watch.image)}">
-          <img src="${watch.image}" alt="${watch.name}">
-          <h4 title="${watch.name}">${watch.name}</h4>
-          <span class="info">ดูถึง ${Math.floor(watch.currentTime)} วินาที</span>
-        </a>
-      `;
-      content.appendChild(div);
+	if (watch.duration > 60 && watch.currentTime < watch.duration - 30) {
+	if (watch.duration === 0) return;
+	const percent = Math.floor((watch.currentTime / watch.duration) * 100);
+
+    const div = document.createElement("div");
+          div.className = "movie";
+          div.innerHTML = `
+            <a href="player.html?name=${encodeURIComponent(watch.name)}&url=${encodeURIComponent(watch.url)}&image=${encodeURIComponent(watch.image)}">
+            <img src="${watch.image}" alt="${watch.name}">
+            <h4 title="${watch.name}">${watch.name}</h4>
+            <span class="info">รับชมแล้ว ${percent}%</span>
+           <div class="progress" style="width:${percent}%"></div>
+           </a>
+        `;
+        content.appendChild(div);
     }
   });
 
@@ -127,3 +134,36 @@ function showContinueWatching() {
 }
 
 showContinueWatching();
+
+function showFavorites() {
+  const favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
+  if (favorites.length === 0) return;
+
+  const section = document.createElement("section");
+  section.className = "accordion";
+  section.id = "favorites";
+
+  const heading = document.createElement("h2");
+  heading.className = "accordion-header";
+  heading.textContent = "❤️ รายการโปรด";
+
+  const content = document.createElement("div");
+  content.className = "accordion-content show";
+
+  favorites.forEach(movie => {
+    const div = document.createElement("div");
+    div.className = "movie";
+    div.innerHTML = `
+      <a href="player.html?name=${encodeURIComponent(movie.name)}&url=${encodeURIComponent(movie.url)}&image=${encodeURIComponent(movie.image || '')}">
+        <img src="${movie.image}" alt="${movie.name}">
+        <h4>${movie.name}</h4>
+      </a>`;
+    content.appendChild(div);
+  });
+
+  section.appendChild(heading);
+  section.appendChild(content);
+  container.prepend(section); // 🔁 แสดงไว้ด้านบน
+}
+
+showFavorites();
