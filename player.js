@@ -3,7 +3,6 @@ const name = params.get("name") || "ไม่ทราบชื่อ";
 const rawUrl = params.get("url") || "";
 const info = params.get("info") || "";
 const image = params.get("image") || "";
-
 const videoURL = decodeURIComponent(rawUrl);
 
 document.getElementById("movie-title").textContent = name;
@@ -12,6 +11,7 @@ document.getElementById("info-text").textContent = info;
 const videoSource = document.getElementById("video-source");
 const posterBg = document.getElementById("video-poster-bg");
 const favBtn = document.getElementById("fav-btn");
+const overlayBtn = document.getElementById("player-overlay-btn");
 
 if (videoURL) {
   videoSource.src = videoURL;
@@ -30,20 +30,27 @@ if (image) {
   }
 }
 
-const overlayBtn = document.getElementById("player-overlay-btn");
+player.on("play", () => {
+  try {
+    player.requestFullscreen();
+  } catch (e) {}
+  if (posterBg) posterBg.style.opacity = 0;
+  animateOverlay("⏸");
+});
 
-function showOverlay(icon = "▶️") {
+player.on("pause", () => {
+  animateOverlay("▶️");
+});
+
+// 🎛 ปุ่ม overlay พร้อม animation
+function animateOverlay(icon = "▶️") {
   overlayBtn.textContent = icon;
-  overlayBtn.classList.remove("hidden");
-  overlayBtn.classList.add("visible");
-
+  overlayBtn.classList.add("show");
   setTimeout(() => {
-    overlayBtn.classList.remove("visible");
-    overlayBtn.classList.add("hidden");
-  }, 1500);
+    overlayBtn.classList.remove("show");
+  }, 1000);
 }
 
-// แตะตรงกลางเพื่อ toggle เล่น/หยุด
 overlayBtn.addEventListener("click", () => {
   if (player.paused()) {
     player.play();
@@ -52,12 +59,7 @@ overlayBtn.addEventListener("click", () => {
   }
 });
 
-// แสดง overlay ปุ่มทุกครั้งที่หยุด
-player.on("pause", () => showOverlay("▶️"));
-player.on("play", () => showOverlay("⏸"));
-
-
-
+// 🎬 Resume Popup
 const watchKey = "watch_" + videoURL;
 let watchData = null;
 
@@ -91,6 +93,7 @@ player.ready(() => {
   }
 });
 
+// 💾 บันทึกตำแหน่ง
 player.on("timeupdate", () => {
   const progress = {
     name,
@@ -103,10 +106,23 @@ player.on("timeupdate", () => {
   localStorage.setItem(watchKey, JSON.stringify(progress));
 });
 
+// ❤️ รายการโปรด
 function updateFavUI() {
   const favs = JSON.parse(localStorage.getItem("favorites") || "[]");
   const isFav = favs.some(m => m.url === videoURL);
   favBtn.textContent = isFav ? "💔 ลบจากรายการโปรด" : "❤️ เพิ่มในรายการโปรด";
 }
 
-fav
+favBtn.addEventListener("click", () => {
+  let favs = JSON.parse(localStorage.getItem("favorites") || "[]");
+  const index = favs.findIndex(m => m.url === videoURL);
+  if (index >= 0) {
+    favs.splice(index, 1);
+  } else {
+    favs.push({ name, url: videoURL, image });
+  }
+  localStorage.setItem("favorites", JSON.stringify(favs));
+  updateFavUI();
+});
+
+updateFavUI();
