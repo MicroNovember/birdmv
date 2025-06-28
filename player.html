@@ -2,136 +2,46 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8" />
-  <title>🎬 Player</title>
+  <title>🎬 Video Player</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-  <style>
-    body {
-      margin: 0;
-      background: #000;
-      color: white;
-      font-family: sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .controls {
-      display: flex;
-      justify-content: space-between;
-      width: 100%;
-      max-width: 800px;
-      padding: 10px;
-    }
-    .controls button {
-      background: #111;
-      color: white;
-      border: 1px solid #444;
-      border-radius: 6px;
-      padding: 8px 12px;
-      font-size: 14px;
-      cursor: pointer;
-    }
-    video {
-      max-width: 100%;
-      height: auto;
-    }
-    h1 {
-      font-size: 18px;
-      margin: 10px;
-      text-align: center;
-    }
-    #watchProgress {
-      width: 90%;
-      margin: 10px 0;
-    }
-    #progress-text {
-      color: #ccc;
-      font-size: 14px;
-    }
-  </style>
+  <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
+  <link rel="stylesheet" href="player.css" />
 </head>
 <body>
-  <h1 id="movie-title">กำลังโหลด...</h1>
+  <h1 id="movie-title">Loading...</h1>
+  <p id="info-text" style="color:#bbb; font-size:14px; margin-bottom:8px;"></p>
+
+  <div id="video-wrapper">
+    <div id="video-poster-bg"></div>
+    <video
+      id="my-player"
+      class="video-js vjs-default-skin"
+      controls
+      preload="auto"
+      playsinline
+      data-setup="{}"
+    >
+      <source id="video-source" src="" type="video/mp4" />
+    </video>
+  </div>
+
   <div class="controls">
     <button id="fav-btn">❤️ เพิ่มในรายการโปรด</button>
     <button onclick="history.back()">🔙 กลับ</button>
   </div>
 
-  <video id="player" controls autoplay>
-    <track id="subtitle-track" kind="subtitles" srclang="th" label="คำบรรยาย" default>
-  </video>
+  <!-- ป๊อปอัป Resume -->
+  <div id="resume-dialog" class="resume-dialog hidden">
+    <div class="dialog-box">
+      <p id="resume-message">คุณเคยดูค้างไว้</p>
+      <div class="dialog-actions">
+        <button id="resume-yes">▶️ ดูต่อ</button>
+        <button id="resume-no">🔄 เริ่มใหม่</button>
+      </div>
+    </div>
+  </div>
 
-  <progress id="watchProgress" value="0" max="100"></progress>
-  <div id="progress-text"></div>
-
-  <script>
-    const params = new URLSearchParams(location.search);
-    const name = params.get("name") || "ไม่ทราบชื่อ";
-    const rawUrl = params.get("url");
-    const url = decodeURIComponent(rawUrl);
-    const image = params.get("image") || "";
-    const subtitle = params.get("subtitle") || "";
-
-    const titleElement = document.getElementById("movie-title");
-    const video = document.getElementById("player");
-    const track = document.getElementById("subtitle-track");
-    const progressBar = document.getElementById("watchProgress");
-    const progressText = document.getElementById("progress-text");
-
-    titleElement.textContent = name;
-
-    // 🔁 subtitle
-    if (subtitle) track.src = subtitle;
-
-    // 🎬 Load video
-    if (Hls.isSupported() && url.endsWith(".m3u8")) {
-      const hls = new Hls();
-      hls.loadSource(url);
-      hls.attachMedia(video);
-    } else {
-      video.src = url;
-    }
-
-    // 📍 progress loading
-    const watchKey = "watch_" + url;
-    const watchData = JSON.parse(localStorage.getItem(watchKey));
-    video.addEventListener("loadedmetadata", () => {
-      if (watchData && watchData.currentTime < video.duration - 30) {
-        video.currentTime = watchData.currentTime;
-      }
-    });
-
-    // 🧠 timeupdate: save & show %
-    video.addEventListener("timeupdate", () => {
-      const percent = Math.floor((video.currentTime / video.duration) * 100);
-      progressBar.value = percent;
-      progressText.innerText = `🎯 ดูไปแล้ว ${percent}%`;
-
-      const progress = {
-        name, url, image,
-        currentTime: video.currentTime,
-        duration: video.duration,
-        lastWatched: Date.now()
-      };
-      localStorage.setItem(watchKey, JSON.stringify(progress));
-    });
-
-    // ❤️ Favorite system
-    const favBtn = document.getElementById("fav-btn");
-    function updateFavBtn() {
-      const favs = JSON.parse(localStorage.getItem("favorites") || "[]");
-      const isFav = favs.some(m => m.url === url);
-      favBtn.textContent = isFav ? "💔 ลบจากรายการโปรด" : "❤️ เพิ่มในรายการโปรด";
-    }
-    favBtn.addEventListener("click", () => {
-      let favs = JSON.parse(localStorage.getItem("favorites") || "[]");
-      const index = favs.findIndex(m => m.url === url);
-      if (index >= 0) favs.splice(index, 1);
-      else favs.push({ name, url, image });
-      localStorage.setItem("favorites", JSON.stringify(favs));
-      updateFavBtn();
-    });
-    updateFavBtn();
-  </script>
+  <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
+  <script src="player.js"></script>
 </body>
 </html>
