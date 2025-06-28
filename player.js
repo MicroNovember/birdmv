@@ -127,7 +127,7 @@ if (
   window.location.pathname === "/" ||
   window.location.pathname === ""
 ) {
-  fetch("marquee.json")
+  fetch(location.pathname.replace(/[^/]*$/, "marquee.json"))
     .then(res => res.json())
     .then(data => {
       if (data.show && data.message) {

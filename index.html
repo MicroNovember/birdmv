@@ -11,21 +11,15 @@
 <body>
   <header>
     <img src="assets/logo.png" alt="TeamTalk+ Logo" />
-	<h1>TeamTalk+</h1>
-	
+    <h1>TeamTalk+</h1>
     <input type="text" id="searchInput" placeholder="🔍 ค้นหาหนัง..." />
   </header>
-  
-   <div id="news-marquee">
-   <div class="marquee-content">📣 ทดสอบระบบ ทั้งหมดใช้งานฟรี</div>
-   </div>
-   
-   <div id="news-marquee" class="hidden">
-   <div id="marquee-content">
-   </div></div>
 
+  <!-- ✅ ข้อความวิ่งประกาศ -->
+  <div id="news-marquee" class="hidden">
+    <div id="marquee-content"></div>
+  </div>
 
-	
   <nav class="menu">
     <a href="full.html?category=thai&title=🎬 หนังไทย"><span class="menu-icon">🎬</span><span class="menu-label">ไทย</span></a>
     <a href="full.html?category=en&title=🎥 หนังฝรั่ง"><span class="menu-icon">🎥</span><span class="menu-label">ฝรั่ง</span></a>
@@ -34,5 +28,20 @@
   </nav>
 
   <main id="accordion-container"></main>
+
+  <!-- ✅ JavaScript โหลดประกาศจาก marquee.json -->
+  <script>
+    fetch("./marquee.json")
+      .then(res => res.json())
+      .then(data => {
+        if (data.show && data.message) {
+          const marquee = document.getElementById("news-marquee");
+          const content = document.getElementById("marquee-content");
+          content.textContent = data.message;
+          marquee.classList.remove("hidden");
+        }
+      })
+      .catch(e => console.warn("❌ โหลด marquee.json ไม่สำเร็จ:", e));
+  </script>
 </body>
 </html>
