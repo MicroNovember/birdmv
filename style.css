@@ -203,3 +203,15 @@ header input::placeholder {
   box-shadow: 0 1px 4px rgba(0,0,0,0.2);     /* เพิ่มเงาบาง ๆ ให้อ่านง่าย */
   border-radius: 999px;  /* มน
 }
+
+
+@media (max-width: 600px) {
+  .movie {
+    width: 100px;
+  }
+
+  .movie img {
+    border-radius: 8px;
+  }
+}
+
