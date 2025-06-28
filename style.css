@@ -204,14 +204,61 @@ header input::placeholder {
   border-radius: 999px;  /* มน
 }
 
-
-@media (max-width: 600px) {
-  .movie {
-    width: 100px;
-  }
-
-  .movie img {
-    border-radius: 8px;
-  }
+/* ✅ ปรับขนาดปกแนวนอนทุกอุปกรณ์ */
+.accordion-content {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  gap: 12px;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
 }
 
+.movie {
+  flex: 0 0 auto;
+  width: clamp(100px, 22vw, 160px); /* ปรับอัตโนมัติตามจอ */
+  scroll-snap-align: start;
+  text-align: center;
+}
+
+/* ✅ ป้าย NEW ปรับอัตโนมัติ */
+.poster-container {
+  position: relative;
+}
+
+.badge-new {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  background-color: rgba(255, 61, 87, 0.65); /* แดงใสแบบ soft */
+  color: white;
+  font-size: clamp(9px, 2.5vw, 11px);
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 999px;
+  backdrop-filter: blur(2px);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  z-index: 2;
+}
+
+/* ✅ Scrollbar มือถือ: ซ่อน */
+.accordion-content::-webkit-scrollbar {
+  height: 6px;
+}
+
+@media (max-width: 600px) {
+  .accordion-content {
+    gap: 8px;
+    padding: 8px 0;
+  }
+
+  .movie {
+    width: calc((100% - 16px) / 3); /* ปรับให้พอดี 3 ปก */
+  }
+
+  .badge-new {
+    top: 4px;
+    left: 4px;
+    padding: 2px 5px;
+  }
+}
