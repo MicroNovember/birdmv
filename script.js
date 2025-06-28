@@ -34,14 +34,21 @@ sections.forEach(({ file, id, title }) => {
     content.className = "accordion-content show"; // เปิดไว้ตอนโหลด
 
 	// จำนวนเรื่อง ที่แสดงใน สไลด์
-    data.slice(0, 10).forEach(movie => {
+	
+	data.slice(0, 10).forEach((movie, index) => {
+	  const isNew = index < 6; // 👈 ตรงนี้กำหนดว่า index 0-5 คือเรื่อง "ใหม่"
+      const badgeNew = isNew ? `<span class="badge-new">NEW</span>` : "";
+
       const div = document.createElement("div");
       div.className = "movie";
       div.innerHTML = `
         <a href="player.html?name=${encodeURIComponent(movie.name)}&url=${encodeURIComponent(movie.url)}&image=${encodeURIComponent(movie.image)}&subtitle=${encodeURIComponent(movie.subtitle || '')}">
-          <img src="${movie.image}" alt="${movie.name}">
-          <h4 title="${movie.name}">${movie.name}</h4>
-          <span class="info">${movie.info || ""}</span>
+        <div class="poster-container">
+        <img src="${movie.image}" alt="${movie.name}">
+        ${badgeNew}
+        </div>
+        <h4 title="${movie.name}">${movie.name}</h4>
+        <span class="info">${movie.info || ""}</span>
         </a>
       `;
       content.appendChild(div);

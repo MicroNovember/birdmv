@@ -82,7 +82,11 @@ header input::placeholder {
   background-color: #e50914;
   margin-top: 4px;
   border-radius: 2px;
+  transition: width 0.3s ease;
 }
+
+
+
 
 /* 🧱 Section หมวดหมู่ */
 .accordion {
@@ -178,4 +182,24 @@ header input::placeholder {
   margin-top: 4px;
   display: block;
   line-height: 1.2em;
+}
+
+.poster-container {
+  position: relative;
+}
+
+.badge-new {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  background-color: rgba(255, 61, 87, 0.5);  /* แดงใส 50% */
+  color: white;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 4px;
+  z-index: 2;
+  backdrop-filter: blur(2px);  /* 🎯 ทำให้เบลอฉากหลังเล็กน้อย */
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);     /* เพิ่มเงาบาง ๆ ให้อ่านง่าย */
+  border-radius: 999px;  /* มน
 }
