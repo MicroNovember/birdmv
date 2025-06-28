@@ -262,3 +262,15 @@ header input::placeholder {
     padding: 2px 5px;
   }
 }
+
+#news-marquee {
+  width: 100%;
+  background: linear-gradient(to right, #111, #1a1a1a);
+  color: #f5f5f5;
+  overflow: hidden;
+  padding: 8px 0;
+  font-size: 14px;
+  border-bottom: 1px solid #333;
+}
+
+#news-marquee

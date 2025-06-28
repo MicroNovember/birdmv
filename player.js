@@ -11,8 +11,10 @@ document.getElementById("info-text").textContent = info;
 const videoSource = document.getElementById("video-source");
 const posterBg = document.getElementById("video-poster-bg");
 const favBtn = document.getElementById("fav-btn");
-const overlayBtn = document.getElementById("player-overlay-btn");
+const hitbox = document.getElementById("player-hitbox");
+const hitboxIcon = document.getElementById("player-hitbox-icon");
 
+// ตั้งค่าวิดีโอ
 if (videoURL) {
   videoSource.src = videoURL;
   if (videoURL.endsWith(".m3u8")) {
@@ -24,42 +26,36 @@ const player = videojs("my-player");
 
 if (image) {
   player.poster(image);
-  if (posterBg) {
-    posterBg.style.backgroundImage = `url('${image}')`;
-    posterBg.style.opacity = 1;
-  }
+  posterBg.style.backgroundImage = `url('${image}')`;
+  posterBg.style.opacity = 1;
 }
 
 player.on("play", () => {
-  try {
-    player.requestFullscreen();
-  } catch (e) {}
+  try { player.requestFullscreen(); } catch (e) {}
   if (posterBg) posterBg.style.opacity = 0;
-  animateOverlay("⏸");
+  animateHitbox("⏸");
 });
 
 player.on("pause", () => {
-  animateOverlay("▶️");
+  animateHitbox("▶️");
 });
 
-// 🎛 ปุ่ม overlay พร้อม animation
-function animateOverlay(icon = "▶️") {
-  overlayBtn.textContent = icon;
-  overlayBtn.classList.add("show");
+function animateHitbox(icon = "▶️") {
+  hitboxIcon.textContent = icon;
+  hitboxIcon.classList.add("show");
   setTimeout(() => {
-    overlayBtn.classList.remove("show");
+    hitboxIcon.classList.remove("show");
   }, 1000);
 }
 
-overlayBtn.addEventListener("click", () => {
-  if (player.paused()) {
-    player.play();
-  } else {
-    player.pause();
+hitbox.addEventListener("click", () => {
+  const promise = player.paused() ? player.play() : player.pause();
+  if (promise) {
+    promise.catch(e => console.warn("⛔ ไม่สามารถเล่นวิดีโอ:", e));
   }
 });
 
-// 🎬 Resume Popup
+// ----- ระบบ Resume -----
 const watchKey = "watch_" + videoURL;
 let watchData = null;
 
@@ -75,8 +71,7 @@ player.ready(() => {
     const msg = `คุณเคยดู "${name}" ถึงนาทีที่ ${mins}:${secs}`;
 
     const dialog = document.getElementById("resume-dialog");
-    const msgEl = document.getElementById("resume-message");
-    msgEl.textContent = msg;
+    document.getElementById("resume-message").textContent = msg;
     dialog.classList.remove("hidden");
 
     document.getElementById("resume-yes").onclick = () => {
@@ -93,7 +88,6 @@ player.ready(() => {
   }
 });
 
-// 💾 บันทึกตำแหน่ง
 player.on("timeupdate", () => {
   const progress = {
     name,
@@ -106,7 +100,7 @@ player.on("timeupdate", () => {
   localStorage.setItem(watchKey, JSON.stringify(progress));
 });
 
-// ❤️ รายการโปรด
+// ----- รายการโปรด -----
 function updateFavUI() {
   const favs = JSON.parse(localStorage.getItem("favorites") || "[]");
   const isFav = favs.some(m => m.url === videoURL);
@@ -126,3 +120,22 @@ favBtn.addEventListener("click", () => {
 });
 
 updateFavUI();
+
+// ----- โหลดข่าวสารจาก marquee.json เฉพาะหน้า index.html -----
+if (
+  window.location.pathname.endsWith("index.html") ||
+  window.location.pathname === "/" ||
+  window.location.pathname === ""
+) {
+  fetch("marquee.json")
+    .then(res => res.json())
+    .then(data => {
+      if (data.show && data.message) {
+        const marquee = document.getElementById("news-marquee");
+        const content = document.getElementById("marquee-content");
+        content.textContent = data.message;
+        marquee.classList.remove("hidden");
+      }
+    })
+    .catch(e => console.warn("🚫 โหลดประกาศไม่สำเร็จ:", e));
+}
