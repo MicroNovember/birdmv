@@ -6,14 +6,12 @@ const image = params.get("image") || "";
 
 const videoURL = decodeURIComponent(rawUrl);
 
-const titleEl = document.getElementById("movie-title");
-const infoEl = document.getElementById("info-text");
-const videoSource = document.getElementById("video-source");
-const favBtn = document.getElementById("fav-btn");
-const posterBg = document.getElementById("video-poster-bg");
+document.getElementById("movie-title").textContent = name;
+document.getElementById("info-text").textContent = info;
 
-titleEl.textContent = name;
-infoEl.textContent = info;
+const videoSource = document.getElementById("video-source");
+const posterBg = document.getElementById("video-poster-bg");
+const favBtn = document.getElementById("fav-btn");
 
 if (videoURL) {
   videoSource.src = videoURL;
@@ -51,7 +49,6 @@ try {
 player.ready(() => {
   if (watchData && watchData.currentTime > 20) {
     player.pause();
-
     const mins = Math.floor(watchData.currentTime / 60);
     const secs = Math.floor(watchData.currentTime % 60).toString().padStart(2, "0");
     const msg = `คุณเคยดู "${name}" ถึงนาทีที่ ${mins}:${secs}`;
@@ -93,16 +90,4 @@ function updateFavUI() {
   favBtn.textContent = isFav ? "💔 ลบจากรายการโปรด" : "❤️ เพิ่มในรายการโปรด";
 }
 
-favBtn.addEventListener("click", () => {
-  let favs = JSON.parse(localStorage.getItem("favorites") || "[]");
-  const index = favs.findIndex(m => m.url === videoURL);
-  if (index >= 0) {
-    favs.splice(index, 1);
-  } else {
-    favs.push({ name, url: videoURL, image });
-  }
-  localStorage.setItem("favorites", JSON.stringify(favs));
-  updateFavUI();
-});
-
-updateFavUI();
+fav

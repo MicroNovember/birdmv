@@ -9,20 +9,22 @@
 </head>
 <body>
   <h1 id="movie-title">Loading...</h1>
-  <p id="info-text" style="color:#bbb; font-size:14px; margin-bottom:8px;"></p>
+  <p id="info-text"></p>
 
   <div id="video-wrapper">
     <div id="video-poster-bg"></div>
-    <video
-      id="my-player"
-      class="video-js vjs-default-skin"
-      controls
-      preload="auto"
-      playsinline
-      data-setup="{}"
-    >
-      <source id="video-source" src="" type="video/mp4" />
-    </video>
+    <div class="video-responsive">
+      <video
+        id="my-player"
+        class="video-js vjs-default-skin"
+        controls
+        preload="auto"
+        playsinline
+        data-setup="{}"
+      >
+        <source id="video-source" src="" type="video/mp4" />
+      </video>
+    </div>
   </div>
 
   <div class="controls">
@@ -30,7 +32,6 @@
     <button onclick="history.back()">🔙 กลับ</button>
   </div>
 
-  <!-- ป๊อปอัป Resume -->
   <div id="resume-dialog" class="resume-dialog hidden">
     <div class="dialog-box">
       <p id="resume-message">คุณเคยดูค้างไว้</p>
