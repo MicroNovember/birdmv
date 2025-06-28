@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title id="title">ⲦⲉⲁⲙⲦⲁlⲕ - ดูทั้งหมด</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .full-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 16px;
+      padding: 20px;
+    }
+
+    .pagination {
+      text-align: center;
+      padding: 10px;
+    }
+
+    .pagination button {
+      margin: 4px;
+      padding: 6px 12px;
+      border: none;
+      background: #333;
+      color: white;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .pagination button.active {
+      background: #00e676;
+      color: #000;
+    }
+
+    header {
+      padding: 10px 20px;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #00e676;
+    }
+
+    header a {
+      color: #0f0;
+      text-decoration: none;
+      font-size: 14px;
+    }
+  </style>
+  
+<div class="toolbar">
+  <label>
+    แสดงต่อหน้า:
+    <select id="perPageSelect">
+      <option value="12">12</option>
+      <option value="24" selected>24</option>
+      <option value="36">36</option>
+      <option value="48">48</option>
+      <option value="60">60</option>
+    </select>
+  </label>
+</div>
+
+<h1 id="page-title">กำลังโหลด...</h1>
+
+</head>
+<body>
+  <header>
+    <h1 id="title">ดูทั้งหมด</h1>
+    <a href="index.html">← กลับหน้าแรก</a>
+  </header>
+
+  <main id="movie-list" class="full-grid"></main>
+  <div class="pagination" id="pagination"></div>
+
+  <script src="full.js"></script>
+</body>
+</html>
