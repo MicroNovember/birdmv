@@ -139,3 +139,27 @@ h1 {
   background: #3c3c3c;
   border-color: #666;
 }
+
+.player-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 64px;
+  color: white;
+  background-color: rgba(0,0,0,0.4);
+  border-radius: 50%;
+  padding: 18px 22px;
+  cursor: pointer;
+  z-index: 5;
+  transition: opacity 0.3s ease;
+}
+
+.player-overlay.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.player-overlay.visible {
+  opacity: 1;
+}

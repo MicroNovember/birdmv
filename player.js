@@ -30,14 +30,33 @@ if (image) {
   }
 }
 
-player.on("play", () => {
-  try {
-    player.requestFullscreen();
-  } catch (e) {}
-  if (posterBg) {
-    posterBg.style.opacity = 0;
+const overlayBtn = document.getElementById("player-overlay-btn");
+
+function showOverlay(icon = "▶️") {
+  overlayBtn.textContent = icon;
+  overlayBtn.classList.remove("hidden");
+  overlayBtn.classList.add("visible");
+
+  setTimeout(() => {
+    overlayBtn.classList.remove("visible");
+    overlayBtn.classList.add("hidden");
+  }, 1500);
+}
+
+// แตะตรงกลางเพื่อ toggle เล่น/หยุด
+overlayBtn.addEventListener("click", () => {
+  if (player.paused()) {
+    player.play();
+  } else {
+    player.pause();
   }
 });
+
+// แสดง overlay ปุ่มทุกครั้งที่หยุด
+player.on("pause", () => showOverlay("▶️"));
+player.on("play", () => showOverlay("⏸"));
+
+
 
 const watchKey = "watch_" + videoURL;
 let watchData = null;
