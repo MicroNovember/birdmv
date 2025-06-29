@@ -3,10 +3,17 @@ const name = params.get("name") || "ไม่ทราบชื่อ";
 const rawUrl = params.get("url") || "";
 const info = params.get("info") || "";
 const image = params.get("image") || "";
+const audio = params.get("audio") || ""; // เพิ่มบรรทัดนี้
 const videoURL = decodeURIComponent(rawUrl);
 
 document.getElementById("movie-title").textContent = name;
 document.getElementById("info-text").textContent = info;
+
+// แสดงข้อมูลพากย์/บรรยาย
+const audioInfoElem = document.getElementById("audio-info");
+if (audioInfoElem) {
+  audioInfoElem.textContent = audio ? `เสียง: ${audio}` : "";
+}
 
 const videoSource = document.getElementById("video-source");
 const posterBg = document.getElementById("video-poster-bg");
@@ -30,12 +37,6 @@ if (image) {
   posterBg.style.opacity = 1;
 }
 
-player.on("play", () => {
-  try { player.requestFullscreen(); } catch (e) {}
-  if (posterBg) posterBg.style.opacity = 0;
-  animateHitbox("⏸");
-});
-
 player.on("pause", () => {
   animateHitbox("▶️");
 });
@@ -46,6 +47,25 @@ function animateHitbox(icon = "▶️") {
   setTimeout(() => {
     hitboxIcon.classList.remove("show");
   }, 1000);
+}
+
+// เพิ่ม event สำหรับแตะหรือคลิกที่วิดีโอ (รองรับทั้ง desktop และ mobile)
+const videoElem = document.getElementById("my-player");
+
+// รองรับ tap/click ที่ video โดยตรง
+videoElem.addEventListener("click", togglePlayPause);
+videoElem.addEventListener("touchend", function(e) {
+  // ป้องกัน tap ซ้อน
+  e.preventDefault();
+  togglePlayPause();
+});
+
+function togglePlayPause() {
+  if (player.paused()) {
+    player.play();
+  } else {
+    player.pause();
+  }
 }
 
 hitbox.addEventListener("click", () => {
@@ -120,22 +140,3 @@ favBtn.addEventListener("click", () => {
 });
 
 updateFavUI();
-
-// ----- โหลดข่าวสารจาก marquee.json เฉพาะหน้า index.html -----
-if (
-  window.location.pathname.endsWith("index.html") ||
-  window.location.pathname === "/" ||
-  window.location.pathname === ""
-) {
-  fetch(location.pathname.replace(/[^/]*$/, "marquee.json"))
-    .then(res => res.json())
-    .then(data => {
-      if (data.show && data.message) {
-        const marquee = document.getElementById("news-marquee");
-        const content = document.getElementById("marquee-content");
-        content.textContent = data.message;
-        marquee.classList.remove("hidden");
-      }
-    })
-    .catch(e => console.warn("🚫 โหลดประกาศไม่สำเร็จ:", e));
-}

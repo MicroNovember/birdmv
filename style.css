@@ -263,14 +263,23 @@ header input::placeholder {
   }
 }
 
-#news-marquee {
+
+#simple-marquee {
   width: 100%;
-  background: linear-gradient(to right, #111, #1a1a1a);
-  color: #f5f5f5;
   overflow: hidden;
-  padding: 8px 0;
-  font-size: 14px;
-  border-bottom: 1px solid #333;
+  background: #222;
+  color: #fff;
+  font-size: 16px;
+  padding: 10px 0;
+  border-bottom: 1px solid #444;
+  position: relative;
+  height: 30px;
 }
 
-#news-marquee
+#marquee-text {
+  position: absolute;
+  left: 100%;
+  top: 0;
+  white-space: nowrap;
+  will-change: transform;
+}

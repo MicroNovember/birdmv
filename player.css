@@ -170,3 +170,17 @@ h1 {
 }
 
 
+.video-js .vjs-control-bar {
+  font-size: 14px !important;
+  height: 32px !important;
+  /* bottom: 16px !important;  // ถ้าอยากให้ลอยขึ้นจากขอบล่าง */
+}
+
+#audio-info {
+  color: #ffd700;
+  font-size: 16px;
+  margin-bottom: 8px;
+  margin-top: 0;
+  text-align: center;
+  font-weight: bold;
+}
