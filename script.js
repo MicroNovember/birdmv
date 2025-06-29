@@ -1,6 +1,8 @@
 const sections = [
   { file: "data/thai.json", id: "thai", title: "🎬 หนังไทย" },
   { file: "data/en.json", id: "en", title: "🎥 หนังฝรั่ง" },
+  { file: "data/china.json", id: "china", title: "🇨🇳 หนังจีน" },
+  { file: "data/korea.json", id: "korea", title: "🇰🇷 หนังเกาหลี" }, 
   { file: "data/asia.json", id: "asia", title: "🌏 หนังเอเชีย" },
   { file: "data/cartoon.json", id: "cartoon", title: "🧸 การ์ตูน" },
 ];
