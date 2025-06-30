@@ -263,8 +263,7 @@ header input::placeholder {
   }
 }
 
-
-#simple-marquee {
+.marquee-css {
   width: 100%;
   overflow: hidden;
   background: #222;
@@ -273,13 +272,16 @@ header input::placeholder {
   padding: 10px 0;
   border-bottom: 1px solid #444;
   position: relative;
-  height: 30px;
 }
 
-#marquee-text {
-  position: absolute;
-  left: 100%;
-  top: 0;
+.marquee-css span {
+  display: inline-block;
   white-space: nowrap;
-  will-change: transform;
+  animation: marquee-left 18s linear infinite;
+  padding-left: 100%;
+}
+
+@keyframes marquee-left {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
 }
