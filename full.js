@@ -5,7 +5,7 @@ const perPage = parseInt(qs.get("perPage") || "24"); // ✅ ค่าเริ�
 let currentPage = parseInt(qs.get("page") || "1");
 
 document.title = title;
-document.getElementById("page-title").textContent = title;
+// document.getElementById("page-title").textContent = title;
 
 fetch(`data/${category}.json`)
   .then(res => res.json())

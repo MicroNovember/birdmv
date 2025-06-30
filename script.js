@@ -1,10 +1,10 @@
 const sections = [
-  { file: "data/thai.json", id: "thai", title: "🎬 หนังไทย" },
-  { file: "data/en.json", id: "en", title: "🎥 หนังฝรั่ง" },
-  { file: "data/china.json", id: "china", title: "🇨🇳 หนังจีน" },
-  { file: "data/korea.json", id: "korea", title: "🇰🇷 หนังเกาหลี" }, 
-  { file: "data/asia.json", id: "asia", title: "🌏 หนังเอเชีย" },
-  { file: "data/cartoon.json", id: "cartoon", title: "🧸 การ์ตูน" },
+  { file: "data/thai.json", id: "thai", title: "หนังไทย" },
+  { file: "data/en.json", id: "en", title: "หนังฝรั่ง" },
+  { file: "data/china.json", id: "china", title: "หนังจีน" },
+  { file: "data/korea.json", id: "korea", title: "หนังเกาหลี" }, 
+  { file: "data/asia.json", id: "asia", title: "หนังเอเชีย" },
+  { file: "data/cartoon.json", id: "cartoon", title: "การ์ตูน" },
 ];
 
 const container = document.getElementById("accordion-container");
@@ -24,7 +24,7 @@ sections.forEach(({ file, id, title }) => {
     heading.className = "accordion-header";
     heading.innerHTML = `
       <span class="header-title">${title}</span>
-      <a href="full.html?category=${id}&title=${encodeURIComponent(title)}" class="see-all-link">→</a>
+      <a href="full.html?category=${id}&title=${encodeURIComponent(title)}" class="see-all-link">ดูทั้งหมด →</a>
     `;
 
     // ✅ Event พับ/ขยาย
@@ -108,6 +108,10 @@ function showContinueWatching() {
   const heading = document.createElement("h2");
   heading.className = "accordion-header";
   heading.textContent = "🎞️ ดูต่อ";
+  // เพิ่ม event toggle
+  heading.addEventListener("click", () => {
+    content.classList.toggle("show");
+  });
 
   const content = document.createElement("div");
   content.className = "accordion-content show";
@@ -152,6 +156,9 @@ function showFavorites() {
   const heading = document.createElement("h2");
   heading.className = "accordion-header";
   heading.textContent = "❤️ รายการโปรด";
+  heading.addEventListener("click", () => {
+    content.classList.toggle("show");
+  });
 
   const content = document.createElement("div");
   content.className = "accordion-content show";
@@ -170,7 +177,7 @@ function showFavorites() {
 
   section.appendChild(heading);
   section.appendChild(content);
-  container.prepend(section); // 🔁 แสดงไว้ด้านบน
+  container.prepend(section);
 }
 
 showFavorites();

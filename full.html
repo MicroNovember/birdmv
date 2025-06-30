@@ -5,50 +5,30 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title id="title">ⲦⲉⲁⲙⲦⲁlⲕ - ดูทั้งหมด</title>
   <link rel="stylesheet" href="style.css" />
-  <style>
-    .full-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-      gap: 16px;
-      padding: 20px;
-    }
-
-    .pagination {
-      text-align: center;
-      padding: 10px;
-    }
-
-    .pagination button {
-      margin: 4px;
-      padding: 6px 12px;
-      border: none;
-      background: #333;
-      color: white;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-
-    .pagination button.active {
-      background: #99aacc;
-      color: #000;
-    }
-
-    header {
-      padding: 10px 20px;
-      background: #000;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      color: #99aacc;
-    }
-
-    header a {
-      color: #0f0;
-      text-decoration: none;
-      font-size: 14px;
-    }
-  </style>
   
+
+</head>
+<body>
+   <header>
+    <img src="assets/logo.png" alt="TeamTalk+ Logo" />
+    <h1>TeamTalk+</h1>
+    <input type="text" id="searchInput" placeholder="🔍 ค้นหาหนัง..." />
+  </header>
+
+  <nav class="menu">
+  <a href="index.html">หน้าหลัก</a>
+  <a href="full.html?category=thai&title=หนังไทย">หนังไทย</a>
+  <a href="full.html?category=china&title=หนังจีน">หนังจีน</a>
+  <a href="full.html?category=korea&title=หนังเกาหลี">หนังเกาหลี</a>
+  <a href="full.html?category=en&title=หนังฝรั่ง">หนังฝรั่ง</a>
+  <a href="full.html?category=asia&title=หนังเอเชีย">หนังเอเชีย</a>
+  <a href="full.html?category=cartoon&title=การ์ตูน">การ์ตูน</a>
+</nav>
+
+<marquee behavior="scroll" direction="left" scrollamount="3" style="background:#222; color:#fff; padding:10px 0; border-bottom:1px solid #444;">
+  🔔 : เว็บไซต์นี้ฟรี ไม่มีโฆษณา อัปเดตหนังใหม่ไม่ทุกวัน! ขอบคุณที่ติดตามครับ : ⲦⲉⲁⲙⲦⲁlⲕ 😊
+</marquee>
+
 <div class="toolbar">
   <label>
     แสดงต่อหน้า:
@@ -62,14 +42,7 @@
   </label>
 </div>
 
-<h1 id="page-title">กำลังโหลด...</h1>
 
-</head>
-<body>
-  <header>
-    <h1 id="title">ดูทั้งหมด</h1>
-    <a href="index.html">← กลับหน้าแรก</a>
-  </header>
 
   <main id="movie-list" class="full-grid"></main>
   <div class="pagination" id="pagination"></div>
