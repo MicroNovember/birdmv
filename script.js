@@ -65,8 +65,54 @@ sections.forEach(({ file, id, title }) => {
 searchInput.addEventListener("input", () => {
   const keyword = searchInput.value.trim().toLowerCase();
   container.innerHTML = "";
-  if (!keyword) return location.reload();
 
+  if (!keyword) {
+    // ถ้าไม่มีคำค้นหา ให้แสดงหมวดปกติใหม่
+    sections.forEach(({ file, id, title }) => {
+      fetch(file).then(res => res.json()).then(data => {
+        const section = document.createElement("section");
+        section.className = "accordion";
+        section.id = id;
+
+        const heading = document.createElement("h2");
+        heading.className = "accordion-header";
+        heading.innerHTML = `
+          <span class="header-title">${title}</span>
+          <a href="full.html?category=${id}&title=${encodeURIComponent(title)}" class="see-all-link">ดูทั้งหมด →</a>
+        `;
+        heading.addEventListener("click", () => {
+          content.classList.toggle("show");
+        });
+
+        const content = document.createElement("div");
+        content.className = "accordion-content show";
+        data.slice(0, 10).forEach((movie, index) => {
+          const isNew = index < 6;
+          const badgeNew = isNew ? `<span class="badge-new">NEW</span>` : "";
+          const div = document.createElement("div");
+          div.className = "movie";
+          div.innerHTML = `
+            <a href="player.html?name=${encodeURIComponent(movie.name)}&url=${encodeURIComponent(movie.url)}&image=${encodeURIComponent(movie.image)}&audio=${encodeURIComponent(movie.info || '')}">
+            <div class="poster-container">
+            <img src="${movie.image}" alt="${movie.name}">
+            ${badgeNew}
+            </div>
+            <h4 title="${movie.name}">${movie.name}</h4>
+            <span class="info">${movie.info || ""}</span>
+            </a>
+          `;
+          content.appendChild(div);
+        });
+
+        section.appendChild(heading);
+        section.appendChild(content);
+        container.appendChild(section);
+      });
+    });
+    return;
+  }
+
+  // แสดงผลลัพธ์การค้นหา
   const resultSection = document.createElement("section");
   resultSection.className = "accordion";
 
