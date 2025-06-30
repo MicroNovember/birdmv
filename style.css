@@ -280,9 +280,9 @@ header input::placeholder {
 /* ====== สำหรับหน้า full.html (Grid + Pagination) ====== */
 .full-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 16px;
-  padding: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+  padding: 16px 10px;
   width: 100%;
   max-width: 1200px;
   box-sizing: border-box;
@@ -481,6 +481,8 @@ header input::placeholder {
   max-width: 1200px;
   margin: 0 auto;
   box-sizing: border-box;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
 .accordion-content {
@@ -493,6 +495,8 @@ header input::placeholder {
   scroll-behavior: smooth;
   box-sizing: border-box;
   width: 100%;
+  padding-left: 4px;   /* เพิ่มขอบซ้าย */
+  padding-right: 4px;  /* เพิ่มขอบขวา 
 }
 
 .movie {
@@ -504,15 +508,15 @@ header input::placeholder {
 }
 
 @media (max-width: 600px) {
-  #accordion-container,
-  .accordion {
-    max-width: 100vw;
-    padding-left: 0;
-    padding-right: 0;
+  .full-grid {
+    gap: 7px;
+    padding: 8px 4px;
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
   }
+}
   .accordion-content {
     gap: 8px;
-    padding: 8px 0;
+    padding: 8px 4px 8px 4px; /* เว้นขอบซ้ายขวา */
   }
   .movie {
     width: 120px;
