@@ -2,28 +2,33 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8" />
-  <title> Free Movie by ⲦⲉⲁⲙⲦⲁlⲕ</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ค้นหาหนัง</title>
   <link rel="stylesheet" href="style.css" />
-  <script src="script.js" defer></script>
-
+  <script src="script-menu.js" defer></script>
+  <script src="search.js" defer></script>
 </head>
 <body>
- <header>
-  <div class="top-row">
-    <button id="hamburger" aria-label="เมนู">☰</button>
-    <img src="assets/logo.png" alt="ⲦⲉⲁⲙⲦⲁlⲕLogo" />
-    <h1>ดูหนังฟรี </h1>
-  <form id="search-form" action="search.html" method="GET">
-   <input type="text" id="main-search-box" name="q" placeholder="ค้นหาชื่อเรื่อง..." />
-   <button type="submit">ค้นหา</button>
-  </form>
 
-  </div>
- </header>
+  <!-- 🔝 ส่วนหัว -->
+  <header>
+    <div class="top-row">
+      <button id="hamburger" aria-label="เมนู">☰</button>
+      <img src="assets/logo.png" alt="ⲦⲉⲁⲙⲦⲁlⲕLogo" />
+      <h1>ดูหนังฟรี</h1>
+      <form id="search-form" action="search.html" method="GET">
+        <input type="text" id="search-box" name="q" placeholder="ค้นหาชื่อเรื่อง..." />
+        <button id="submit">ค้นหา</button>
+      </form>
+    </div>
+  </header>
 
+  <!-- 🎯 พื้นที่แสดงผลลัพธ์การค้นหา -->
+  <main>
+    <div id="search-results" class="movie-list"></div>
+  </main>
 
-
+  <!-- 📋 เมนูเลื่อนด้านข้าง -->
   <nav class="menu">
     <a href="index.html">หน้าหลัก</a>
     <a href="full.html?category=server1-thai&title=หนังไทย-1">หนังไทย-1</a>
@@ -39,18 +44,8 @@
     <a href="favorite.html">❤️ รายการโปรด</a>
   </nav>
 
-  <div class="overlay"></div> <!-- ✅ เพิ่ม overlay -->
+  <!-- 🔲 คลิกปิดเมนู -->
+  <div class="overlay"></div>
 
-
-
-<marquee behavior="scroll" direction="left" scrollamount="3" style="background:#222; color:#fff; padding:10px 0; border-bottom:1px solid #444;">
-  🔔 : เว็บไซต์นี้ฟรี ไม่มีโฆษณา อัปเดตหนังใหม่ไม่ทุกวัน! ขอบคุณที่ติดตามครับ : ⲦⲉⲁⲙⲦⲁlⲕ 😊
-</marquee>
-
-  <main id="accordion-container"></main>
-  
 </body>
-
 </html>
-
-

@@ -1,23 +1,37 @@
-const sections = [
-  { file: "data/thai.json", id: "thai", title: "หนังไทย" },
-  { file: "data/en.json", id: "en", title: "หนังฝรั่ง" },
-  { file: "data/china.json", id: "china", title: "หนังจีน" },
-  { file: "data/korea.json", id: "korea", title: "หนังเกาหลี" }, 
-  { file: "data/asia.json", id: "asia", title: "หนังเอเชีย" },
-  { file: "data/cartoon.json", id: "cartoon", title: "การ์ตูน" },
+const allSections = [
+  { file: "data/server1-thai.json", id: "server1-thai", title: "หนังไทย" },
+  { file: "data/server1-en.json", id: "server1-en", title: "หนังฝรั่ง" },
+  { file: "data/server1-china.json", id: "server1-china", title: "หนังจีน" },
+  { file: "data/server1-korea.json", id: "server1-korea", title: "หนังเกาหลี" },
+  { file: "data/server1-asia.json", id: "server1-asia", title: "หนังเอเชีย" },
+  { file: "data/server1-cartoon.json", id: "server1-cartoon", title: "การ์ตูน" },
+  { file: "data/server2-thai.json", id: "server2-thai", title: "หนังไทย" },
+  { file: "data/server2-inter.json", id: "server2-inter", title: "หนังฝรั่ง" },
+  { file: "data/server2-asia.json", id: "server2-asia", title: "หนังเอเชีย" },
+  { file: "data/server2-cartoon.json", id: "server2-cartoon", title: "การ์ตูน" }
 ];
 
 const container = document.getElementById("accordion-container");
-const searchInput = document.getElementById("searchInput");
+
+const params = new URLSearchParams(location.search);
+const keyword = (params.get("q") || "").trim().toLowerCase();
+
+if (keyword) {
+  searchBox.value = keyword;
+  performSearch(keyword);
+}
+
 let allMovies = [];
 
-sections.forEach(({ file, id, title }) => {
+allSections.forEach(({ file, id, title }) => {
   fetch(file).then(res => res.json()).then(data => {
     allMovies.push(...data);
 
     const section = document.createElement("section");
     section.className = "accordion";
     section.id = id;
+
+
 
     // ✅ สร้างหัวหมวดพร้อมปุ่ม "→"
     const heading = document.createElement("h2");
@@ -61,87 +75,7 @@ sections.forEach(({ file, id, title }) => {
   });
 });
 
-// ✅ ค้นหาหนัง
-searchInput.addEventListener("input", () => {
-  const keyword = searchInput.value.trim().toLowerCase();
-  container.innerHTML = "";
 
-  if (!keyword) {
-    // ถ้าไม่มีคำค้นหา ให้แสดงหมวดปกติใหม่
-    sections.forEach(({ file, id, title }) => {
-      fetch(file).then(res => res.json()).then(data => {
-        const section = document.createElement("section");
-        section.className = "accordion";
-        section.id = id;
-
-        const heading = document.createElement("h2");
-        heading.className = "accordion-header";
-        heading.innerHTML = `
-          <span class="header-title">${title}</span>
-          <a href="full.html?category=${id}&title=${encodeURIComponent(title)}" class="see-all-link">ดูทั้งหมด →</a>
-        `;
-        heading.addEventListener("click", () => {
-          content.classList.toggle("show");
-        });
-
-        const content = document.createElement("div");
-        content.className = "accordion-content show";
-        data.slice(0, 10).forEach((movie, index) => {
-          const isNew = index < 6;
-          const badgeNew = isNew ? `<span class="badge-new">NEW</span>` : "";
-          const div = document.createElement("div");
-          div.className = "movie";
-          div.innerHTML = `
-            <a href="player.html?name=${encodeURIComponent(movie.name)}&url=${encodeURIComponent(movie.url)}&image=${encodeURIComponent(movie.image)}&audio=${encodeURIComponent(movie.info || '')}">
-            <div class="poster-container">
-            <img src="${movie.image}" alt="${movie.name}">
-            ${badgeNew}
-            </div>
-            <h4 title="${movie.name}">${movie.name}</h4>
-            <span class="info">${movie.info || ""}</span>
-            </a>
-          `;
-          content.appendChild(div);
-        });
-
-        section.appendChild(heading);
-        section.appendChild(content);
-        container.appendChild(section);
-      });
-    });
-    return;
-  }
-
-  // แสดงผลลัพธ์การค้นหา
-  const resultSection = document.createElement("section");
-  resultSection.className = "accordion";
-
-  const heading = document.createElement("h2");
-  heading.className = "accordion-header";
-  heading.textContent = "🔍 ผลลัพธ์การค้นหา";
-
-  const content = document.createElement("div");
-  content.className = "accordion-content show";
-
-  allMovies
-    .filter(m => m.name.toLowerCase().includes(keyword))
-    .forEach(movie => {
-      const div = document.createElement("div");
-      div.className = "movie";
-      div.innerHTML = `
-        <a href="player.html?name=${encodeURIComponent(movie.name)}&url=${encodeURIComponent(movie.url)}&image=${encodeURIComponent(movie.image)}&audio=${encodeURIComponent(movie.info || '')}">
-          <img src="${movie.image}" alt="${movie.name}">
-          <h4 title="${movie.name}">${movie.name}</h4>
-          <span class="info">${movie.info || ""}</span>
-        </a>
-      `;
-      content.appendChild(div);
-    });
-
-  resultSection.appendChild(heading);
-  resultSection.appendChild(content);
-  container.appendChild(resultSection);
-});
 
 function showContinueWatching() {
   const keys = Object.keys(localStorage).filter(k => k.startsWith("watch_"));
@@ -228,18 +162,27 @@ function showFavorites() {
 
 showFavorites();
 
-// marquee JS (ถ้ามี)
-window.addEventListener("DOMContentLoaded", function () {
-  const marquee = document.getElementById("marquee-text");
-  if (!marquee) return;
-  let pos = marquee.parentElement.offsetWidth;
-  function animate() {
-    pos--;
-    marquee.style.left = pos + "px";
-    if (pos < -marquee.offsetWidth) {
-      pos = marquee.parentElement.offsetWidth;
-    }
-    requestAnimationFrame(animate);
-  }
-  animate();
+document.addEventListener("DOMContentLoaded", () => {
+  const menu = document.querySelector(".menu");
+  const overlay = document.querySelector(".overlay");
+  const toggle = document.getElementById("hamburger");
+
+  if (!menu || !toggle || !overlay) return;
+
+  // ✅ toggle menu
+  toggle.addEventListener("click", () => {
+    menu.classList.toggle("show");
+  });
+
+  // ✅ คลิกนอกเมนู (overlay) เพื่อปิด
+  overlay.addEventListener("click", () => {
+    menu.classList.remove("show");
+  });
+
+  // ✅ คลิกลิงก์เมนู → ปิดเมนู
+  menu.querySelectorAll("a").forEach(link => {
+    link.addEventListener("click", () => {
+      menu.classList.remove("show");
+    });
+  });
 });

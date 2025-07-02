@@ -1,19 +1,20 @@
 const params = new URLSearchParams(location.search);
 const name = params.get("name") || "ไม่ทราบชื่อ";
+const info = (params.get("info") || params.get("audio") || "").trim();
+
 const rawUrl = params.get("url") || "";
-const info = params.get("info") || "";
 const image = params.get("image") || "";
-const audio = params.get("audio") || ""; // เพิ่มบรรทัดนี้
 const videoURL = decodeURIComponent(rawUrl);
 
 document.getElementById("movie-title").textContent = name;
-document.getElementById("info-text").textContent = info;
 
-// แสดงข้อมูลพากย์/บรรยาย
+
 const audioInfoElem = document.getElementById("audio-info");
-if (audioInfoElem) {
-  audioInfoElem.textContent = audio ? `เสียง: ${audio}` : "";
+if (audioInfoElem && info) {
+  audioInfoElem.textContent = `เสียง: ${info}`;
 }
+
+
 
 const videoSource = document.getElementById("video-source");
 const posterBg = document.getElementById("video-poster-bg");
@@ -49,13 +50,9 @@ function animateHitbox(icon = "▶️") {
   }, 1000);
 }
 
-// เพิ่ม event สำหรับแตะหรือคลิกที่วิดีโอ (รองรับทั้ง desktop และ mobile)
 const videoElem = document.getElementById("my-player");
-
-// รองรับ tap/click ที่ video โดยตรง
 videoElem.addEventListener("click", togglePlayPause);
-videoElem.addEventListener("touchend", function(e) {
-  // ป้องกัน tap ซ้อน
+videoElem.addEventListener("touchend", function (e) {
   e.preventDefault();
   togglePlayPause();
 });

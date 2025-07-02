@@ -5,25 +5,39 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title id="title">ⲦⲉⲁⲙⲦⲁlⲕ - ดูทั้งหมด</title>
   <link rel="stylesheet" href="style.css" />
-  
-
+  <script src="script.js" defer></script>
+  <script src="script-menu.js" defer></script>
 </head>
-<body>
-   <header>
-    <img src="assets/logo.png" alt="TeamTalk+ Logo" />
-    <h1>TeamTalk+</h1>
-    <input type="text" id="searchInput" placeholder="🔍 ค้นหาหนัง..." />
-  </header>
 
-  <nav class="menu">
+<body>
+ <header>
+  <div class="top-row">
+    <button id="hamburger" aria-label="เมนู">☰</button>
+    <img src="assets/logo.png" alt="ⲦⲉⲁⲙⲦⲁlⲕLogo" />
+    <h1>ดูหนังฟรี</h1>
+    <form id="search-form" action="search.html" method="GET">
+     <input type="text" id="main-search-box" name="q" placeholder="ค้นหาชื่อเรื่อง..." />
+     <button type="submit">ค้นหา</button>
+    </form>
+  </div>
+ </header>
+
+
+<nav class="menu">
   <a href="index.html">หน้าหลัก</a>
-  <a href="full.html?category=thai&title=หนังไทย">หนังไทย</a>
-  <a href="full.html?category=china&title=หนังจีน">หนังจีน</a>
-  <a href="full.html?category=korea&title=หนังเกาหลี">หนังเกาหลี</a>
-  <a href="full.html?category=en&title=หนังฝรั่ง">หนังฝรั่ง</a>
-  <a href="full.html?category=asia&title=หนังเอเชีย">หนังเอเชีย</a>
-  <a href="full.html?category=cartoon&title=การ์ตูน">การ์ตูน</a>
+    <a href="full.html?category=server1-thai&title=หนังไทย-1">หนังไทย-1</a>
+    <a href="full.html?category=server2-thai&title=หนังไทย-2">หนังไทย-2</a>
+    <a href="full.html?category=server1-en&title=หนังฝรั่ง-1">หนังฝรั่ง-1</a>
+    <a href="full.html?category=server2-inter&title=หนังฝรั่ง-2">หนังฝรั่ง-2</a>
+    <a href="full.html?category=server1-china&title=หนังจีน">หนังจีน</a>
+    <a href="full.html?category=server1-korea&title=หนังเกาหลี">หนังเกาหลี</a>
+    <a href="full.html?category=server1-asia&title=เอเชีย-1">เอเชีย-1</a>
+    <a href="full.html?category=server2-asia&title=เอเชีย-2">เอเชีย-2</a>
+    <a href="full.html?category=server1-cartoon&title=การ์ตูน-1">การ์ตูน-1</a>
+    <a href="full.html?category=server2-cartoon&title=การ์ตูน-2">การ์ตูน-2</a>
+    <a href="favorite.html">❤️ รายการโปรด</a>
 </nav>
+<div class="overlay"></div>
 
 <marquee behavior="scroll" direction="left" scrollamount="3" style="background:#222; color:#fff; padding:10px 0; border-bottom:1px solid #444;">
   🔔 : เว็บไซต์นี้ฟรี ไม่มีโฆษณา อัปเดตหนังใหม่ไม่ทุกวัน! ขอบคุณที่ติดตามครับ : ⲦⲉⲁⲙⲦⲁlⲕ 😊
