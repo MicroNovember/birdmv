@@ -8,17 +8,20 @@
   <script src="script.js" defer></script>
   <script src="script-menu.js" defer></script>
 
+
 </head>
 <body>
+  <!-- 🔝 ส่วนหัว -->
   <header>
     <div class="top-row">
-      <button id="hamburger" aria-label="เมนูมือถือ">☰</button>
+      <button id="hamburger" aria-label="เมนู">☰</button>
+      <img src="assets/logo.png" alt="ⲦⲉⲁⲙⲦⲁlⲕLogo" />
+      <h1></h1>
+      <form id="search-form" action="search.html" method="GET" autocomplete="off">
+        <input type="text" id="search-box" name="q" placeholder="ค้นหาชื่อเรื่อง..." />
+        <button id="submit">ค้นหา</button>
+      </form>
     </div>
-    
-    <form id="search-form" action="search.html" method="GET" autocomplete="off">
-     <input type="text" id="main-search-box" name="q" placeholder="ค้นหาชื่อเรื่อง..." />
-     <button type="submit">ค้นหา</button>
-    </form>
   </header>
 
   <nav class="menu">
@@ -38,9 +41,7 @@
 
   <div class="overlay"></div>
 
-  <marquee behavior="scroll" direction="left" scrollamount="3" style="background:#222; color:#fff; padding:10px 0; border-bottom:1px solid #444;">
-  🔔 : เว็บไซต์นี้ฟรี ไม่มีโฆษณา อัปเดตหนังใหม่ไม่ทุกวัน! ขอบคุณที่ติดตามครับ : ⲦⲉⲁⲙⲦⲁlⲕ 😊
-</marquee>
+
 
 
   
