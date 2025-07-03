@@ -1,9 +1,12 @@
 /* marquee.css */
 .marquee-container {
+  width: 85%;
+  box-sizing: border-box;
+  padding: 0px 12px; /* ✅ เว้นขอบซ้าย–ขวา */
   overflow: hidden;
   white-space: nowrap;
   background: #111;
-  padding: 8px 0;
+
 }
 
 .marquee-text {

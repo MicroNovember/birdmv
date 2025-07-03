@@ -12,12 +12,12 @@ body {
 
 /* 🔲 Container หลักที่ล้อม content */
 #accordion-container {
-  width: 100%;
+  width: 100vw%;
   max-width: 1200px;
   margin: 0 auto;
   box-sizing: border-box;
-  padding-left: 20px;
-  padding-right: 20px;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 /* 🧭 2. Header (แถบด้านบนที่มีโลโก้ + ค้นหา + ปุ่ม ☰) */
