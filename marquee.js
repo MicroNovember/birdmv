@@ -3,14 +3,14 @@
 const marqueeMessages = [
   "🎬 อัปเดตหนังใหม่ไม่ทุกวัน! 🍿",
   "🔊 รับชมฟรี ไม่มีโฆษณา 📢",
-  "📱 ขอบคุณที่ติดตาม : ⲦⲉⲁⲙⲦⲁlⲕ 😊 "
+  "📱 ขอบคุณที่ติดตาม : ⲦⲉⲁⲙⲦⲁlⲕ 😊 🦜"
 ];
 
 const selectedIndexes = [0, 1, 2]; // 🟡 เลือกข้อความที่ 1 และ 3
 
 const marqueeSpeed = 40; // วินาที
 const marqueeColor = "#00ffff";
-const marqueeFontSize = "20px";
+const marqueeFontSize = "18px";
 
 document.addEventListener("DOMContentLoaded", () => {
   const container = document.createElement("div");
