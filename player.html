@@ -20,35 +20,38 @@
       max-width: 900px;
       margin: auto;
       padding: 16px;
-    }
-
-    #video-poster-bg {
-      position: fixed;
-      inset: 0;
-      background-size: cover;
-      background-position: center;
-      filter: blur(30px);
-      opacity: 0;
-      transition: 0.5s;
-      z-index: -1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     .video-js {
       width: 100%;
       max-height: 60vh;
       border-radius: 8px;
-      overflow: hidden;
     }
 
     .controls-bar {
-     display: flex;
-     justify-content: center;    /* 🔥 วางปุ่มกลางแนวนอน */
-     align-items: center;
-     gap: 12px;
-     margin-top: 16px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      margin-top: 16px;
+      flex-wrap: wrap;
     }
 
-    
+    .controls-bar button {
+      flex: initial;
+      width: auto;
+      padding: 8px 14px;
+      font-size: 15px;
+      white-space: nowrap;
+      border-radius: 6px;
+      border: none;
+      background: #1f2937;
+      color: #5ab9ff;
+      cursor: pointer;
+    }
 
     #resume-dialog {
       background: rgba(0,0,0,0.85);
@@ -72,53 +75,38 @@
       cursor: pointer;
     }
 
+    #audio-info {
+      color: #5ab9ff;
+      font-size: 16px;
+      font-weight: 600;
+      text-align: center;
+      margin: 4px 0 12px;
+      text-shadow: 0 0 3px rgba(0, 80, 255, 0.2);
+    }
+
+    #movie-title {
+      color: #5ab9ff;
+      font-size: 24px;
+      font-weight: bold;
+      text-align: center;
+      margin: 12px 0;
+      text-shadow: 0 0 3px rgba(0, 80, 255, 0.2);
+    }
+
     @media (max-width: 600px) {
       .controls-bar {
         flex-direction: column;
-        align-items: stretch;
+        align-items: center;
+      }
+
+      .controls-bar button {
+        font-size: 14px;
+        padding: 6px 12px;
       }
     }
-
-    #audio-info {
-  color: #5ab9ff;              /* 💙 ฟ้าอ่อนพาสเทลสวย ๆ */
-  font-size: 16px;
-  font-weight: 600;
-  text-align: center;
-  margin: 4px 0 12px;
-  letter-spacing: 0.3px;
-  text-shadow: 0 0 3px rgba(0, 80, 255, 0.2);
-  font-family: 'Segoe UI', 'DM Sans', 'Noto Sans Thai', sans-serif;
-}
-
-#movie-title {
-  color: #5ab9ff; 
-  font-size: 24px;
-  font-weight: bold;
-  text-align: center;
-  margin: 12px 0;
-  text-shadow: 0 0 3px rgba(0, 80, 255, 0.2);
-  font-family: 'Segoe UI', 'DM Sans', 'Noto Sans Thai', sans-serif;
-}
-
-@media (max-width: 600px) {
-  .controls-bar {
-    flex-direction: row;
-    justify-content: center;
-    gap: 12px;
-  }
-
-
-}
-
-
-
-
-
   </style>
 </head>
 <body>
-
-<div id="video-poster-bg"></div>
 
 <div class="container">
   <h2 id="movie-title">กำลังโหลด...</h2>
@@ -139,13 +127,12 @@
   <div class="controls-bar">
     <button id="fav-btn">❤️ เพิ่มในรายการโปรด</button>
     <button onclick="location.href='index.html'" style="display: flex; align-items: center; gap: 6px;">
-  <svg width="20" height="20" fill="#5ab9ff" viewBox="0 0 24 24"><path d="M12 3l10 9h-3v9h-6v-6h-2v6H5v-9H2z"/></svg>
-  หน้าแรก
-</button>
+      <svg width="20" height="20" fill="#5ab9ff" viewBox="0 0 24 24"><path d="M12 3l10 9h-3v9h-6v-6h-2v6H5v-9H2z"/></svg>
+      หน้าแรก
+    </button>
   </div>
 </div>
 
-<!-- 🔘 Resume Dialog -->
 <div id="resume-dialog">
   <p id="resume-message">คุณดูมาถึงจุดนี้แล้ว ต้องการดำเนินการต่อไหม?</p>
   <div>
@@ -154,10 +141,8 @@
   </div>
 </div>
 
-<!-- 📦 Video.js Script -->
 <script src="https://vjs.zencdn.net/8.6.1/video.min.js"></script>
 
-<!-- 🎯 Custom Script -->
 <script>
   const params = new URLSearchParams(location.search);
   const name = params.get("name") || "ไม่ทราบชื่อ";
@@ -168,18 +153,11 @@
 
   document.getElementById("movie-title").textContent = name;
   const audioInfoElem = document.getElementById("audio-info");
- 
-  // 👇 เพิ่มเช็กว่ามี info หรือเปล่า
   if (audioInfoElem) {
-    if (info) {
-    audioInfoElem.textContent = " : " + info;
-    } else {
-    audioInfoElem.textContent = ""; // หรือ "เสียง: ไม่ระบุ"
-   }
+    audioInfoElem.textContent = info ? "เสียง: " + info : "";
   }
 
   const videoSource = document.getElementById("video-source");
-  const posterBg = document.getElementById("video-poster-bg");
   const favBtn = document.getElementById("fav-btn");
 
   if (videoURL) {
@@ -190,14 +168,12 @@
   }
 
   const player = videojs("my-player");
-  player.volume(0.3); // เริ่มต้นที่เสียงปกติ
+  player.volume(0.3);
 
   if (image) {
     player.poster(image);
-
   }
 
-  // ✅ ระบบ Resume
   const watchKey = "watch_" + videoURL;
   let watchData = null;
   try {
@@ -213,14 +189,15 @@
       document.getElementById("resume-dialog").style.display = "block";
 
       document.getElementById("resume-yes").onclick = () => {
-        player.currentTime(watchData.currentTime);
-        player.play();
         document.getElementById("resume-dialog").style.display = "none";
+        setTimeout(() => player.currentTime(watchData.currentTime), 10);
+        setTimeout(() => player.play(), 100);
       };
+
       document.getElementById("resume-no").onclick = () => {
-        player.currentTime(0);
-        player.play();
         document.getElementById("resume-dialog").style.display = "none";
+        setTimeout(() => player.currentTime(0), 10);
+        setTimeout(() => player.play(), 100);
       };
     }
   });
@@ -237,7 +214,6 @@
     localStorage.setItem(watchKey, JSON.stringify(progress));
   });
 
-  // ✅ ระบบรายการโปรด
   function updateFavUI() {
     const favs = JSON.parse(localStorage.getItem("favorites") || "[]");
     const isFav = favs.some(m => m.url === videoURL);
@@ -256,10 +232,7 @@
     updateFavUI();
   });
 
-
-
   updateFavUI();
 </script>
-
 </body>
 </html>
