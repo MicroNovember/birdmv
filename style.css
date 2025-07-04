@@ -596,3 +596,39 @@ header h1 {
   background-color: #0056b3;
 }
 
+/ * 🔔 13. Alert Box (แจ้งเตือน) 7/4/25 */
+.alert-box {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #1e293b;
+  color: #fff;
+  padding: 20px 24px;
+  border-radius: 8px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+  z-index: 9999;
+  text-align: center;
+  max-width: 320px;
+  width: 90%;
+  box-sizing: border-box;
+  font-family: 'Prompt', sans-serif;
+}
+
+.alert-box.hidden {
+  display: none;
+}}
+
+.alert-close {
+  margin-top: 12px;
+  background-color: #5ac8fa;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.alert-close:hover {
+  background-color: #3aa7d7;
+}

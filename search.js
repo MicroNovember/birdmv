@@ -12,7 +12,7 @@ const jsonFiles = [
 ];
 
 const searchBox = document.getElementById("search-box");
-const searchBtn = document.getElementById("search-btn");
+const searchBtn = document.getElementById("submit");
 const resultsContainer = document.getElementById("search-results");
 
 let allMovies = [];
@@ -72,4 +72,6 @@ function performSearch(forcedKeyword) {
     `;
     resultsContainer.appendChild(div);
   });
+
+  
 }

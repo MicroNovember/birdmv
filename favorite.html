@@ -2,26 +2,30 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8" />
-  <title>ⲦⲉⲁⲙⲦⲁlⲕ+ Free Movie Zone</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>❤️ รายการโปรด</title>
   <link rel="stylesheet" href="style.css" />
-  <script src="script.js" defer></script>
   <script src="script-menu.js" defer></script>
-
+  <script src="search.js" defer></script>
+  <link rel="stylesheet" href="marquee.css" />
 
 </head>
 <body>
+
   <!-- 🔝 ส่วนหัว -->
   <header>
     <div class="top-row">
       <button id="hamburger" aria-label="เมนู">☰</button>
-      <form id="search-form" action="search.html" method="GET" autocomplete="off">
-        <input type="text" id="search-box" name="q" placeholder="ค้นหาชื่อเรื่อง..." />
-        <button id="submit">ค้นหา</button>
-      </form>
+
     </div>
   </header>
 
+  <!-- 🎯 พื้นที่แสดงผลลัพธ์การค้นหา -->
+  <main>
+    <div id="search-results" class="movie-list"></div>
+  </main>
+
+  <!-- 📋 เมนูเลื่อนด้านข้าง -->
   <nav class="menu">
     <a href="index.html">หน้าหลัก</a>
     <a href="full.html?category=server1-thai&title=หนังไทย-1">หนังไทย-1</a>
@@ -37,6 +41,7 @@
     <a href="favorite.html">❤️ รายการโปรด</a>
   </nav>
 
+  <!-- 🔲 คลิกปิดเมนู -->
   <div class="overlay"></div>
 
 
@@ -71,6 +76,7 @@
 <body>
   
   <div id="favorites-list"></div>
+  <button id="clear-favorite-btn" class="clear-btn">ล้างรายการโปรดทั้งหมด</button>
 
   <script>
     const list = document.getElementById("favorites-list");
@@ -99,11 +105,62 @@
       localStorage.setItem("favorites", JSON.stringify(favorites));
       location.reload();
     }
-  </script>
-<marquee behavior="scroll" direction="left" scrollamount="3" style="background:#222; color:#fff; padding:10px 0; border-bottom:1px solid #444;">
-  ❤️ รายการโปรด ของคุณจะถูกเก็บไว้ในเบราว์เซอร์นี้เท่านั้น หากลบแคชหรือใช้เบราว์เซอร์อื่น รายการโปรดจะหายไป
-</marquee>
+document.getElementById("clear-favorite-btn").addEventListener("click", () => {
+  const box = document.getElementById("confirm-box");
+  box.classList.remove("hidden");
 
+  document.getElementById("confirm-yes").onclick = () => {
+    localStorage.removeItem("favorites");
+    location.reload();
+  };
+
+  document.getElementById("confirm-no").onclick = () => {
+    box.classList.add("hidden");
+  };
+});   
+
+    function showAlert(message) {
+    const box = document.getElementById("alert-box");
+    const msg = document.getElementById("alert-message");
+    msg.textContent = message;
+    box.classList.remove("hidden");
+
+    document.querySelector(".alert-close").onclick = () => {
+    box.classList.add("hidden");
+   };
+  }
+
+  document.getElementById("clear-favorite-btn").addEventListener("click", () => {
+  const box = document.getElementById("confirm-box");
+  box.classList.remove("hidden");
+
+  document.getElementById("confirm-yes").onclick = () => {
+    localStorage.removeItem("favorites");
+    location.reload();
+  };
+  document.getElementById("confirm-no").onclick = () => {
+    box.classList.add("hidden");
+  };
+});
+
+   
+  </script>
+
+
+
+
+
+<div id="confirm-box" class="alert-box hidden">
+
+  <div style="margin-top: 16px;">
+    <button id="confirm-yes" class="alert-close">✅ ใช่</button>
+    <button id="confirm-no" class="alert-close" style="margin-left: 12px;">❌ ยกเลิก</button>
+  </div>
+</div>
+
+  <marquee behavior="scroll" direction="left" scrollamount="3" style="background:#101828; color:#fff; padding:0 5px; border-bottom:1px solid #444;">
+  <span style="color: #ff0;"> ⲦⲉⲁⲙⲦⲁlⲕ + Free Movie </span>
+  </marquee>
 
 </body>
 </html>

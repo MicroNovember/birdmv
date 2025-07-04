@@ -1,14 +1,14 @@
 // marquee.js
 
 const marqueeMessages = [
-  "🎬 อัปเดตหนังใหม่ไม่ทุกวัน! 🍿",
-  "🔊 รับชมฟรี ไม่มีโฆษณา 📢",
-  "📱 ขอบคุณที่ติดตาม : ⲦⲉⲁⲙⲦⲁlⲕ 😊 🦜"
+  "📢 อัปเดตหนังใหม่ไม่ทุกวัน!  ",
+  "😊 รับชมฟรี ไม่มีโฆษณา  ",
+  "😊 ขอบคุณที่ติดตาม : ⲦⲉⲁⲙⲦⲁlⲕ  🦜"
 ];
 
 const selectedIndexes = [0, 1, 2]; // 🟡 เลือกข้อความที่ 1 และ 3
 
-const marqueeSpeed = 40; // วินาที
+const marqueeSpeed = 60; // วินาที
 const marqueeColor = "#00ffff";
 const marqueeFontSize = "18px";
 
