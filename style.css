@@ -84,7 +84,7 @@ header h1 {
   gap: 10px;
   margin: 20px 0 12px 0;
   width: 100%;
-  max-width: 1200px;
+
 }
 
 .menu a {
@@ -129,7 +129,6 @@ header h1 {
   padding: 16px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   width: 100%;
-  max-width: 1200px;
   box-sizing: border-box;
 }
 
@@ -271,7 +270,6 @@ header h1 {
   gap: 12px;
   padding: 16px 10px;
   width: 100%;
-  max-width: 1200px;
   box-sizing: border-box;
 }
 
