@@ -2,79 +2,260 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8" />
-  <title>🎬 Video Player</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
-  <link rel="stylesheet" href="player.css" />
-  <link rel="stylesheet" href="style.css" />
-  <script src="script.js" defer></script>
-  <script src="script-menu.js" defer></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🎬 วิดีโอเพลเยอร์</title>
+
+  <!-- 🔗 Video.js CSS -->
+  <link href="https://vjs.zencdn.net/8.6.1/video-js.css" rel="stylesheet" />
+
+  <style>
+    body {
+      margin: 0;
+      background: #0f172a;
+      color: #fff;
+      font-family: 'Segoe UI', 'DM Sans', 'Noto Sans Thai', sans-serif;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: auto;
+      padding: 16px;
+    }
+
+    #video-poster-bg {
+      position: fixed;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      filter: blur(30px);
+      opacity: 0;
+      transition: 0.5s;
+      z-index: -1;
+    }
+
+    .video-js {
+      width: 100%;
+      max-height: 60vh;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .controls-bar {
+      margin-top: 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+    }
+
+    #resume-dialog {
+      background: rgba(0,0,0,0.85);
+      padding: 20px;
+      border-radius: 8px;
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 1000;
+      display: none;
+      text-align: center;
+    }
+
+    #resume-dialog button {
+      margin: 8px;
+      padding: 8px 16px;
+      border-radius: 6px;
+      border: none;
+      background-color: #3b82f6;
+      color: white;
+      cursor: pointer;
+    }
+
+    @media (max-width: 600px) {
+      .controls-bar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+    }
+
+    #audio-info {
+  color: #5ab9ff;              /* 💙 ฟ้าอ่อนพาสเทลสวย ๆ */
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+  margin: 4px 0 12px;
+  letter-spacing: 0.3px;
+  text-shadow: 0 0 3px rgba(0, 80, 255, 0.2);
+  font-family: 'Segoe UI', 'DM Sans', 'Noto Sans Thai', sans-serif;
+}
+
+#movie-title {
+  color: #5ab9ff; 
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  margin: 12px 0;
+  text-shadow: 0 0 3px rgba(0, 80, 255, 0.2);
+  font-family: 'Segoe UI', 'DM Sans', 'Noto Sans Thai', sans-serif;
+}
+
+.controls-bar {
+  position: fixed;
+  bottom: 15px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 999;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 12px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  gap: 16px;
+}
+
+
+
+  </style>
 </head>
 <body>
-  
-  <button id="hamburger" aria-label="เมนู">☰</button>
 
-<nav class="menu">
-  <a href="index.html">หน้าหลัก</a>
-    <a href="full.html?category=server1-thai&title=หนังไทย-1">หนังไทย-1</a>
-    <a href="full.html?category=server2-thai&title=หนังไทย-2">หนังไทย-2</a>
-    <a href="full.html?category=server1-en&title=หนังฝรั่ง-1">หนังฝรั่ง-1</a>
-    <a href="full.html?category=server2-inter&title=หนังฝรั่ง-2">หนังฝรั่ง-2</a>
-    <a href="full.html?category=server1-china&title=หนังจีน">หนังจีน</a>
-    <a href="full.html?category=server1-korea&title=หนังเกาหลี">หนังเกาหลี</a>
-    <a href="full.html?category=server1-asia&title=เอเชีย-1">เอเชีย-1</a>
-    <a href="full.html?category=server2-asia&title=เอเชีย-2">เอเชีย-2</a>
-    <a href="full.html?category=server1-cartoon&title=การ์ตูน-1">การ์ตูน-1</a>
-    <a href="full.html?category=server2-cartoon&title=การ์ตูน-2">การ์ตูน-2</a>
-    <a href="favorite.html">❤️ รายการโปรด</a>
-</nav>
+<div id="video-poster-bg"></div>
 
-
-  <h1  </h1>
-  <h1 id="movie-title">Loading...</h1>
+<div class="container">
+  <h2 id="movie-title">กำลังโหลด...</h2>
   <p id="audio-info"></p>
 
-  <div id="video-wrapper">
-    <div id="video-poster-bg"></div>
-    <div class="video-responsive">
-      <video
-        id="my-player"
-        class="video-js vjs-default-skin"
-        controls
-        preload="auto"
-        playsinline
-        data-setup="{}"
-      >
-        <source id="video-source" src="" type="video/mp4" />
-      </video>
-    </div>
+  <video
+    id="my-player"
+    class="video-js vjs-big-play-centered"
+    controls
+    preload="auto"
+    playsinline
+    data-setup="{}"
+  >
+    <source id="video-source" src="" type="video/mp4" />
+    ขอโทษค่ะ เบราว์เซอร์ของคุณไม่รองรับวิดีโอ
+  </video>
 
-    <!-- ปุ่ม hitbox กลางจอ -->
-    <div id="player-hitbox">
-      <div id="player-hitbox-icon">▶️</div>
-    </div>
-  </div>
-
-  <div class="controls">
-    <button onclick="history.back()">🔙 หน้าหลัก</button>
+  <div class="controls-bar">
     <button id="fav-btn">❤️ เพิ่มในรายการโปรด</button>
+    <button onclick="history.back()">⬅️ กลับ</button>
   </div>
+</div>
 
-  <div id="resume-dialog" class="resume-dialog hidden">
-    <div class="dialog-box">
-      <p id="resume-message">คุณเคยดูค้างไว้</p>
-      <div class="dialog-actions">
-        <button id="resume-yes">▶️ ดูต่อ</button>
-        <button id="resume-no">🔄 เริ่มใหม่</button>
-      </div>
-    </div>
+<!-- 🔘 Resume Dialog -->
+<div id="resume-dialog">
+  <p id="resume-message">คุณดูมาถึงจุดนี้แล้ว ต้องการดำเนินการต่อไหม?</p>
+  <div>
+    <button id="resume-yes">▶️ ต่อจากเดิม</button>
+    <button id="resume-no">⏮ เริ่มใหม่</button>
   </div>
+</div>
 
-  <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
-  <script src="player.js"></script>
-<div class="overlay"></div>
-<marquee behavior="scroll" direction="left" scrollamount="3" style="background:#101828; color:#fff; padding:10px 0; border-bottom:1px solid #444;">
-  🔔 หากกดเล่นแล้วหนังไม่เล่น ให้ลองรีเฟรชหน้าใหม่ หรืออาจมีปัญหาจากเซิร์ฟเวอร์ 😊
-</marquee>
+<!-- 📦 Video.js Script -->
+<script src="https://vjs.zencdn.net/8.6.1/video.min.js"></script>
+
+<!-- 🎯 Custom Script -->
+<script>
+  const params = new URLSearchParams(location.search);
+  const name = params.get("name") || "ไม่ทราบชื่อ";
+  const info = (params.get("info") || params.get("audio") || "").trim();
+  const rawUrl = params.get("url") || "";
+  const image = params.get("image") || "";
+  const videoURL = decodeURIComponent(rawUrl);
+
+  document.getElementById("movie-title").textContent = name;
+  const audioInfoElem = document.getElementById("audio-info");
+ 
+  // 👇 เพิ่มเช็กว่ามี info หรือเปล่า
+  if (audioInfoElem) {
+    if (info) {
+    audioInfoElem.textContent = " : " + info;
+    } else {
+    audioInfoElem.textContent = ""; // หรือ "เสียง: ไม่ระบุ"
+   }
+  }
+
+  const videoSource = document.getElementById("video-source");
+  const posterBg = document.getElementById("video-poster-bg");
+  const favBtn = document.getElementById("fav-btn");
+
+  if (videoURL) {
+    videoSource.src = videoURL;
+    if (videoURL.endsWith(".m3u8")) {
+      videoSource.type = "application/x-mpegURL";
+    }
+  }
+
+  const player = videojs("my-player");
+  player.volume(0.3); // เริ่มต้นที่เสียงปกติ
+
+  if (image) {
+    player.poster(image);
+
+  }
+
+  // ✅ ระบบ Resume
+  const watchKey = "watch_" + videoURL;
+  let watchData = null;
+  try {
+    watchData = JSON.parse(localStorage.getItem(watchKey) || "null");
+  } catch {}
+
+  player.ready(() => {
+    if (watchData?.currentTime > 20) {
+      player.pause();
+      const mins = Math.floor(watchData.currentTime / 60);
+      const secs = String(Math.floor(watchData.currentTime % 60)).padStart(2, "0");
+      document.getElementById("resume-message").textContent = `คุณเคยดู "${name}" ถึงนาทีที่ ${mins}:${secs}`;
+      document.getElementById("resume-dialog").style.display = "block";
+
+      document.getElementById("resume-yes").onclick = () => {
+        player.currentTime(watchData.currentTime);
+        player.play();
+        document.getElementById("resume-dialog").style.display = "none";
+      };
+      document.getElementById("resume-no").onclick = () => {
+        player.currentTime(0);
+        player.play();
+        document.getElementById("resume-dialog").style.display = "none";
+      };
+    }
+  });
+
+  player.on("timeupdate", () => {
+    const progress = {
+      name,
+      url: videoURL,
+      image,
+      currentTime: player.currentTime(),
+      duration: player.duration(),
+      lastWatched: Date.now()
+    };
+    localStorage.setItem(watchKey, JSON.stringify(progress));
+  });
+
+  // ✅ ระบบรายการโปรด
+  function updateFavUI() {
+    const favs = JSON.parse(localStorage.getItem("favorites") || "[]");
+    const isFav = favs.some(m => m.url === videoURL);
+    favBtn.textContent = isFav ? "💔 ลบจากรายการโปรด" : "❤️ เพิ่มในรายการโปรด";
+  }
+
+  favBtn.addEventListener("click", () => {
+    let favs = JSON.parse(localStorage.getItem("favorites") || "[]");
+    const index = favs.findIndex(m => m.url === videoURL);
+    if (index >= 0) {
+      favs.splice(index, 1);
+    } else {
+      favs.push({ name, url: videoURL, image });
+    }
+    localStorage.setItem("favorites", JSON.stringify(favs));
+    updateFavUI();
+  });
+
+
+
+  updateFavUI();
+</script>
+
 </body>
 </html>
