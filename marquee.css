@@ -1,11 +1,11 @@
 /* marquee.css */
 .marquee-container {
-  width: 85%;
+  width: 100%;
   box-sizing: border-box;
-  padding: 0px 12px; /* ✅ เว้นขอบซ้าย–ขวา */
+  padding: 0px 5px; /* ✅ เว้นขอบซ้าย–ขวา */
   overflow: hidden;
   white-space: nowrap;
-  background: #111;
+  background: #101828;
 
 }
 
