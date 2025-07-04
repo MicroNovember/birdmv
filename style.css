@@ -83,7 +83,6 @@ header h1 {
   gap: 10px;
   margin: 20px 0 12px 0;
   width: 100%;
-  max-width: 1200px;
 }
 
 .menu a {
@@ -128,7 +127,6 @@ header h1 {
   padding: 16px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   width: 100%;
-  max-width: 1200px;
   box-sizing: border-box;
 }
 
@@ -165,7 +163,9 @@ header h1 {
   scroll-behavior: smooth;
   padding-left: 4px;
   padding-right: 4px;
+  padding: 8px 0;
 }
+
 
 .accordion-content:not(.show) {
   display: none !important;
@@ -270,7 +270,6 @@ header h1 {
   gap: 12px;
   padding: 16px 10px;
   width: 100%;
-  max-width: 1200px;
   box-sizing: border-box;
 }
 
@@ -637,7 +636,7 @@ header h1 {
 /* 🔲 Item แสดงหนังแต่ละเรื่อง */
 .accordion-item {
   flex: 0 0 auto;
-  width: 160px;
+  width: 140px;
   scroll-snap-align: start;
   display: flex;
   flex-direction: column;
