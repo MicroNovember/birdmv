@@ -16,7 +16,10 @@
   <header>
     <div class="top-row">
       <button id="hamburger" aria-label="เมนู">☰</button>
-
+      <form id="search-form" action="search.html" method="GET" autocomplete="off">
+        <input type="text" id="search-box" name="q" placeholder="ค้นหาชื่อเรื่อง..." />
+        <button id="submit">ค้นหา</button>
+      </form>
     </div>
   </header>
 
@@ -89,9 +92,9 @@
         const div = document.createElement("div");
         div.className = "movie";
         div.innerHTML = `
-          <a href="player.html?name=${encodeURIComponent(movie.name)}&url=${encodeURIComponent(movie.url)}&image=${encodeURIComponent(movie.image)}&subtitle=${encodeURIComponent(movie.subtitle || '')}">
-            <img src="${movie.image}" alt="${movie.name}">
-            <h4>${movie.name}</h4>
+          <a href="player.html?name=${encodeURIComponent(movie.name)}&url=${encodeURIComponent(movie.url)}&image=${encodeURIComponent(movie.image)}&info=${encodeURIComponent(movie.info || '')}">
+            <img src="${movie.image}" alt="${movie.name}" />
+            <h4 title="${movie.name}">${movie.name}</h4>
             <span class="info">${movie.info || ""}</span>
           </a>
           <span class="remove-btn" onclick="removeFavorite(${index})">ลบออก</span>
