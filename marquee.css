@@ -1,6 +1,6 @@
 /* marquee.css */
 .marquee-container {
-  width: 100%;
+  width: 85%;
   box-sizing: border-box;
   padding: 0px 12px; /* ✅ เว้นขอบซ้าย–ขวา */
   overflow: hidden;
