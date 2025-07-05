@@ -41,11 +41,8 @@
     }
 
     .controls-bar button {
-      flex: initial;
-      width: auto;
       padding: 8px 14px;
       font-size: 15px;
-      white-space: nowrap;
       border-radius: 6px;
       border: none;
       background: #1f2937;
@@ -134,10 +131,10 @@
 </div>
 
 <div id="resume-dialog">
-  <p id="resume-message">คุณดูมาถึงจุดนี้แล้ว ต้องการดำเนินการต่อไหม?</p>
+  <p id="resume-message">ต้องการดำเนินการต่อไหม?</p>
   <div>
-    <button id="resume-yes">▶️ ต่อจากเดิม</button>
-    <button id="resume-no">⏮ เริ่มใหม่</button>
+    <button id="resume-yes">ดูต่อจากเดิม</button>
+    <button id="resume-no">เริ่มใหม่</button>
   </div>
 </div>
 
@@ -185,7 +182,7 @@
       player.pause();
       const mins = Math.floor(watchData.currentTime / 60);
       const secs = String(Math.floor(watchData.currentTime % 60)).padStart(2, "0");
-      document.getElementById("resume-message").textContent = `คุณเคยดู "${name}" ถึงนาทีที่ ${mins}:${secs}`;
+      document.getElementById("resume-message").textContent = `คุณเคยดู "${name}" ถึงนาทีที่ ${mins}:${secs} `;
       document.getElementById("resume-dialog").style.display = "block";
 
       document.getElementById("resume-yes").onclick = () => {
