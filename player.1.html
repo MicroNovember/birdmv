@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🎬 วิดีโอเพลเยอร์</title>
+
+    <!-- Plyr CSS -->
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
+
+    <style>
+        body {
+            margin: 0;
+            background: #0f172a;
+            color: #fff;
+            font-family: 'Segoe UI', 'DM Sans', 'Noto Sans Thai', sans-serif;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .plyr {
+            width: 100%;
+            max-height: 60vh;
+            border-radius: 8px;
+        }
+
+        .controls-bar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+
+        .controls-bar button {
+            padding: 8px 14px;
+            font-size: 15px;
+            border-radius: 6px;
+            border: none;
+            background: #1f2937;
+            color: #5ab9ff;
+            cursor: pointer;
+        }
+
+        #resume-dialog {
+            background: rgba(0,0,0,0.85);
+            padding: 20px;
+            border-radius: 8px;
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+            display: none;
+            text-align: center;
+        }
+
+        #resume-dialog button {
+            margin: 8px;
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: none;
+            background-color: #3b82f6;
+            color: white;
+            cursor: pointer;
+        }
+
+        #audio-info {
+            color: #5ab9ff;
+            font-size: 16px;
+            font-weight: 600;
+            text-align: center;
+            margin: 4px 0 12px;
+            text-shadow: 0 0 3px rgba(0, 80, 255, 0.2);
+        }
+
+        #movie-title {
+            color: #5ab9ff;
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin: 12px 0;
+            text-shadow: 0 0 3px rgba(0, 80, 255, 0.2);
+        }
+
+        @media (max-width: 600px) {
+            .controls-bar {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .controls-bar button {
+                font-size: 14px;
+                padding: 6px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2 id="movie-title">กำลังโหลด...</h2>
+    <p id="audio-info"></p>
+
+    <video
+        id="my-player"
+        class="plyr"
+        controls
+        preload="auto"
+        playsinline
+    >
+        <source id="video-source" src="" type="video/mp4" />
+        ขอโทษค่ะ เบราว์เซอร์ของคุณไม่รองรับวิดีโอ
+    </video>
+
+    <div class="controls-bar">
+        <button id="fav-btn">❤️ เพิ่มในรายการโปรด</button>
+        <button onclick="location.href='index.html'" style="display: flex; align-items: center; gap: 6px;">
+            <svg width="20" height="20" fill="#5ab9ff" viewBox="0 0 24 24"><path d="M12 3l10 9h-3v9h-6v-6h-2v6H5v-9H2z"/></svg>
+            หน้าแรก
+        </button>
+    </div>
+</div>
+
+<div id="resume-dialog">
+    <p id="resume-message">ต้องการดำเนินการต่อไหม?</p>
+    <div>
+        <button id="resume-yes">ดูต่อจากเดิม</button>
+        <button id="resume-no">เริ่มใหม่</button>
+    </div>
+</div>
+
+<!-- Plyr JS -->
+<script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
+<!-- ถ้าเล่น .m3u8 (HLS) ต้องเพิ่ม hls.js ด้วย -->
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+
+<script>
+    // Get URL parameters
+    const params = new URLSearchParams(location.search);
+    const name = params.get("name") || "ไม่ทราบชื่อ";
+    const info = (params.get("info") || params.get("audio") || "").trim();
+    const rawUrl = params.get("url") || "";
+    const image = params.get("image") || "";
+    const videoURL = decodeURIComponent(rawUrl);
+
+    // Update movie title and audio info
+    document.getElementById("movie-title").textContent = name;
+    const audioInfoElem = document.getElementById("audio-info");
+    if (audioInfoElem) {
+        audioInfoElem.textContent = info ? "เสียง: " + info : "";
+    }
+
+    // Get video elements and favorite button
+    const videoElement = document.getElementById("my-player");
+    const videoSource = document.getElementById("video-source");
+    const favBtn = document.getElementById("fav-btn");
+
+    // Set video source
+    if (videoURL) {
+        videoSource.src = videoURL;
+        // Plyr can handle MP4 directly. For HLS (.m3u8), hls.js will be used.
+        if (videoURL.endsWith(".m3u8")) {
+            videoSource.type = "application/x-mpegURL"; // Still specify type for clarity
+        }
+    }
+
+    // Initialize Plyr player with desired controls
+    const player = new Plyr(videoElement, {
+        // Define which controls to show in the player
+        controls: [
+            'play-large', // Large play button in the center of the player
+            'play',       // Play/pause button
+            'progress',   // Progress bar
+            'current-time', // Current playback time
+            'duration',   // Total duration of the video
+            'mute',       // Mute/unmute button
+            'volume',     // Volume slider
+            'settings',   // Settings menu (for quality, speed, etc.)
+            'pip',        // Picture-in-Picture button
+            'fullscreen'  // Fullscreen button
+        ],
+        // Configure the settings menu to include quality and speed options
+        settings: ['quality', 'speed'],
+        // You can add more Plyr options here, e.g., volume, autoplay, etc.
+    });
+
+    // Handle HLS (m3u8) streams with hls.js for Plyr
+    if (videoURL.endsWith(".m3u8") && Hls.isSupported()) {
+        const hls = new Hls();
+        hls.loadSource(videoURL);
+        hls.attachMedia(videoElement);
+
+        // When HLS manifest is parsed, set up quality options for Plyr
+        hls.on(Hls.Events.MANIFEST_PARSED, function() {
+            console.log("HLS manifest parsed.");
+            // Optional: Set initial volume after HLS is ready
+            player.volume = 0.3;
+            // If there's a poster image, set it
+            if (image) {
+                player.poster = image;
+            }
+            // Trigger resume dialog if applicable after HLS is ready
+            checkResumePlayback();
+
+            // Set up quality options for Plyr based on HLS levels
+            const levels = hls.levels.map((level, index) => ({
+                size: level.height,
+                label: level.height + 'p',
+                selected: index === hls.currentLevel, // Set initial selected quality
+                value: index,
+            }));
+            // Add 'Auto' option
+            levels.unshift({
+                size: 0, // A special value for auto
+                label: 'Auto',
+                selected: true, // Auto is usually default
+                value: 'auto',
+            });
+            player.quality = levels;
+
+            // Listen for quality change from Plyr and update HLS
+            player.on('qualitychange', (event) => {
+                const newQuality = event.detail.quality;
+                if (newQuality === 'auto') {
+                    hls.currentLevel = -1; // -1 for auto
+                } else {
+                    hls.currentLevel = newQuality;
+                }
+            });
+        });
+
+        hls.on(Hls.Events.ERROR, function (event, data) {
+            if (data.fatal) {
+                switch(data.type) {
+                    case Hls.ErrorTypes.NETWORK_ERROR:
+                        console.error("Fatal network error encountered, trying to recover...", data);
+                        hls.startLoad();
+                        break;
+                    case Hls.ErrorTypes.MEDIA_ERROR:
+                        console.error("Fatal media error encountered, trying to recover...", data);
+                        hls.recoverMediaError();
+                        break;
+                    default:
+                        // Cannot recover
+                        hls.destroy();
+                        console.error("Fatal HLS error, cannot recover:", data);
+                        break;
+                }
+            }
+        });
+    } else if (!videoURL.endsWith(".m3u8") && videoURL) {
+        // For MP4 or general videos, set src directly and then initialize Plyr
+        videoElement.src = videoURL;
+        player.volume = 0.3; // Set initial volume
+        if (image) {
+            player.poster = image; // Set poster
+        }
+        // Trigger resume dialog immediately for non-HLS videos
+        checkResumePlayback();
+    } else {
+        console.error("Browser not supported for HLS or no video URL provided.");
+    }
+
+    const watchKey = "watch_" + videoURL;
+    let watchData = null;
+    try {
+        watchData = JSON.parse(localStorage.getItem(watchKey) || "null");
+    } catch (e) {
+        console.error("Error parsing watch data from localStorage:", e);
+    }
+
+    // Function to check and show resume dialog
+    function checkResumePlayback() {
+        // Ensure player is ready before checking currentTime
+        if (player.currentTime !== undefined && watchData?.currentTime > 20) {
+            player.pause();
+            const mins = Math.floor(watchData.currentTime / 60);
+            const secs = String(Math.floor(watchData.currentTime % 60)).padStart(2, "0");
+            document.getElementById("resume-message").textContent = `คุณเคยดู "${name}" ถึงนาทีที่ ${mins}:${secs} `;
+            document.getElementById("resume-dialog").style.display = "block";
+
+            document.getElementById("resume-yes").onclick = () => {
+                document.getElementById("resume-dialog").style.display = "none";
+                // Delay setting currentTime slightly to ensure player is fully ready
+                setTimeout(() => {
+                    player.currentTime = watchData.currentTime;
+                    player.play();
+                }, 50);
+            };
+
+            document.getElementById("resume-no").onclick = () => {
+                document.getElementById("resume-dialog").style.display = "none";
+                setTimeout(() => {
+                    player.currentTime = 0;
+                    player.play();
+                }, 50);
+            };
+        }
+    }
+
+    // Plyr 'ready' event listener
+    player.on("ready", () => {
+        // For HLS, checkResumePlayback is called after MANIFEST_PARSED.
+        // For non-HLS, it's called immediately after Plyr initialization.
+        // This 'ready' event can also trigger it as a fallback or for other player states.
+        if (!videoURL.endsWith(".m3u8")) { // Only call if not HLS, to avoid double-call
+             checkResumePlayback();
+        }
+    });
+
+    // Plyr 'timeupdate' event listener to save progress
+    player.on("timeupdate", () => {
+        const progress = {
+            name,
+            url: videoURL,
+            image,
+            currentTime: player.currentTime,
+            duration: player.duration,
+            lastWatched: Date.now()
+        };
+        localStorage.setItem(watchKey, JSON.stringify(progress));
+    });
+
+    // Function to update favorite button UI
+    function updateFavUI() {
+        const favs = JSON.parse(localStorage.getItem("favorites") || "[]");
+        const isFav = favs.some(m => m.url === videoURL);
+        favBtn.textContent = isFav ? "💔 ลบจากรายการโปรด" : "❤️ เพิ่มในรายการโปรด";
+    }
+
+    // Add event listener for favorite button
+    favBtn.addEventListener("click", () => {
+        let favs = JSON.parse(localStorage.getItem("favorites") || "[]");
+        const index = favs.findIndex(m => m.url === videoURL);
+        if (index >= 0) {
+            favs.splice(index, 1);
+        } else {
+            favs.push({ name, url: videoURL, image });
+        }
+        localStorage.setItem("favorites", JSON.stringify(favs));
+        updateFavUI();
+    });
+
+    // Initial update of favorite UI on page load
+    updateFavUI();
+</script>
+</body>
+</html>
