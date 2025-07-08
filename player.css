@@ -5,7 +5,6 @@ body {
     background: #0f172a;
     color: #fff;}
 .container {
-    max-width: 900px;
     margin: auto;
     padding: 16px;
     display: flex;
@@ -13,7 +12,6 @@ body {
     align-items: center;}
 .plyr {
     width: 100%;
-    max-height: 60vh;
     border-radius: 8px;}
 
 .controls-bar {
