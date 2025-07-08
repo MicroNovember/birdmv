@@ -192,7 +192,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateFavUI() {
         const favs = JSON.parse(localStorage.getItem("favorites") || "[]");
         const isFav = favs.some(m => m.url === videoURL);
-        favBtn.textContent = isFav ? "💔 ลบจากรายการโปรด" : "❤️ เพิ่มในรายการโปรด";
+        favBtn.textContent = isFav ? "💔 ลบรายการโปรด" : "❤️ เพิ่มรายการโปรด";
     }
 
     // Add event listener for favorite button

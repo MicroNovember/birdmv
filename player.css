@@ -3,105 +3,92 @@
 body {
     margin: 0;
     background: #0f172a;
-    color: #fff;
-    font-family: 'Segoe UI', 'DM Sans', 'Noto Sans Thai', sans-serif;
-}
-
+    color: #fff;}
 .container {
     max-width: 900px;
     margin: auto;
     padding: 16px;
     display: flex;
     flex-direction: column;
-    align-items: center;
-}
-
+    align-items: center;}
 .plyr {
     width: 100%;
     max-height: 60vh;
-    border-radius: 8px;
-}
+    border-radius: 8px;}
 
 .controls-bar {
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 12px;
-    margin-top: 16px;
-    flex-wrap: wrap;
-}
+    flex-wrap: nowrap;}
 
 .controls-bar button {
     padding: 8px 14px;
-    font-size: 15px;
+    font-size: 0.75em;
     border-radius: 6px;
     border: none;
     background: #1f2937;
     color: #5ab9ff;
     cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease; /* เพิ่ม transition */
-}
-
+    transition: background-color 0.3s ease, color 0.3s ease; /* เพิ่ม transition */}
 .controls-bar button:hover { /* เพิ่ม hover effect */
     background: #2D3748; /* Dark Grey-Blue from main theme */
     color: #0072D2; /* Vibrant Blue from main theme */
+    white-space: nowrap; /* ป้องกันข้อความในปุ่มขึ้นบรรทัดใหม่ */
 }
 
-
 #resume-dialog {
+    font-size: 0.75em;
     background: rgba(0,0,0,0.85);
     padding: 20px;
     border-radius: 8px;
     position: fixed;
-    top: 50%; left: 50%;
+    top: 25%; left: 50%;
     transform: translate(-50%, -50%);
     z-index: 1000;
     display: none;
     text-align: center;
-}
+        /* **ปรับค่าเหล่านี้** */
+    width: 80%;       /* ให้ใช้ความกว้าง 90% ของ viewport */
+    max-width: 450px; /* แต่ไม่เกิน 450px */
+    /* min-width: 280px; ถ้าจอเล็กมากๆ ไม่ต้องการให้เล็กกว่านี้ */
+    height: 17.5%; /* ปรับความสูงอัตโนมัติ */
+    max-height: 80vh; /* จำกัดความสูงไม่เกิน 80% ของ viewport */
 
+}
 #resume-dialog button {
-    margin: 8px;
-    padding: 8px 16px;
-    border-radius: 6px;
+    margin: 6px;
+    border-radius: 8px;
     border: none;
-    background-color: #3b82f6;
-    color: white;
+    background-color: #1f2937;
+    color: #E0E6F0;
     cursor: pointer;
-    transition: background-color 0.3s ease; /* เพิ่ม transition */
-}
-
+    transition: background-color 0.3s ease; /* เพิ่ม transition */}
 #resume-dialog button:hover { /* เพิ่ม hover effect */
-    background-color: #0072D2; /* Vibrant Blue from main theme */
-}
+    background-color: #2D3748; /* Vibrant Blue from main theme */}
 
-
-#audio-info {
-    color: #5ab9ff;
-    font-size: 16px;
-    font-weight: 600;
-    text-align: center;
-    margin: 4px 0 12px;
-    text-shadow: 0 0 3px rgba(0, 80, 255, 0.2);
-}
 
 #movie-title {
     color: #5ab9ff;
-    font-size: 24px;
-    font-weight: bold;
+    font-size: 1em;
+    font-weight: normal;
     text-align: center;
     margin: 12px 0;
-    text-shadow: 0 0 3px rgba(0, 80, 255, 0.2);
-}
+    text-shadow: 0 0 3px rgba(0, 80, 255, 0.2);}
+#audio-info {
+    color: #5ab9ff;
+    font-size: 0.75em;
+    font-weight: 100;
+    text-align: center;
+    margin: 4px 0 12px;
+    text-shadow: 0 0 3px rgba(0, 80, 255, 0.2);}
 
 @media (max-width: 600px) {
     .controls-bar {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .controls-bar button {
+        align-items: center;}
+.controls-bar button {
         font-size: 14px;
-        padding: 6px 12px;
-    }
+        padding: 6px 12px;}
 }
+

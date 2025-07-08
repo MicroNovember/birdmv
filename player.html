@@ -6,40 +6,29 @@
     <title>🎬 วิดีโอเพลเยอร์</title>
 
     <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
-    <link rel="stylesheet" href="player.css" />
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="player.css" /> <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
 
-    <header>
-
-
-        <div class="search-container">
-            <input type="text" id="search-input" placeholder="ค้นหาชื่อหนัง...">
-            <button id="search-button" aria-label="ค้นหา">
-                <i class="fas fa-search"></i>
-            </button>
-            </div>
-    </header>
-
 <div class="container">
-    <h2 id="movie-title">กำลังโหลด...</h2>
-    <p id="audio-info"></p>
+    <div class="video-player-wrapper">
+        <video
+            id="my-player"
+            class="plyr"
+            controls
+            preload="auto"
+            playsinline
+        >
+            <source id="video-source" src="" type="video/mp4" />
+            ขอโทษค่ะ เบราว์เซอร์ของคุณไม่รองรับวิดีโอ
+        </video>
 
-    <video
-        id="my-player"
-        class="plyr"
-        controls
-        preload="auto"
-        playsinline
-    >
-        <source id="video-source" src="" type="video/mp4" />
-        ขอโทษค่ะ เบราว์เซอร์ของคุณไม่รองรับวิดีโอ
-    </video>
-
+        <h2 id="movie-title" class="video-overlay-title">กำลังโหลด...</h2>
+        <p id="audio-info" class="video-overlay-info"></p>
+    </div>
     <div class="controls-bar">
-        <button id="fav-btn">❤️ เพิ่มในรายการโปรด</button>
+        <button id="fav-btn">❤️ เพิ่มรายการโปรด</button>
         <button id="home-button" style="display: flex; align-items: center; gap: 6px;">
             <svg width="20" height="20" fill="#5ab9ff" viewBox="0 0 24 24"><path d="M12 3l10 9h-3v9h-6v-6h-2v6H5v-9H2z"/></svg>
             หน้าแรก
@@ -48,16 +37,23 @@
 </div>
 
 <div id="resume-dialog">
-    <p id="resume-message">ต้องการดำเนินการต่อไหม?</p>
+    <p id="resume-message">ต้องการเล่นต่อเนื่องไหม?</p>
     <div>
-        <button id="resume-yes">ดูต่อจากเดิม</button>
-        <button id="resume-no">เริ่มใหม่</button>
+        <button id="resume-no">ยกเลิก</button>
+        <button id="resume-yes">ดำเนินการต่อ</button>
+
     </div>
 </div>
+
+    <footer>
+    <marquee behavior="scroll" direction="left" scrollamount="2" style="padding:0 5px;">
+     <span style="color: #0072D2;"> &copy; 2025 ⲦⲉⲁⲙⲦⲁlⲕ+ Free Movie</span>
+    </marquee>
+    </footer>
 
 <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 <script src="player.js"></script>
-<script src="script.js"></script>
+
 </body>
 </html>

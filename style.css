@@ -33,6 +33,8 @@ header {
     justify-content: space-around; /* กระจายบาร์ */
     align-items: center;
     flex: 0 0 auto; /* ไม่ขยาย ไม่หด คงขนาดเดิม */
+    order: -1; /* จัดลำดับให้ hamburger ไปอยู่บรรทัดแรก */
+
 }
 
 .hamburger-menu .bar {
@@ -44,10 +46,9 @@ header {
 }
 
 
-/* ช่องที่ 2: H1 (ชื่อเว็บไซต์) */
 .header-title {
     margin: 0;
-    font-size: 1.8em;
+    font-size: 1em;
     white-space: nowrap; /* ป้องกันไม่ให้ขึ้นบรรทัดใหม่ */
     overflow: hidden; /* ซ่อนส่วนเกิน */
     text-overflow: ellipsis; /* แสดง ... */
@@ -56,6 +57,7 @@ header {
     /* บน Desktop: h1 กิน 2 ส่วน */
     flex: 2 1 auto; /* ให้ขยาย 2 ส่วน, หดตัวได้, ขนาดพื้นฐาน auto */
     min-width: 100px; /* ความกว้างขั้นต่ำ เพื่อไม่ให้ถูกบีบมากเกินไป */
+    order: 1; /* จัดลำดับให้ h1 ไปอยู่บรรทัดถัดไป */
 }
 
 /* ช่องที่ 3: ช่องค้นหา + ปุ่มค้นหา */
@@ -69,6 +71,7 @@ header {
     position: relative;
     margin-left: auto; /* ดันไปทางขวาใน desktop เมื่อมีพื้นที่เหลือ */
     min-width: 180px; /* กำหนดความกว้างขั้นต่ำ */
+    order: 3;
 }
 
 .search-container input {
@@ -428,10 +431,11 @@ footer {
     .movie-card p {
         font-size: 0.75em;
         height: 1em; 
-        -webkit-line-clamp: 2;
+        -webkit-line-clamp: 1; /* กำหนดให้แสดงสูงสุด 1 บรรทัด */
+        -webkit-box-orient: vertical;
     }
     header h1 {
-        font-size: 1.3em;
+        font-size: 0.5em;
     }
     .sidebar-menu a {
         font-size: 18px;
@@ -555,13 +559,7 @@ footer {
         /* flex: 0 0 auto; ก็ถูกกำหนดไว้แล้วข้างบน */
     }
 
-    .header-title {
-        flex: 1 1 100%; /* ให้ h1 กินพื้นที่เต็มบรรทัดใหม่ */
-        order: 3; /* จัดลำดับให้ h1 ไปอยู่บรรทัดถัดไป */
-        text-align: center; /* จัดกึ่งกลาง */
-        font-size: 1.5em; /* ลดขนาด font */
-        margin-top: 10px; /* เพิ่มระยะห่างด้านบน */
-    }
+
 
     .search-container {
         flex: 1 1 auto; /* สำคัญ: ให้ search-container หดตัวได้ แต่ไม่ขยายเต็ม */
