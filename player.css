@@ -11,7 +11,7 @@ body {
     flex-direction: column;
     align-items: center;}
 .plyr {
-    width: 65%;
+    width: 50%;
     margin-left: auto;  /* ชิดขวา */
     margin-right: auto; /* ชิดซ้าย */
     /* หรือใช้ shorthand: */
@@ -100,5 +100,6 @@ body {
 @media (max-width: 600px) { /* หรือ 600px ตามที่คุณต้องการ */
     .plyr {
         width: 100%; /* ทำให้เต็มความกว้างของ Container บนมือถือ */
+        margin: 0;
     }
 }
