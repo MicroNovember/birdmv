@@ -11,8 +11,15 @@ body {
     flex-direction: column;
     align-items: center;}
 .plyr {
-    width: 100%;
-    border-radius: 8px;}
+    width: 65%;
+    margin-left: auto;  /* ชิดขวา */
+    margin-right: auto; /* ชิดซ้าย */
+    /* หรือใช้ shorthand: */
+    margin: 0 auto; /* **ทำให้ชิดกลางในแนวนอน** */
+    border-radius: 8px;
+}
+
+
 
 .controls-bar {
     display: flex;
@@ -52,6 +59,7 @@ body {
     max-width: 450px; /* แต่ไม่เกิน 450px */
     /* min-width: 280px; ถ้าจอเล็กมากๆ ไม่ต้องการให้เล็กกว่านี้ */
 
+
 }
 #resume-dialog button {
     margin: 6px;
@@ -88,3 +96,9 @@ body {
         padding: 6px 12px;}
 }
 
+
+@media (max-width: 600px) { /* หรือ 600px ตามที่คุณต้องการ */
+    .plyr {
+        width: 100%; /* ทำให้เต็มความกว้างของ Container บนมือถือ */
+    }
+}
