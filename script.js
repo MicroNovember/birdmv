@@ -38,7 +38,8 @@ document.addEventListener('DOMContentLoaded', () => {
         { url: "data/server2-inter.json", id: "server2-inter", title: "หนังฝรั่ง (S2)" },
         { url: "data/server2-asia.json", id: "server2-asia", title: "หนังเอเชีย (S2)" },
         { url: "data/server2-thai.json", id: "server2-thai", title: "หนังไทย (S2)" },
-        { url: "data/server2-cartoon.json", id: "server2-cartoon", title: "การ์ตูน (S2)" }
+        { url: "data/server2-cartoon.json", id: "server2-cartoon", title: "การ์ตูน (S2)" },
+        { url: "data/server2-zoom.json", id: "server2-zoom", title: "ซูม ชนโรง" }
     ];
 
     function createMovieCard(movie) {
