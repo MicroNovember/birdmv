@@ -8,8 +8,11 @@
     <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
     <link rel="stylesheet" href="player.css" /> <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+
 
 <div class="container">
     <div class="video-player-wrapper">
@@ -33,6 +36,12 @@
             <svg width="20" height="20" fill="#5ab9ff" viewBox="0 0 24 24"><path d="M12 3l10 9h-3v9h-6v-6h-2v6H5v-9H2z"/></svg>
             หน้าแรก
         </button>
+
+    <button id="back-button" style="display: flex; align-items: center; gap: 6px;" onclick="window.location.href='channel.html'">
+    📺
+    ฟรีทีวี
+    </button>
+
     </div>
 </div>
 
@@ -45,6 +54,7 @@
     </div>
 </div>
 
+
     <footer>
     <marquee behavior="scroll" direction="left" scrollamount="2" style="padding:0 5px;">
      <span style="color: #0072D2;"> &copy; 2025 ⲦⲉⲁⲙⲦⲁlⲕ+ Free Movie</span>
@@ -54,6 +64,7 @@
 <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 <script src="player.js"></script>
+<script src="script.js"></script>
 
 </body>
 </html>

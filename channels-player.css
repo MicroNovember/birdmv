@@ -1,0 +1,249 @@
+/* channels-player.css */
+
+/* --- GLOBAL STYLES --- */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #0f172a; /* Dark background */
+    color: #E0E6F0; /* Light text */
+    line-height: 1.6;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+---
+
+## **Player Section Styles (ส่วนที่ตรึงอยู่ด้านบน)**
+
+```css
+.channel-page-container {
+    position: fixed; /* ทำให้ element อยู่คงที่เมื่อ scroll */
+    top: 15px; /* เว้นระยะจากขอบบนของ viewport 15px */
+    left: 0; /* ชิดขอบซ้าย */
+    width: 100%; /* ขยายเต็มความกว้างของ viewport */
+    z-index: 1000; /* ให้แสดงอยู่ด้านบนสุดขององค์ประกอบอื่นๆ */
+    border-radius: 0; /* ลบขอบโค้งออก เพื่อให้ดูเป็นแถบเต็มจอ */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); /* เพิ่มเงาให้ดูโดดเด่น */
+
+    padding: 20px; /* เพิ่มระยะขอบ 20px รอบด้าน */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* จัดกึ่งกลางแนวนอนของเนื้อหาทั้งหมดใน container */
+    justify-content: center; /* จัดกึ่งกลางแนวตั้ง (ถ้ามีพื้นที่เหลือ) */
+    background: #1f2937; /* สีพื้นหลัง */
+    box-sizing: border-box; /* สำคัญ: รวม padding เข้าไปในการคำนวณ width/height */
+    
+    /* **ปรับ max-height เพื่อจำกัดความสูงโดยรวมของส่วน fixed** */
+    /* ค่านี้อาจต้องปรับเล็กน้อยตามความเหมาะสม */
+    max-height: 80vh; /* ให้สูงไม่เกิน 80% ของ viewport height บน Desktop */
+    overflow: hidden; /* ถ้าเนื้อหาเกิน max-height ให้ซ่อนไป */
+}
+
+/* แถวที่ 1: Title ของช่องที่กำลังเล่น */
+#channel-playing-title {
+    color: #5ab9ff;
+    font-size: 1.2em;
+    font-weight: normal;
+    text-align: center;
+    margin: 0 0 10px; /* ปรับ margin-bottom เพื่อเว้นระยะจาก Player */
+    text-shadow: 0 0 3px rgba(0, 80, 255, 0.2);
+    flex-shrink: 0; /* ให้ title ไม่หดหรือยืดตาม flexbox */
+}
+
+/* แถวที่ 2: หน้าต่างเครื่องเล่นวิดีโอ (Player Wrapper) */
+.player-wrapper {
+    width: 50vw; /* 50% ของ viewport width */
+    max-width: 700px; /* จำกัดขนาดสูงสุดบน Desktop */
+    height: auto; /* ความสูงปรับตามสัดส่วน */
+    aspect-ratio: 16 / 9; /* รักษาอัตราส่วน 16:9 */
+    
+    margin: 0 auto 10px; /* จัดกึ่งกลางแนวนอนและเว้นระยะจาก info ด้านล่าง */
+    box-sizing: border-box; /* สำคัญ: รวม padding/border เข้าในการคำนวณขนาด */
+    flex-shrink: 0; /* ให้ player wrapper ไม่หดหรือยืดตาม flexbox */
+}
+
+/* ทำให้ Plyr Player ขยายเต็ม wrapper ของมัน และกำหนด object-fit */
+#channel-player.plyr { 
+    width: 100% !important; /* **ใช้ !important เพื่อให้แน่ใจว่า Plyr ไม่ override** */
+    height: 100% !important; /* **ใช้ !important เพื่อให้แน่ใจว่า Plyr ไม่ override** */
+    border-radius: 8px;
+    object-fit: contain !important; /* **ใช้ !important เพื่อให้แน่ใจว่าวิดีโอมี black bars ถ้าสัดส่วนไม่ตรง** */
+}
+
+/* แถวที่ 3: ข้อมูลช่องที่กำลังเล่น */
+#channel-playing-info {
+    color: #5ab9ff;
+    font-size: 0.85em;
+    font-weight: 100;
+    text-align: center;
+    margin: 0 0 10px; /* ปรับ margin-bottom เพื่อเว้นระยะจากขอบล่างของ container */
+    text-shadow: 0 0 3px rgba(0, 80, 255, 0.2);
+    flex-shrink: 0; /* ให้ info ไม่หดหรือยืดตาม flexbox */
+}
+
+---
+
+## **Channel List Section (ส่วนที่เลื่อนได้)**
+
+```css
+.channel-list-section {
+    width: 90%;
+    max-width: 960px;
+    background: #1f2937;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    box-sizing: border-box; /* สำคัญ: รวม padding เข้าไปในการคำนวณ width/height */
+
+    /* **ลบ margin-top ออกจาก CSS และจะให้ JavaScript จัดการแทน** */
+    /* margin-top: calc(15px + 65vh + 10px); */ 
+}
+
+/* แถวที่ 4: เมนูรายการ (Category tabs) */
+.category-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+    justify-content: center;
+}
+
+.category-tabs button {
+    background: #2D3748;
+    color: #E0E6F0;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.category-tabs button:hover,
+.category-tabs button.active {
+    background: #0072D2;
+    color: #ffffff;
+}
+
+/* แถวที่ 5: รายการตามเมนู (Channel grid) */
+.channel-grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 15px;
+    padding: 10px;
+    justify-content: center;
+}
+
+/* Individual Channel Item Styles */
+.channel-item {
+    background-color: #2D3748;
+    border-radius: 8px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.channel-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+    background-color: #3f4a5a;
+}
+
+.channel-item .channel-logo {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    background-color: #2D3748;
+    padding: 5px;
+}
+
+.channel-item .channel-name {
+    font-size: 0.9em;
+    font-weight: bold;
+    color: #E0E6F0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+    padding: 0 5px;
+}
+
+---
+
+## **Media Queries (ปรับขนาด Plyr บนอุปกรณ์มือถือ)**
+
+```css
+@media (max-width: 768px) {
+    /* Player Wrapper บนแท็บเล็ต/มือถือ */
+    .player-wrapper {
+        width: 80vw; /* กว้าง 80% ของ viewport บนแท็บเล็ต */
+        max-width: none; /* ลบ max-width คงที่ออกบนหน้าจอเล็ก */
+    }
+    
+    /* NEW: ปรับ max-height ของ fixed container บนแท็บเล็ต */
+    .channel-page-container {
+        max-height: 85vh; /* อาจปรับให้สูงขึ้นเล็กน้อยบนแท็บเล็ต */
+    }
+
+    /* **ลบ margin-top ออกจาก CSS ใน Media Query ด้วย** */
+    /* margin-top: calc(15px + 70vh + 10px); */ 
+
+    .channel-grid-container {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 10px;
+    }
+    .channel-item .channel-logo {
+        width: 60px;
+        height: 60px;
+    }
+    .channel-item .channel-name {
+        font-size: 0.85em;
+    }
+}
+
+@media (max-width: 480px) {
+    .channel-page-container {
+        padding: 10px; /* ลด padding บนมือถือ */
+        /* NEW: ปรับ max-height ของ fixed container บนมือถือ */
+        max-height: 90vh; /* ให้สูงมากที่สุดบนมือถือ แต่ยังคงเหลือพื้นที่ด้านบนและล่าง */
+    }
+    /* Player Wrapper บนมือถือ */
+    .player-wrapper {
+        width: 95vw; /* กว้าง 95% ของ viewport บนมือถือ */
+        max-width: none;
+    }
+    #channel-playing-title {
+        font-size: 1.1em;
+    }
+    #channel-playing-info {
+        font-size: 0.8em;
+    }
+    .channel-list-section {
+        padding: 10px;
+        /* **ลบ margin-top ออกจาก CSS ใน Media Query ด้วย** */
+        /* margin-top: calc(15px + 80vh + 10px); */
+    }
+    .channel-grid-container {
+        grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+        gap: 8px;
+    }
+    .channel-item .channel-logo {
+        width: 50px;
+        height: 50px;
+    }
+    .channel-item .channel-name {
+        font-size: 0.8em;
+    }
+}

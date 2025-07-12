@@ -1,0 +1,130 @@
+[
+  {
+    "category": "ช่องหลัก HD",
+    "channels": [
+      {
+        "name": "ช่อง 3 HD",
+        "image": "https://ais-s.ais-vidnt.com/ais/play/origin/LIVE/channelicon/LOGO3HD.PNG",
+        "url": "https://lb1-live-mv.v2h-cdn.com/hls/ffae/3hd/3hd.m3u8"
+      },
+      {
+        "name": "ช่อง 7HD",
+        "image": "https://ais-s.ais-vidnt.com/ais/play/origin/LIVE//channelicon/0018.png",
+        "url": "https://lb1-live-mv.v2h-cdn.com/hls/ffac/7hd/7hd.m3u8"
+      },
+      {
+        "name": "ช่อง 9 MCOT HD",
+        "image": "https://ais-s.ais-vidnt.com/ais/play/origin/LIVE/channelicon/MCOT_new.png",
+        "url": "https://lb1-live-mv.v2h-cdn.com/hls/ffbb/mcot/mcot.m3u8"
+      },
+
+      {
+        "name": "Thai PBS (ช่อง 3)",
+        "image": "https://ais-s.ais-vidnt.com/ais/play/origin/LIVE//channelicon/0014.png",
+        "url": "https://lb1-live-mv.v2h-cdn.com/hls/fffd/tpbs/tpbs.m3u8"
+      },
+      {
+        "name": "ช่อง 5 HD1",
+        "image": "https://ais-s.ais-vidnt.com/ais/play/origin/LIVE//channelicon//ch5new.logo.png",
+        "url": "https://lb1-live-mv.v2h-cdn.com/hls/fffb/5hd/5hd.m3u8"
+      },
+      {
+        "name": "ช่อง One 31",
+        "image": "https://ais-s.ais-vidnt.com/ais/play/origin/LIVE/channelicon/0012.png",
+        "url": "https://lb1-live-mv.v2h-cdn.com/hls/ffba/one/one.m3u8"
+      },
+      {
+        "name": "ไทยรัฐทีวี 32 HD",
+        "image": "https://ais-s.ais-vidnt.com/ais/play/origin/LIVE/channelicon/0013_R.png",
+        "url": "https://lb1-live-mv.v2h-cdn.com/hls/ffaf/thairath/thairath.m3u8"
+      },
+      {
+        "name": "Amarin TV 34 HD",
+        "image": "https://ais-s.ais-vidnt.com/ais/play/origin/LIVE/channelicon/AmarinTV_NEW512.png",
+        "url": "https://lb1-live-mv.v2h-cdn.com/hls/ffad/amarin/amarin.m3u8"
+      },
+      {
+        "name": "PPTV HD 36",
+        "image": "https://ais-s.ais-vidnt.com/ais/play/origin/LIVE/channelicon/PPTV_2024e.jpg",
+        "url": "https://lb1-live-mv.v2h-cdn.com/hls/ffab/pptv/pptv.m3u8"
+      }
+    ]
+  },
+  {
+    "category": "ช่องข่าว",
+    "channels": [
+      {
+        "name": "TNN 16",
+        "image": "https://ais-s.ais-vidnt.com/ais/play/origin/LIVE/channelicon/R2_0053.png",
+        "url": "https://lb1-live-mv.v2h-cdn.com/hls/ffdc/tnn/tnn.m3u8"
+      },
+      {
+        "name": "Nation TV 22",
+        "image": "https://ais-s.ais-vidnt.com/ais/play/origin/LIVE/channelicon/0021.png",
+        "url": "https://lb1-live-mv.v2h-cdn.com/hls/ffcc/nation/nation.m3u8"
+      },
+	  {
+        "name": "NEW1",
+        "image": "https://news1live.com/images/social-share-logo.png",
+        "url": "https://server1.streamssl.com/stream/news1_mid.m3u8"
+      },
+      {
+        "name": "TOPNEWS",
+        "image": "https://ais-s.ais-vidnt.com/ais/play/origin/LIVE//channelicon/TOPNEWS.PNG",
+        "url": "https://live.topnews.co.th/hls/mobile_v1.m3u8"
+      }
+    ]
+  },
+  {
+    "category": "ช่องบันเทิง",
+    "channels": [
+	  {
+        "name": "Workpoint 23",
+        "image": "https://ais-s.ais-vidnt.com/ais/play/origin/LIVE/channelicon//0015_R.png",
+        "url": "https://lb1-live-mv.v2h-cdn.com/hls/ffcb/workpoint/workpoint.m3u8"
+      },
+      {
+        "name": "True4U 24",
+        "image": "https://ais-s.ais-vidnt.com/ais/play/origin/LIVE/channelicon/0054.png",
+        "url": "https://lb1-live-mv.v2h-cdn.com/hls/ffca/true24/true24.m3u8"
+      },
+      {
+        "name": "GMM25",
+        "image": "https://ais-s.ais-vidnt.com/ais/play/origin/LIVE/channelicon/0019.png",
+        "url": "https://lb1-live-mv.v2h-cdn.com/hls/ffbf/gmm25/gmm25.m3u8"
+      },
+      {
+        "name": "ช่อง 8",
+        "image": "https://ais-s.ais-vidnt.com/ais/play/origin/LIVE/channelicon//0006.png",
+        "url": "https://lb1-live-mv.v2h-cdn.com/hls/ffbe/ch8/ch8.m3u8"
+      },
+      {
+        "name": "MONO29",
+        "image": "https://ais-s.ais-vidnt.com/ais/play/origin/LIVE/channelicon/0016.png",
+        "url": "https://lb1-live-mv.v2h-cdn.com/hls/ffbc/mono29/mono29.m3u8"
+      },
+	  {
+        "name": "T Sports 7",
+        "image": "https://ais-s.ais-vidnt.com/ais/play/origin/LIVE/channelicon/T-SPorts_7_Final.png",
+        "url": "https://lb1-live-mv.v2h-cdn.com/hls/ffef/tsport/tsport.m3u8"
+      }
+    ]
+  },
+  {
+    "category": "ช่องการศึกษา",
+    "channels": [
+      {
+        "name": "ALTV (ช่อง 4)",
+        "image": "https://ais-s.ais-vidnt.com/ais/play/origin/LIVE//channelicon/ALTV.PNG",
+        "url": "https://lb1-live-mv.v2h-cdn.com/hls/fffc/altv/altv.m3u8"
+      },
+      {
+        "name": "TPTV (ช่อง 10)",
+        "image": "https://ais-s.ais-vidnt.com/ais/play/origin/LIVE//channelicon/0048.png",
+        "url": "https://lb1-live-mv.v2h-cdn.com/hls/ffec/tptv/tptv.m3u8"
+      }
+    ]
+  }
+  
+  
+]

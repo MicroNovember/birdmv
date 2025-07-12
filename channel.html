@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>📺 ช่องทีวีดิจิทัล</title>
+
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
+    <link rel="stylesheet" href="channels-player.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+</head>
+<body>
+
+    <div class="container channel-page-container">
+        <h2 id="channel-playing-title">เลือกช่องเพื่อรับชม</h2> 
+
+        <div class="player-wrapper">
+            <video
+                id="channel-player"
+                class="plyr"
+                controls
+                preload="auto"
+                playsinline
+            >
+                <source id="channel-video-source" src="" type="video/mp4" />
+                ขอโทษค่ะ เบราว์เซอร์ของคุณไม่รองรับวิดีโอ
+            </video>
+        </div>
+        
+
+
+    </div>
+
+
+    <div class="channel-list-section">
+        <div class="category-tabs" id="category-tabs">
+            </div>
+        
+        <div class="channel-grid-container" id="channel-grid-container">
+            </div>
+        
+        <p id="no-channels-message" style="display: none; text-align: center; color: #A9B8CC;">
+            ไม่พบช่องรายการในหมวดหมู่นี้
+        </p>
+    </div>
+
+    <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <script src="channels-player.js"></script>
+</body>
+</html>
