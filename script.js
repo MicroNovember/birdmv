@@ -316,15 +316,7 @@ document.addEventListener('DOMContentLoaded', () => {
         sidebarMenu.insertBefore(homeLink, favoritesLink);
 
 
-        const allLink = document.createElement('a');
-        allLink.href = "#";
-        allLink.dataset.category = "All";
-        allLink.textContent = "ทั้งหมด";
-        allLink.addEventListener('click', (event) => {
-            event.preventDefault(); 
-            showFullMovieDisplay('category', Object.values(allMoviesLoaded).flat());
-        });
-        sidebarMenu.insertBefore(allLink, favoritesLink); // เพิ่ม allLink ก่อน favoritesLink
+
 
         for (const source of movieSources) {
             try {
