@@ -107,7 +107,9 @@ header {
 
 /* Sidebar Menu */
 .sidebar-menu {
-    height: 100%;
+    max-height: 60vh; /* หรือ calc(100vh - [ความสูงของ header ด้านบนที่ไม่ใช่ส่วนของ sidebar]); */
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch; /* เพิ่มเพื่อความลื่นไหลบน iOS */
     width: 0; /* ความกว้างเริ่มต้นของ Sidebar */   
     position: fixed;
     z-index: 1000;
