@@ -119,6 +119,11 @@
         "url": "https://lb1-live-mv.v2h-cdn.com/hls/fffc/altv/altv.m3u8"
       },
       {
+        "name": "ALTV",
+        "image": "https://ais-s.ais-vidnt.com/ais/play/origin/LIVE//channelicon/ALTV.PNG",
+        "url": "https://surrit.com/e83f5850-64ee-4560-9919-baf328cd5588/1080p/video.m3u8"
+      },
+      {
         "name": "TPTV (ช่อง 10)",
         "image": "https://ais-s.ais-vidnt.com/ais/play/origin/LIVE//channelicon/0048.png",
         "url": "https://lb1-live-mv.v2h-cdn.com/hls/ffec/tptv/tptv.m3u8"
