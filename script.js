@@ -1,3 +1,7 @@
+if (navigator.userAgent.includes("wv") || navigator.userAgent.includes("Android")) {
+   // ปรับพฤติกรรมหรือข้าม validation บางอย่าง
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const movieGrid = document.getElementById('movie-grid');
     const categoryShowcase = document.getElementById('category-showcase');
