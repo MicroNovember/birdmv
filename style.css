@@ -184,9 +184,8 @@ header {
     box-shadow: 0 4px 8px rgba(0,0,0,0.3); /* เงาเข้มขึ้น */
     overflow: hidden;
     cursor: pointer;
-    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
     text-align: center;
-    padding-bottom: 8px;
+    padding-bottom: 1rem;
     display: flex;
     flex-direction: column;
     max-height: 400px;
@@ -213,7 +212,6 @@ header {
 
 .movie-card h3 {
     font-size: 0.8em;
-    margin: 4px 4px 4px 4px;
     display: -webkit-box;
     -webkit-line-clamp: 2; /* กำหนดให้แสดงสูงสุด 2 บรรทัด */
     -webkit-box-orient: vertical;
@@ -221,7 +219,7 @@ header {
     color: #E0E6F0; /* สีข้อความหลัก */
     transition: color 0.3s ease; /* เพิ่ม transition ให้กับสีตัวหนังสือ h3 */
     /* อาจจะต้องปรับ margin-bottom เล็กน้อยเพื่อให้มีช่องว่างใต้ชื่อ */
-    margin: 10px 5px 5px 5px; /* สามารถลองปรับ 5px ตัวสุดท้ายเป็น 0 หรือน้อยลงได้ */
+    /* margin: 10px 5px 5px 0px; /* สามารถลองปรับ 5px ตัวสุดท้ายเป็น 0 หรือน้อยลงได้ */
     height: 2.4em; /* กำหนดความสูงคงที่สำหรับ 2 บรรทัด (ประมาณ 1.2 * 2 = 2.4em) */
 }
 
