@@ -180,7 +180,7 @@ header {
 
 .movie-card {
     background-color: #2D3748; /* พื้นหลังรอง Dark Grey-Blue */
-    border-radius: 8px;
+    border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.3); /* เงาเข้มขึ้น */
     overflow: hidden;
     cursor: pointer;
@@ -221,6 +221,12 @@ header {
     /* อาจจะต้องปรับ margin-bottom เล็กน้อยเพื่อให้มีช่องว่างใต้ชื่อ */
     /* margin: 10px 5px 5px 0px; /* สามารถลองปรับ 5px ตัวสุดท้ายเป็น 0 หรือน้อยลงได้ */
     height: 2.4em; /* กำหนดความสูงคงที่สำหรับ 2 บรรทัด (ประมาณ 1.2 * 2 = 2.4em) */
+    position: relative;
+    bottom: auto;
+    left: auto;
+    right: auto;
+    margin-bottom: 10px;
+    text-align: center;
 }
 
 .movie-card p {
@@ -420,7 +426,7 @@ footer {
     }
     .movie-card h3 {
         font-size: 0.8em;
-        margin: 4px 4px 4px 4px;
+       /* margin: 4px 4px 4px 4px;
         display: -webkit-box;
         -webkit-line-clamp: 2; /* กำหนดให้แสดงสูงสุด 2 บรรทัด */
         -webkit-box-orient: vertical;
