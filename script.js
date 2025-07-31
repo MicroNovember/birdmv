@@ -40,8 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { url: "data/server1-korea.json", id: "server1-korea", title: "หนังเกาหลี (S1)" },
         { url: "data/server1-asia.json", id: "server1-asia", title: "หนังอินเดีย (S1)" },
         { url: "data/server1-thai.json", id: "server1-thai", title: "หนังไทย (S1)" },
-        { url: "data/server1-cartoon.json", id: "server1-cartoon", title: "การ์ตูน (S1)" },
-	{ url: "data/moviesdoofree.json", id: "doofree", title: "หนัง (S3)" }
+        { url: "data/server1-cartoon.json", id: "server1-cartoon", title: "การ์ตูน (S1)" }
     ];
 
     function createMovieCard(movie) {
