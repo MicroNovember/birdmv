@@ -1,7 +1,3 @@
-if (navigator.userAgent.includes("wv") || navigator.userAgent.includes("Android")) {
-   // ปรับพฤติกรรมหรือข้าม validation บางอย่าง
-}
-
 document.addEventListener('DOMContentLoaded', () => {
     const movieGrid = document.getElementById('movie-grid');
     const categoryShowcase = document.getElementById('category-showcase');
@@ -10,7 +6,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const hamburgerMenu = document.querySelector('.hamburger-menu');
     const sidebarMenu = document.querySelector('.sidebar-menu');
     const displayCountSelect = document.getElementById('displayCount');
-    
 
     const prevPageBtn = document.getElementById('prev-page');
     const nextPageBtn = document.getElementById('next-page');
@@ -20,36 +15,38 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById('search-input');
     const searchButton = document.getElementById('search-button');
 
-    // เพิ่ม Element ใหม่
+    // Element ใหม่
     const favoritesLink = document.getElementById('favorites-link');
     const clearFavoritesBtn = document.getElementById('clear-favorites-btn');
 
     let allMoviesLoaded = {};
     let currentCategoryData = [];
     let currentPage = 1;
-    let moviesPerPage = parseInt(displayCountSelect.value);
+
+    // Handle 'all' as string or number
+    let moviesPerPage = displayCountSelect.value === 'all' ? 'all' : parseInt(displayCountSelect.value);
 
     let currentSearchResults = [];
-    let isDisplayingFavorites = false; // Flag เพื่อตรวจสอบว่ากำลังแสดงรายการโปรด
+    let isDisplayingFavorites = false; // Flag สำหรับรายการโปรด
 
     const movieSources = [
+        { url: "data/server2-zoom.json", id: "server2-zoom", title: "ซูม ชนโรง" },
         { url: "data/server2-inter.json", id: "server2-inter", title: "หนังฝรั่ง (S2)" },
         { url: "data/server2-asia.json", id: "server2-asia", title: "หนังเอเชีย (S2)" },
         { url: "data/server2-thai.json", id: "server2-thai", title: "หนังไทย (S2)" },
         { url: "data/server2-cartoon.json", id: "server2-cartoon", title: "การ์ตูน (S2)" },
-        { url: "data/server2-zoom.json", id: "server2-zoom", title: "ซูม ชนโรง" },
         { url: "data/server1-en.json", id: "server1-en", title: "หนังฝรั่ง (S1)" },
         { url: "data/server1-china.json", id: "server1-china", title: "หนังจีน (S1)" },
         { url: "data/server1-korea.json", id: "server1-korea", title: "หนังเกาหลี (S1)" },
         { url: "data/server1-asia.json", id: "server1-asia", title: "หนังอินเดีย (S1)" },
         { url: "data/server1-thai.json", id: "server1-thai", title: "หนังไทย (S1)" },
-        { url: "data/server1-cartoon.json", id: "server1-cartoon", title: "การ์ตูน (S1)" }
+        { url: "data/server1-cartoon.json", id: "server1-cartoon", title: "การ์ตูน (S1)" },
+		{ url: "data/server1-cartoon.json", id: "doofree", title: "doofree" }
     ];
 
     function createMovieCard(movie) {
         const movieCard = document.createElement('div');
         movieCard.classList.add('movie-card');
-        
         movieCard.innerHTML = `
             <img src="${movie.image}" alt="${movie.name} Cover" onerror="this.onerror=null;this.src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJYAAACWCAYAAAA8AX2lAAACV0lEQVR4Xu3cMQ0AAAgEIfvXn2JzZlA904KqA1jDtgkCAQIECLx7AgnYAQIECBAYEGBgEwIECLx7AgnYAQIECBAYEGBgEwIECLx7AgnYAQIECBAYEGBgEwIECLx7AgnYAQIECBAYEGBgEwIECLx7AgnYAQIECBAYEGBgEwIECLx7AgnYAQIECBAYEGBgEwIECLx7AgnYAQIECBAYEGBgEwIECLx7AgnYAQIECBAYEGBgEwIECLx7AgnYAQIECBAYEGBgEwIECLx7AgnYAQIECBAYEGBgEwIECLx7AgnYAQIECBAYEGBgEwIECLx7AgnYAQIECBAYEGBgEwIECLx7AgnYAQIECBAYEGBgEwIECLx7AgnYAXv/C9uX/X+r82uIAAAAAElFTkSuQmCC';">
             <h3>${movie.name}</h3>
@@ -67,47 +64,47 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function displayMoviesGrid(moviesToDisplay) {
-        movieGrid.innerHTML = ''; 
+        movieGrid.innerHTML = '';
 
         const totalMoviesInCurrentDisplay = moviesToDisplay.length;
-        
+
         // ควบคุมการแสดงปุ่มล้างรายการโปรด
         if (isDisplayingFavorites) {
             clearFavoritesBtn.style.display = 'flex'; // แสดงปุ่มเมื่ออยู่หน้ารายการโปรด
-            if (totalMoviesInCurrentDisplay === 0) { // ถ้าไม่มีหนังในรายการโปรดเลย
+            if (totalMoviesInCurrentDisplay === 0) {
                 movieGrid.innerHTML = '<p style="text-align: center; color: #A9B8CC; padding: 20px;">ยังไม่มีหนังในรายการโปรดของคุณ</p>';
-                paginationControls.style.display = 'none'; // ซ่อน pagination
+                paginationControls.style.display = 'none';
                 return;
             }
         } else {
-            clearFavoritesBtn.style.display = 'none'; // ซ่อนปุ่มเมื่ออยู่หน้าอื่น
+            clearFavoritesBtn.style.display = 'none'; // ซ่อนเมื่อไม่ใช่รายการโปรด
         }
 
-
+        // ควบคุมการแสดง pagination
         if (moviesPerPage === 'all' || totalMoviesInCurrentDisplay <= moviesPerPage) {
             paginationControls.style.display = 'none';
         } else {
-            paginationControls.style.display = 'flex'; 
+            paginationControls.style.display = 'flex';
         }
 
-        const moviesToShow = (moviesPerPage === 'all')
-            ? moviesToDisplay
-            : moviesToDisplay.slice(
-                (currentPage - 1) * moviesPerPage,
-                currentPage * moviesPerPage
-            );
+        // คำนวณ subset ของหนังที่จะโชว์
+        const startIdx = (currentPage - 1) * (moviesPerPage === 'all' ? totalMoviesInCurrentDisplay : moviesPerPage);
+        const endIdx = (moviesPerPage === 'all') ? totalMoviesInCurrentDisplay : startIdx + moviesPerPage;
+        const moviesToShow = moviesToDisplay.slice(startIdx, endIdx);
 
+        // ถ้าหน้าเปล่าแต่มีหนังในหมวดหมู่ ให้รีเซ็ตหน้า
         if (moviesToShow.length === 0 && totalMoviesInCurrentDisplay > 0) {
             currentPage = 1;
-            displayMoviesGrid(moviesToDisplay); 
+            displayMoviesGrid(moviesToDisplay);
             return;
         } else if (moviesToShow.length === 0 && totalMoviesInCurrentDisplay === 0 && !isDisplayingFavorites) {
-            // กรณีไม่มีหนังในหมวดหมู่ หรือผลการค้นหา
+            // ไม่มีหนังในหมวดหมู่หรือผลการค้นหา
             movieGrid.innerHTML = '<p style="text-align: center; color: #A9B8CC; padding: 20px;">ไม่พบหนังในหมวดหมู่นี้</p>';
             updatePaginationControls(0);
             return;
         }
 
+        // แสดงหนัง
         moviesToShow.forEach(movie => {
             movieGrid.appendChild(createMovieCard(movie));
         });
@@ -116,47 +113,47 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updatePaginationControls(totalMovies) {
-        const totalPages = Math.ceil(totalMovies / moviesPerPage);
-        pageNumbersContainer.innerHTML = ''; 
+        const totalPages = (moviesPerPage === 'all') ? 1 : Math.ceil(totalMovies / moviesPerPage);
+        pageNumbersContainer.innerHTML = '';
 
-        if (totalPages <= 1) { 
-            paginationControls.style.display = 'none'; 
+        if (totalPages <= 1) {
+            paginationControls.style.display = 'none';
             return;
         }
 
         for (let i = 1; i <= totalPages; i++) {
             const pageLink = document.createElement('a');
-            pageLink.href = '#'; 
+            pageLink.href = '#';
             pageLink.classList.add('page-number-link');
             if (i === currentPage) {
-                pageLink.classList.add('active'); 
+                pageLink.classList.add('active');
             }
             pageLink.textContent = i;
-            pageLink.dataset.page = i; 
+            pageLink.dataset.page = i;
             pageLink.addEventListener('click', (event) => {
                 event.preventDefault();
                 currentPage = parseInt(event.target.dataset.page);
-                if (isDisplayingFavorites) { // เพิ่มเงื่อนไขสำหรับรายการโปรด
+                if (isDisplayingFavorites) {
                     displayMoviesGrid(getFavorites());
                 } else if (currentSearchResults.length > 0) {
                     displayMoviesGrid(currentSearchResults);
                 } else {
                     displayMoviesGrid(currentCategoryData);
                 }
-                window.scrollTo({ top: 0, behavior: 'smooth' }); 
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             });
             pageNumbersContainer.appendChild(pageLink);
         }
 
         prevPageBtn.disabled = (currentPage === 1);
         nextPageBtn.disabled = (currentPage === totalPages);
-        paginationControls.style.display = 'flex'; 
+        paginationControls.style.display = 'flex';
     }
 
     prevPageBtn.addEventListener('click', () => {
         if (currentPage > 1) {
             currentPage--;
-            if (isDisplayingFavorites) { // เพิ่มเงื่อนไขสำหรับรายการโปรด
+            if (isDisplayingFavorites) {
                 displayMoviesGrid(getFavorites());
             } else if (currentSearchResults.length > 0) {
                 displayMoviesGrid(currentSearchResults);
@@ -168,20 +165,19 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     nextPageBtn.addEventListener('click', () => {
-        let totalPages;
-        let dataToCount;
-        if (isDisplayingFavorites) { // เพิ่มเงื่อนไขสำหรับรายการโปรด
-            dataToCount = getFavorites();
+        let totalMoviesCount;
+        if (isDisplayingFavorites) {
+            totalMoviesCount = getFavorites().length;
         } else if (currentSearchResults.length > 0) {
-            dataToCount = currentSearchResults;
+            totalMoviesCount = currentSearchResults.length;
         } else {
-            dataToCount = currentCategoryData;
+            totalMoviesCount = currentCategoryData.length;
         }
-        totalPages = Math.ceil(dataToCount.length / moviesPerPage);
-        
+        const totalPages = (moviesPerPage === 'all') ? 1 : Math.ceil(totalMoviesCount / moviesPerPage);
+
         if (currentPage < totalPages) {
             currentPage++;
-            if (isDisplayingFavorites) { // เพิ่มเงื่อนไขสำหรับรายการโปรด
+            if (isDisplayingFavorites) {
                 displayMoviesGrid(getFavorites());
             } else if (currentSearchResults.length > 0) {
                 displayMoviesGrid(currentSearchResults);
@@ -196,10 +192,10 @@ document.addEventListener('DOMContentLoaded', () => {
         categoryShowcase.style.display = 'block';
         fullMovieDisplay.style.display = 'none';
         sidebarMenu.classList.remove('active');
-        searchInput.value = ''; 
-        currentSearchResults = []; 
-        isDisplayingFavorites = false; // Reset flag
-        clearFavoritesBtn.style.display = 'none'; // ซ่อนปุ่มล้างรายการโปรด
+        searchInput.value = '';
+        currentSearchResults = [];
+        isDisplayingFavorites = false;
+        clearFavoritesBtn.style.display = 'none';
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
@@ -208,7 +204,7 @@ document.addEventListener('DOMContentLoaded', () => {
         fullMovieDisplay.style.display = 'block';
         sidebarMenu.classList.remove('active');
 
-        // Reset flags and data
+        // Reset flags
         isDisplayingFavorites = false;
         currentSearchResults = [];
         currentCategoryData = [];
@@ -219,17 +215,12 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (type === 'search') {
             currentSearchResults = data;
             searchInput.value = keyword;
-        } else if (type === 'favorites') { // กรณีแสดงรายการโปรด
+        } else if (type === 'favorites') {
             isDisplayingFavorites = true;
-            document.querySelector('#full-movie-display .controls label').textContent = 'รายการโปรด:'; // เปลี่ยน label
-            document.getElementById('displayCount').style.display = 'none'; // ซ่อน select จำนวนแสดง
-            // เปลี่ยน title ใน header (ถ้าคุณมี element สำหรับเปลี่ยน title ใน full-movie-display)
-            // เช่น ถ้าคุณมี <h2 id="full-display-title"></h2> ใน full-movie-display
-            // document.getElementById('full-display-title').textContent = 'รายการโปรด';
-            // แต่เนื่องจาก H1 เป็น header หลัก เราจะไม่เปลี่ยนมัน
-            // ถ้าอยากเปลี่ยน header หลักให้เป็น "รายการโปรด" ต้องทำเพิ่ม
-            clearFavoritesBtn.style.display = 'flex'; // แสดงปุ่มล้าง
-        } else { // default to category if type is unknown
+            document.querySelector('#full-movie-display .controls label').textContent = 'รายการโปรด:';
+            document.getElementById('displayCount').style.display = 'none';
+            clearFavoritesBtn.style.display = 'flex';
+        } else {
             currentCategoryData = data;
         }
 
@@ -244,28 +235,27 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('กรุณาป้อนคำค้นหา');
             return;
         }
+        const allMovies = Object.values(allMoviesLoaded).flat();
 
-        const allMovies = Object.values(allMoviesLoaded).flat(); 
-        
-        const results = allMovies.filter(movie => 
+        const results = allMovies.filter(movie =>
             movie.name && movie.name.toLowerCase().includes(keyword)
         );
 
         if (results.length > 0) {
             showFullMovieDisplay('search', results, keyword);
         } else {
-            showFullMovieDisplay('search', [], keyword); 
+            showFullMovieDisplay('search', [], keyword);
             movieGrid.innerHTML = `<p style="text-align: center; color: #A9B8CC; padding: 20px;">ไม่พบผลลัพธ์สำหรับ "${keyword}"</p>`;
-            paginationControls.style.display = 'none'; 
+            updatePaginationControls(0);
         }
     }
 
-    // --- NEW: Favorite Functions ---
+    // --- Favorite Functions ---
     function getFavorites() {
         try {
-            return JSON.parse(localStorage.getItem("favorites") || "[]");
+            return JSON.parse(localStorage.getItem('favorites') || '[]');
         } catch (e) {
-            console.error("Error parsing favorites from localStorage:", e);
+            console.error('Error parsing favorites from localStorage:', e);
             return [];
         }
     }
@@ -273,22 +263,19 @@ document.addEventListener('DOMContentLoaded', () => {
     function showFavorites() {
         const favorites = getFavorites();
         showFullMovieDisplay('favorites', favorites);
-        sidebarMenu.classList.remove('active'); // ปิดเมนู sidebar
-        // ปรับ UI ของ displayCountSelect และ label กลับมาใน showCategoryShowcase หรือเมื่อออกจาก Favorites
-        document.querySelector('#full-movie-display .controls label').textContent = 'แสดง: ';
-        document.getElementById('displayCount').style.display = 'inline-block'; // แสดง select จำนวนแสดง
+        sidebarMenu.classList.remove('active');
+        document.querySelector('#full-movie-display .controls label').textContent = 'รายการโปรด:';
+        document.getElementById('displayCount').style.display = 'none';
     }
 
     function clearAllFavorites() {
         if (confirm('คุณแน่ใจหรือไม่ที่ต้องการล้างรายการโปรดทั้งหมด?')) {
             localStorage.removeItem('favorites');
-            showFavorites(); // แสดงรายการโปรดที่ว่างเปล่า
-            // ปรับ UI ของปุ่ม Favorite ใน Player Page หากผู้ใช้อยู่ที่นั่น
-            // (ต้องมีวิธีสื่อสารระหว่างหน้า หรือให้ผู้ใช้รีเฟรชหน้า Player)
+            showFavorites();
             alert('รายการโปรดทั้งหมดถูกล้างแล้ว!');
         }
     }
-    // --- END NEW: Favorite Functions ---
+    // --- END Favorite Functions ---
 
     searchButton.addEventListener('click', performSearch);
     searchInput.addEventListener('keydown', (event) => {
@@ -297,48 +284,44 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Event Listener สำหรับ Favorites Link
+    // Favorites link event
     favoritesLink.addEventListener('click', (event) => {
         event.preventDefault();
         showFavorites();
     });
 
-    // Event Listener สำหรับปุ่มล้างรายการโปรด
+    // ล้างรายการโปรด
     clearFavoritesBtn.addEventListener('click', clearAllFavorites);
-
 
     async function initializeApp() {
         const homeLink = document.createElement('a');
         homeLink.href = "#";
         homeLink.textContent = "🏠 หน้าแรก";
         homeLink.addEventListener('click', (event) => {
-            event.preventDefault(); 
+            event.preventDefault();
             showCategoryShowcase();
             sidebarMenu.classList.remove('active');
         });
-        // เพิ่ม homeLink ก่อน favoritesLink
+        // เพิ่มหน้าแรกก่อน favorites
         sidebarMenu.insertBefore(homeLink, favoritesLink);
-
-
-
 
         for (const source of movieSources) {
             try {
                 const response = await fetch(source.url);
                 if (!response.ok) {
                     console.warn(`Could not load ${source.url}: ${response.statusText}`);
-                    continue; 
+                    continue;
                 }
                 const data = await response.json();
-                allMoviesLoaded[source.id] = data; 
+                allMoviesLoaded[source.id] = data;
 
                 const link = document.createElement('a');
                 link.href = "#";
-                link.dataset.category = source.id; 
-                link.textContent = source.title; 
+                link.dataset.category = source.id;
+                link.textContent = source.title;
                 link.addEventListener('click', (event) => {
-                    event.preventDefault(); 
-                    showFullMovieDisplay('category', allMoviesLoaded[source.id]);
+                    event.preventDefault();
+                    showFullMovieDisplay('category', allMoviesLoaded[event.currentTarget.dataset.category]);
                 });
                 sidebarMenu.appendChild(link);
 
@@ -378,21 +361,23 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // ตรวจสอบ URL parameter สำหรับหมวดหมู่หรือการค้นหาเมื่อโหลดหน้า
+        // ตรวจสอบ URL parameters
         const urlParams = new URLSearchParams(window.location.search);
         const initialCategory = urlParams.get('category');
         const initialSearch = urlParams.get('search');
-        const initialFavorites = urlParams.get('favorites'); // ตรวจสอบ parameter สำหรับ favorites
+        const initialFavorites = urlParams.get('favorites');
 
         if (initialSearch) {
             searchInput.value = initialSearch;
             performSearch();
-        } else if (initialFavorites === 'true') { // ถ้ามี ?favorites=true ใน URL
+        } else if (initialFavorites === 'true') {
             showFavorites();
         } else if (initialCategory && allMoviesLoaded[initialCategory]) {
             showFullMovieDisplay('category', allMoviesLoaded[initialCategory]);
         } else if (initialCategory === "All") {
-            showFullMovieDisplay('category', Object.values(allMoviesLoaded).flat());
+            // รวมหนังทั้งหมด
+            const allMoviesArray = Object.values(allMoviesLoaded).flat();
+            showFullMovieDisplay('category', allMoviesArray);
         } else {
             showCategoryShowcase();
         }
@@ -409,8 +394,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     displayCountSelect.addEventListener('change', (event) => {
-        moviesPerPage = event.target.value === 'all' ? 'all' : parseInt(event.target.value);
-        currentPage = 1; 
+        const val = event.target.value;
+        moviesPerPage = val === 'all' ? 'all' : parseInt(val);
+        currentPage = 1;
         if (isDisplayingFavorites) {
             displayMoviesGrid(getFavorites());
         } else if (currentSearchResults.length > 0) {
@@ -423,5 +409,3 @@ document.addEventListener('DOMContentLoaded', () => {
 
     initializeApp();
 });
-
-
