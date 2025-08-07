@@ -30,11 +30,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let isDisplayingFavorites = false; // Flag สำหรับรายการโปรด
 
     const movieSources = [
-        { url: "data/server2-zoom.json", id: "server2-zoom", title: "ซูม ชนโรง" },
-        { url: "data/server2-inter.json", id: "server2-inter", title: "หนังฝรั่ง (S2)" },
-        { url: "data/server2-asia.json", id: "server2-asia", title: "หนังเอเชีย (S2)" },
-        { url: "data/server2-thai.json", id: "server2-thai", title: "หนังไทย (S2)" },
-        { url: "data/server2-cartoon.json", id: "server2-cartoon", title: "การ์ตูน (S2)" },
         { url: "data/server1-en.json", id: "server1-en", title: "หนังฝรั่ง (S1)" },
         { url: "data/server1-china.json", id: "server1-china", title: "หนังจีน (S1)" },
         { url: "data/server1-korea.json", id: "server1-korea", title: "หนังเกาหลี (S1)" },
@@ -408,3 +403,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
     initializeApp();
 });
+
