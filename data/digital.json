@@ -149,9 +149,9 @@
     "category": "ช่องการศึกษา",
     "channels": [
       {
-        "name": "ALTV (ช่อง 4)",
+        "name": " (ช่อง 4)",
         "image": "https://ais-s.ais-vidnt.com/ais/play/origin/LIVE//channelicon/ALTV.PNG",
-        "url": "https://worker2.playmov.tv/demo-movie/4-ssd/movie/store-2000/VIPDeathSeat.2024.mp4/playlist.m3u8"
+        "url": "https://cdnsv1.bunnycdncloud.com/andaman888th/bein2/th-sport/bein2/chunks.m3u8"
       },
       {
         "name": "ALTV (ช่อง 4)",
@@ -169,3 +169,4 @@
   
 
 ]
+
