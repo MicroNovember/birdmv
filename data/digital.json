@@ -151,6 +151,11 @@
       {
         "name": "ALTV (ช่อง 4)",
         "image": "https://ais-s.ais-vidnt.com/ais/play/origin/LIVE//channelicon/ALTV.PNG",
+        "url": "https://worker2.playmov.tv/demo-movie/4-ssd/movie/store-2000/VIPDeathSeat.2024.mp4/playlist.m3u8"
+      },
+      {
+        "name": "ALTV (ช่อง 4)",
+        "image": "https://ais-s.ais-vidnt.com/ais/play/origin/LIVE//channelicon/ALTV.PNG",
         "url": "https://lb1-live-mv.v2h-cdn.com/hls/fffc/altv/altv.m3u8"
       },
       {
@@ -162,4 +167,5 @@
   }
   
   
+
 ]
