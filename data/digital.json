@@ -3,38 +3,38 @@
     "category": "DIGITAL",
     "channels": [
       {
-        "name": "ช่อง 3 HD",
+        "name": "3 HD",
         "image": "https://ais-s.ais-vidnt.com/ais/play/origin/LIVE/channelicon/LOGO3HD.PNG",
         "url": "https://lb1-live-mv.v2h-cdn.com/hls/ffae/muulk/muulk.m3u8"
       },
       {
-        "name": "ช่อง 7HD",
+        "name": "7HD",
         "image": "https://ais-s.ais-vidnt.com/ais/play/origin/LIVE//channelicon/0018.png",
         "url": "https://lb1-live-mv.v2h-cdn.com/hls/ffac/gohg/gohg.m3u8"
       },
       {
-        "name": "ช่อง 9 MCOT HD",
+        "name": "9 MCOT HD",
         "image": "https://ais-s.ais-vidnt.com/ais/play/origin/LIVE/channelicon/MCOT_new.png",
         "url": "https://lb1-live-mv.v2h-cdn.com/hls/ffbb/gdhk/gdhk.m3u8"
       },
 
       {
-        "name": "Thai PBS (ช่อง 3)",
+        "name": "Thai PBS",
         "image": "https://ais-s.ais-vidnt.com/ais/play/origin/LIVE//channelicon/0014.png",
         "url": "https://lb1-live-mv.v2h-cdn.com/hls/fffd/muruugvl/muruugvl.m3u8"
       },
       {
-        "name": "ช่อง 5 HD1",
+        "name": "5 HD1",
         "image": "https://ais-s.ais-vidnt.com/ais/play/origin/LIVE//channelicon//ch5new.logo.png",
         "url": "https://lb1-live-mv.v2h-cdn.com/hls/fffb/muushk/muushk.m3u8"
       },
       {
-        "name": "ช่อง One 31",
+        "name": "One 31",
         "image": "https://ais-s.ais-vidnt.com/ais/play/origin/LIVE/channelicon/0012.png",
         "url": "https://lb1-live-mv.v2h-cdn.com/hls/ffba/yogvfi/yogvfi.m3u8"
       },
       {
-        "name": "ไทยรัฐทีวี 32 HD",
+        "name": "ไทยรัฐทีวี 32",
         "image": "https://ais-s.ais-vidnt.com/ais/play/origin/LIVE/channelicon/0013_R.png",
         "url": "https://lb1-live-mv.v2h-cdn.com/hls/ffaf/wmpiy/wmpiy.m3u8"
       },
@@ -114,5 +114,6 @@
   
   
 ]
+
 
 
