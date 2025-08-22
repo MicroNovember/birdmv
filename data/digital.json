@@ -1,6 +1,6 @@
 [
   {
-    "category": "ช่องหลัก HD",
+    "category": "DIGITAL",
     "channels": [
       {
         "name": "ช่อง 3 HD",
@@ -105,13 +105,14 @@
         "url": "https://lb1-live-mv.v2h-cdn.com/hls/fffa/boomerang/boomerang.m3u8"
       },
 	  {
-        "name": "MONO29",
-        "image": "https://api-soccer.thai-play.com/images/tv/RziUDnIsuVooOkZ7IdtFPb4ro94yY4iais1.png",
-        "url": "https://dolive.thaim3u.com/demo-live-siamzeed-com/football-play-1/playlist.m3u8?wmsAuthSign=c2VydmVyX3RpbWU9Ny8yMy8yMDI1IDEwOjMwOjMxIEFNJmhhc2hfdmFsdWU9MmVaeDl1K0RibXNMcy9qTlRFUnpXdz09JnZhbGlkbWludXRlcz02MA=="
+        "name": "JKN",
+        "image": "https://media-mvtv.imgix.net/channel/122_y_bzfht4O5uRNHylcq1D6nV9TvxmdXWaQP.png",
+        "url": "https://lb1-live-mv.v2h-cdn.com/hls/ffda/jkn18/jkn18.m3u8"
       }
     ]
   }
   
   
 ]
+
 
