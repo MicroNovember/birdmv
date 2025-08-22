@@ -46,7 +46,7 @@
       {
         "name": "PPTV HD 36",
         "image": "https://ais-s.ais-vidnt.com/ais/play/origin/LIVE/channelicon/PPTV_2024e.jpg",
-        "url": "https://lb1-live-mv.v2h-cdn.com/hls/ffab/rurumuu/rurumuu.m3u8
+        "url": "https://lb1-live-mv.v2h-cdn.com/hls/ffab/rurumuu/rurumuu.m3u8"
       },
 	  {
         "name": "Workpoint 23",
@@ -114,3 +114,4 @@
   
   
 ]
+
