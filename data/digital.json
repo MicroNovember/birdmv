@@ -1,40 +1,40 @@
 [
   {
-    "category": "DIGITAL",
+    "category": "ช่องหลัก HD",
     "channels": [
       {
-        "name": "3 HD",
+        "name": "ช่อง 3 HD",
         "image": "https://ais-s.ais-vidnt.com/ais/play/origin/LIVE/channelicon/LOGO3HD.PNG",
         "url": "https://lb1-live-mv.v2h-cdn.com/hls/ffae/muulk/muulk.m3u8"
       },
       {
-        "name": "7HD",
+        "name": "ช่อง 7HD",
         "image": "https://ais-s.ais-vidnt.com/ais/play/origin/LIVE//channelicon/0018.png",
         "url": "https://lb1-live-mv.v2h-cdn.com/hls/ffac/gohg/gohg.m3u8"
       },
       {
-        "name": "9 MCOT HD",
+        "name": "ช่อง 9 MCOT HD",
         "image": "https://ais-s.ais-vidnt.com/ais/play/origin/LIVE/channelicon/MCOT_new.png",
         "url": "https://lb1-live-mv.v2h-cdn.com/hls/ffbb/gdhk/gdhk.m3u8"
       },
 
       {
-        "name": "Thai PBS",
+        "name": "Thai PBS (ช่อง 3)",
         "image": "https://ais-s.ais-vidnt.com/ais/play/origin/LIVE//channelicon/0014.png",
         "url": "https://lb1-live-mv.v2h-cdn.com/hls/fffd/muruugvl/muruugvl.m3u8"
       },
       {
-        "name": "5 HD1",
+        "name": "ช่อง 5 HD1",
         "image": "https://ais-s.ais-vidnt.com/ais/play/origin/LIVE//channelicon//ch5new.logo.png",
         "url": "https://lb1-live-mv.v2h-cdn.com/hls/fffb/muushk/muushk.m3u8"
       },
       {
-        "name": "One 31",
+        "name": "ช่อง One 31",
         "image": "https://ais-s.ais-vidnt.com/ais/play/origin/LIVE/channelicon/0012.png",
         "url": "https://lb1-live-mv.v2h-cdn.com/hls/ffba/yogvfi/yogvfi.m3u8"
       },
       {
-        "name": "ไทยรัฐทีวี 32",
+        "name": "ไทยรัฐทีวี 32 HD",
         "image": "https://ais-s.ais-vidnt.com/ais/play/origin/LIVE/channelicon/0013_R.png",
         "url": "https://lb1-live-mv.v2h-cdn.com/hls/ffaf/wmpiy/wmpiy.m3u8"
       },
@@ -46,7 +46,7 @@
       {
         "name": "PPTV HD 36",
         "image": "https://ais-s.ais-vidnt.com/ais/play/origin/LIVE/channelicon/PPTV_2024e.jpg",
-        "url": "https://lb1-live-mv.v2h-cdn.com/hls/ffab/rurumuu/rurumuu.m3u8"
+        "url": "https://lb1-live-mv.v2h-cdn.com/hls/ffab/rurumuu/rurumuu.m3u8
       },
 	  {
         "name": "Workpoint 23",
@@ -105,15 +105,12 @@
         "url": "https://lb1-live-mv.v2h-cdn.com/hls/fffa/boomerang/boomerang.m3u8"
       },
 	  {
-        "name": "JKN",
-        "image": "https://media-mvtv.imgix.net/channel/122_y_bzfht4O5uRNHylcq1D6nV9TvxmdXWaQP.png",
-        "url": "https://lb1-live-mv.v2h-cdn.com/hls/ffda/jkn18/jkn18.m3u8"
+        "name": "MONO29",
+        "image": "https://api-soccer.thai-play.com/images/tv/RziUDnIsuVooOkZ7IdtFPb4ro94yY4iais1.png",
+        "url": "https://dolive.thaim3u.com/demo-live-siamzeed-com/football-play-1/playlist.m3u8?wmsAuthSign=c2VydmVyX3RpbWU9Ny8yMy8yMDI1IDEwOjMwOjMxIEFNJmhhc2hfdmFsdWU9MmVaeDl1K0RibXNMcy9qTlRFUnpXdz09JnZhbGlkbWludXRlcz02MA=="
       }
     ]
   }
   
   
 ]
-
-
-

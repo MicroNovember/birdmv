@@ -140,7 +140,7 @@ header {
 
 .sidebar-menu.active {
     /* เมื่อ active ให้กำหนด width เป็น max-content */
-    width: max-content;
+    width: auto; /* กำหนดให้ Sidebar ขยายตามเนื้อหา */
     min-width: 180px; /* กำหนดความกว้างขั้นต่ำ เพื่อไม่ให้เล็กเกินไป */
 
 }
@@ -522,7 +522,9 @@ footer {
     color: #E0E6F0; /* สีข้อความหลัก */
     font-size: 1em;
     outline: none; /* ลบขอบตอน focus */
-    width: 150px; /* ความกว้างเริ่มต้น */
+    /* width: 150px; /* ความกว้างเริ่มต้น */
+    width: 100%; /* ให้ input ขยายเต็มความกว้างของ search-container */
+    min-width: 150px; /* กำหนดความกว้างขั้นต่ำ */
     transition: width 0.3s ease; /* เพิ่ม transition */
 }
 
@@ -559,7 +561,7 @@ footer {
     }
 
     .hamburger-menu {
-       /* display: block; /* แสดงใน mobile */
+       /* display: flex; /* แสดงใน mobile */
         order: 1; /* ลำดับแรก */
         /* width และ height ถูกกำหนดไว้แล้วข้างบน */
         /* flex: 0 0 auto; ก็ถูกกำหนดไว้แล้วข้างบน */

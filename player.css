@@ -12,9 +12,6 @@ body {
     align-items: center;}
 .plyr {
     width: 50%;
-    margin-left: auto;  /* ชิดขวา */
-    margin-right: auto; /* ชิดซ้าย */
-    /* หรือใช้ shorthand: */
     margin: 0 auto; /* **ทำให้ชิดกลางในแนวนอน** */
     border-radius: 8px;
 }
@@ -91,13 +88,9 @@ body {
 @media (max-width: 600px) {
     .controls-bar {
         align-items: center;}
-.controls-bar button {
+    .controls-bar button {
         font-size: 14px;
         padding: 6px 12px;}
-}
-
-
-@media (max-width: 600px) { /* หรือ 600px ตามที่คุณต้องการ */
     .plyr {
         width: 100%; /* ทำให้เต็มความกว้างของ Container บนมือถือ */
         margin: 0;
