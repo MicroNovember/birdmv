@@ -103,15 +103,11 @@
         "name": "Boomerang",
         "image": "https://media-mvtv8.imgix.net/channel/153_y_3V9s1SWHcnaNILkoXMmF8GER4ZTrxJvg.jpg",
         "url": "https://lb1-live-mv.v2h-cdn.com/hls/fffa/boomerang/boomerang.m3u8"
-      },
-	  {
-        "name": "MONO29",
-        "image": "https://api-soccer.thai-play.com/images/tv/RziUDnIsuVooOkZ7IdtFPb4ro94yY4iais1.png",
-        "url": "https://dolive.thaim3u.com/demo-live-siamzeed-com/football-play-1/playlist.m3u8?wmsAuthSign=c2VydmVyX3RpbWU9Ny8yMy8yMDI1IDEwOjMwOjMxIEFNJmhhc2hfdmFsdWU9MmVaeDl1K0RibXNMcy9qTlRFUnpXdz09JnZhbGlkbWludXRlcz02MA=="
-      }
+	  }
     ]
   }
   
   
 
 ]
+
