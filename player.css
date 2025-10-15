@@ -11,7 +11,7 @@ body {
     flex-direction: column;
     align-items: center;}
 .plyr {
-    width: 50%;
+    width: 100%;
     margin: 0 auto; /* **ทำให้ชิดกลางในแนวนอน** */
     border-radius: 8px;
 }
@@ -52,7 +52,7 @@ body {
     display: none;
     text-align: center;
         /* **ปรับค่าเหล่านี้** */
-    width: 80%;       /* ให้ใช้ความกว้าง 90% ของ viewport */
+    width: 100%;       /* ให้ใช้ความกว้าง 90% ของ viewport */
     max-width: 450px; /* แต่ไม่เกิน 450px */
     /* min-width: 280px; ถ้าจอเล็กมากๆ ไม่ต้องการให้เล็กกว่านี้ */
 

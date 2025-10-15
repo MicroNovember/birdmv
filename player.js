@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
         hls.on(Hls.Events.MANIFEST_PARSED, function() {
             console.log("HLS manifest parsed.");
             // Optional: Set initial volume after HLS is ready
-            player.volume = 0.3;
+            player.volume = 1;
             // If there's a poster image, set it
             if (image) {
                 player.poster = image;
@@ -118,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
     } else if (!videoURL.endsWith(".m3u8") && videoURL) {
         // For MP4 or general videos, set src directly and then initialize Plyr
         videoElement.src = videoURL;
-        player.volume = 0.3; // Set initial volume
+        player.volume = 1; // Set initial volume
         if (image) {
             player.poster = image; // Set poster
         }
