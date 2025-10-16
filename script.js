@@ -51,19 +51,18 @@ function createMovieSection(title, movies, categoryKey, isSearch = false) {
     const limitedMovies = movies.slice(0, limit);
     const cardsHtml = limitedMovies.map(createMovieCard).join('');
     
-    // สร้าง URL ลิงก์ไปยังหน้าหมวดหมู่เดียว
     const categoryUrl = `category.html?cat=${categoryKey}`;
     
     return `
         <section class="mb-10">
             <a href="${categoryUrl}" class="group block mb-6">
-                <h3 class="text-3xl font-bold border-l-4 border-blue-600 pl-3 transition duration-300 group-hover:text-blue-500">
+                <h3 class="text-3xl font-bold border-l-4 border-red-600 pl-3 transition duration-300 group-hover:text-red-500">
                     ${title} 
-                    <span class="text-blue-600 text-xl ml-2 group-hover:ml-3 transition-all duration-300">›</span>
+                    <span class="text-red-600 text-xl ml-2 group-hover:ml-3 transition-all duration-300">›</span>
                 </h3>
             </a>
             
-            <div class="horizontal-scroll-container flex space-x-4 overflow-x-auto pb-4 -mx-4 px-4 sm:mx-0 sm:px-0">
+            <div class="horizontal-scroll-container flex space-x-2 overflow-x-auto pb-4 -mx-4 px-4 sm:mx-0 sm:px-0">
                 ${cardsHtml}
             </div>
         </section>
