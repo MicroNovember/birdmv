@@ -2,7 +2,7 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <title>รับชมฟรี </title>
+    <title>รับชมฟรี - SAMORN Movie</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -11,12 +11,10 @@
     <script src="//content.jwplatform.com/libraries/SAHhwvZq.js"></script> 
 
     <style>
-        body {
-            margin: 0px;
-        }
-        /* Style สำหรับ Player Container */
+        body { margin: 0px; }
+        /* กำหนดให้ Player Container รักษาอัตราส่วน 16:9 */
         #jwplayerDiv {
-            aspect-ratio: 16/9; /* เพื่อให้ Player รักษาอัตราส่วน 16:9 */
+            aspect-ratio: 16/9; 
         }
     </style>
 </head>
@@ -34,10 +32,10 @@
 
     <main class="container mx-auto px-4 mt-8 mb-16">
         
-        <div id="jwplayerDiv" class="mx-auto" style="width: 100%; max-width: 640px; height: 360px;">
+        <div id="jwplayerDiv" class="mx-auto" style="width: 100%; max-width: 854px; height: auto;">
         </div>
         
-        <h2 id="movie-title" class="text-2xl font-bold mt-4 mb-4">กำลังโหลด...</h2>
+        <h2 id="movie-title" class="text-2xl font-bold mt-4 mb-4 text-blue-500">กำลังโหลด...</h2>
 
         <p id="error-message" class="text-red-500 mt-4 hidden">เกิดข้อผิดพลาดในการโหลดวิดีโอ</p>
     </main>
@@ -52,67 +50,70 @@
         document.addEventListener('DOMContentLoaded', () => {
             const movieUrl = getQueryParam('file');
             const movieName = getQueryParam('name');
-            // *** เพิ่มการดึง Subtitle URL ***
-            const subtitleUrl = getQueryParam('subtitle'); 
+            const subtitleUrl = getQueryParam('subtitle'); // <--- ดึง URL Subtitle
 
-            document.getElementById('movie-title').textContent = movieName || 'ไม่พบชื่อหนัง';
+            const titleElement = document.getElementById('movie-title');
+            const errorMessage = document.getElementById('error-message');
+
+            titleElement.textContent = movieName || 'ไม่พบชื่อหนัง';
             document.title = `ดูหนัง | ${movieName || 'ไม่พบชื่อหนัง'}`;
 
             if (!movieUrl) {
-                 document.getElementById('error-message').textContent = 'ไม่พบ URL ไฟล์หนัง';
-                 document.getElementById('error-message').classList.remove('hidden');
+                 errorMessage.textContent = '❌ ไม่พบ URL ไฟล์หนังที่จำเป็น';
+                 errorMessage.classList.remove('hidden');
                  return;
             }
+            
+            // ตรวจสอบ Type ของไฟล์
+            let fileType = 'hls'; // Assume HLS as default for m3u8
+            if (movieUrl.endsWith('.mpd')) {
+                fileType = 'dash';
+            } else if (movieUrl.endsWith('.mp4')) {
+                fileType = 'mp4';
+            }
 
+            // --- 1. เตรียม Config สำหรับ JW Player ---
             let playerConfig = {
                 file: movieUrl,
-                position: 'bottom',
+                type: fileType,
                 autostart: true,
                 stretching: "uniform", 
                 width: "100%",
                 height: "100%", 
-                // *** 1. เพิ่ม tracks array เพื่อรองรับ Subtitle ***
-                tracks: [],
+                crossorigin: 'anonymous', // พยายามช่วย Subtitle/HLS CORS
+                tracks: [], // <--- JW Player ใช้ tracks สำหรับ Subtitle
             };
             
-            // กำหนด type
-            if (movieUrl.endsWith('.m3u8')) {
-                playerConfig.type = 'hls';
-            } else if (movieUrl.endsWith('.mpd')) {
-                playerConfig.type = 'dash';
-            } else if (movieUrl.endsWith('.mp4')) {
-                playerConfig.type = 'mp4';
-            }
-
-            // *** 2. เพิ่ม Subtitle Track ถ้ามี URL ***
+            // --- 2. การเพิ่ม Subtitle Track (สำคัญ) ---
             if (subtitleUrl && subtitleUrl.trim() !== '' && subtitleUrl !== 'undefined') {
-                 // JW Player ใช้ 'captions' เป็น kind มาตรฐานสำหรับ VTT/SRT
                 playerConfig.tracks.push({
                     file: subtitleUrl,
                     label: 'บรรยายไทย',
-                    kind: 'captions',
-                    default: true,
-                    // สำคัญ: JW Player มักจะจัดการ CORS ของ Subtitle ได้ดีกว่า
-                    // แต่ถ้ายังมีปัญหา ให้แน่ใจว่า Subtitle URL ใช้ CORS Header ที่ถูกต้อง
+                    kind: 'captions', // VTT/SRT ใช้ 'captions'
+                    default: true // ตั้งค่าให้เปิด Subtitle นี้เป็นค่าเริ่มต้น
                 });
+                console.log(`✅ Subtitle URL ถูกเพิ่มใน Config: ${subtitleUrl}`);
+            } else {
+                 console.log("ℹ️ ไม่พบ Subtitle URL ใน Query Parameter.");
             }
             
+            // --- 3. Initialise JW Player ---
             try {
-                // ติดตั้ง JW Player
+                // jwplayer() ต้องถูกเรียกด้วย ID ของ <div>
                 const playerInstance = jwplayer("jwplayerDiv").setup(playerConfig);
 
-                // Error Handling (ควรจะจับปัญหา CORS/403 ได้)
+                // 4. Error Handling
                 playerInstance.on('error', function(event) {
                     const errorMsg = `❌ ข้อผิดพลาดในการเล่นวิดีโอ: ${event.message}`;
-                    document.getElementById('error-message').textContent = errorMsg;
-                    document.getElementById('error-message').classList.remove('hidden');
+                    errorMessage.textContent = errorMsg;
+                    errorMessage.classList.remove('hidden');
                     console.error("JW Player Error:", event);
                 });
 
             } catch (e) {
                 console.error("JW Player Setup Error:", e);
-                document.getElementById('error-message').textContent = 'ข้อผิดพลาดในการติดตั้ง JW Player';
-                document.getElementById('error-message').classList.remove('hidden');
+                errorMessage.textContent = '❌ ข้อผิดพลาดร้ายแรงในการสร้าง Player';
+                errorMessage.classList.remove('hidden');
             }
         });
     </script>
