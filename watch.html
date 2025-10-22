@@ -14,12 +14,9 @@
         body {
             margin: 0px;
         }
-        /* ลบ CSS ที่ทำให้ Player ล้นจอออก */
-        .jwplayer {
-            /* ไม่ต้องกำหนด position: absolute */
-        }
-        .jwplayer.jw-flag-aspect-mode {
-            /* ไม่ต้องกำหนด min/max-height */
+        /* Style สำหรับ Player Container */
+        #jwplayerDiv {
+            aspect-ratio: 16/9; /* เพื่อให้ Player รักษาอัตราส่วน 16:9 */
         }
     </style>
 </head>
@@ -38,11 +35,11 @@
     <main class="container mx-auto px-4 mt-8 mb-16">
         
         <div id="jwplayerDiv" class="mx-auto" style="width: 100%; max-width: 640px; height: 360px;">
-            </div>
+        </div>
         
         <h2 id="movie-title" class="text-2xl font-bold mt-4 mb-4">กำลังโหลด...</h2>
 
-        <p id="error-message" class="text-blue-500 mt-4 hidden">เกิดข้อผิดพลาดในการโหลดวิดีโอ</p>
+        <p id="error-message" class="text-red-500 mt-4 hidden">เกิดข้อผิดพลาดในการโหลดวิดีโอ</p>
     </main>
 
     <script type="text/javascript">
@@ -55,43 +52,69 @@
         document.addEventListener('DOMContentLoaded', () => {
             const movieUrl = getQueryParam('file');
             const movieName = getQueryParam('name');
+            // *** เพิ่มการดึง Subtitle URL ***
+            const subtitleUrl = getQueryParam('subtitle'); 
 
             document.getElementById('movie-title').textContent = movieName || 'ไม่พบชื่อหนัง';
             document.title = `ดูหนัง | ${movieName || 'ไม่พบชื่อหนัง'}`;
 
-            if (movieUrl) {
-                let playerConfig = {
-                    file: movieUrl,
-                    position: 'bottom',
-                    autostart: true,
-                    stretching: "uniform", 
-                    width: "100%",
-                    height: "100%", 
-                    // กำหนดขนาดเริ่มต้นที่ 640x360 ผ่าน CSS style ใน <div>
-                };
-                
-                if (movieUrl.endsWith('.m3u8')) {
-                    playerConfig.type = 'hls';
-                } else if (movieUrl.endsWith('.mpd')) {
-                    playerConfig.type = 'dash';
-                } else if (movieUrl.endsWith('.mp4')) {
-                    playerConfig.type = 'mp4';
-                }
-                
-                try {
-                    // ติดตั้ง JW Player
-                    jwplayer("jwplayerDiv").setup(playerConfig);
-                } catch (e) {
-                    console.error("JW Player Setup Error:", e);
-                    document.getElementById('error-message').textContent = 'ข้อผิดพลาดในการติดตั้ง JW Player';
+            if (!movieUrl) {
+                 document.getElementById('error-message').textContent = 'ไม่พบ URL ไฟล์หนัง';
+                 document.getElementById('error-message').classList.remove('hidden');
+                 return;
+            }
+
+            let playerConfig = {
+                file: movieUrl,
+                position: 'bottom',
+                autostart: true,
+                stretching: "uniform", 
+                width: "100%",
+                height: "100%", 
+                // *** 1. เพิ่ม tracks array เพื่อรองรับ Subtitle ***
+                tracks: [],
+            };
+            
+            // กำหนด type
+            if (movieUrl.endsWith('.m3u8')) {
+                playerConfig.type = 'hls';
+            } else if (movieUrl.endsWith('.mpd')) {
+                playerConfig.type = 'dash';
+            } else if (movieUrl.endsWith('.mp4')) {
+                playerConfig.type = 'mp4';
+            }
+
+            // *** 2. เพิ่ม Subtitle Track ถ้ามี URL ***
+            if (subtitleUrl && subtitleUrl.trim() !== '' && subtitleUrl !== 'undefined') {
+                 // JW Player ใช้ 'captions' เป็น kind มาตรฐานสำหรับ VTT/SRT
+                playerConfig.tracks.push({
+                    file: subtitleUrl,
+                    label: 'บรรยายไทย',
+                    kind: 'captions',
+                    default: true,
+                    // สำคัญ: JW Player มักจะจัดการ CORS ของ Subtitle ได้ดีกว่า
+                    // แต่ถ้ายังมีปัญหา ให้แน่ใจว่า Subtitle URL ใช้ CORS Header ที่ถูกต้อง
+                });
+            }
+            
+            try {
+                // ติดตั้ง JW Player
+                const playerInstance = jwplayer("jwplayerDiv").setup(playerConfig);
+
+                // Error Handling (ควรจะจับปัญหา CORS/403 ได้)
+                playerInstance.on('error', function(event) {
+                    const errorMsg = `❌ ข้อผิดพลาดในการเล่นวิดีโอ: ${event.message}`;
+                    document.getElementById('error-message').textContent = errorMsg;
                     document.getElementById('error-message').classList.remove('hidden');
-                }
-            } else {
-                document.getElementById('error-message').textContent = 'ไม่พบ URL ไฟล์หนัง';
+                    console.error("JW Player Error:", event);
+                });
+
+            } catch (e) {
+                console.error("JW Player Setup Error:", e);
+                document.getElementById('error-message').textContent = 'ข้อผิดพลาดในการติดตั้ง JW Player';
                 document.getElementById('error-message').classList.remove('hidden');
             }
         });
     </script>
 </body>
 </html>
-
