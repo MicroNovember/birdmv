@@ -93,6 +93,11 @@
                 crossorigin: 'anonymous', // สำคัญสำหรับ CORS (ทั้ง HLS และ Subtitle)
                 tracks: [], // อาร์เรย์สำหรับ Subtitle Tracks
             };
+        captions: {
+                   position: 'bottom', // บังคับให้ Subtitle แสดงที่ด้านล่างของจอ
+        // คุณยังสามารถกำหนดขนาดตัวอักษรได้ด้วย เช่น:
+        // fontSize: 14 
+                  },
             
             // --- 2. การเพิ่ม Subtitle Track (สำคัญ) ---
             if (subtitleUrl && subtitleUrl.trim() !== '' && subtitleUrl !== 'undefined') {
@@ -132,3 +137,4 @@
     </script>
 </body>
 </html>
+
