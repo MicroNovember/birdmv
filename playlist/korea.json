@@ -1,4 +1,11 @@
 [
+    {
+  "name": "The Ghost Game",
+  "info": "บรรยายไทย",
+        "logo": "https://statics-02.duckduckcdn.com/683ecdf1-c805-50fd-91aa-725c75f54d38/poster.jpg",
+  "subtitle": "https://statics-02.duckduckcdn.com/683ecdf1-c805-50fd-91aa-725c75f54d38/sub_tha.vtt",
+  "file": "https://statics-02.duckduckcdn.com/683ecdf1-c805-50fd-91aa-725c75f54d38/audio-default/audio.m3u8" 
+},
   {
     "name": "Midnight Sun (2025) กลางคืนตลอดกาล กลางใจตลอดไป",
     "info": "พากย์ไทย",
@@ -2460,4 +2467,5 @@
         "subtitle": "https://pastebin.com/raw/XjDpyhzb",
         "url": "https://text-lb.xmoviedo24.com/playlist2/61785104d1eb1IMV/master.m3u8"
     }
+
 ]
