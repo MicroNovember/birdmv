@@ -45,96 +45,102 @@
         <p id="error-message" class="text-red-500 mt-4 hidden">เกิดข้อผิดพลาดในการโหลดวิดีโอ</p>
     </main>
 
-    <script type="text/javascript">
+<script type="text/javascript">
+    
+    /**
+     * ดึงค่าจาก Query Parameter
+     * @param {string} param - ชื่อพารามิเตอร์ (เช่น 'file', 'name', 'subtitle')
+     */
+    function getQueryParam(param) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const movieUrl = getQueryParam('file');
+        const movieName = getQueryParam('name');
+        const subtitleUrl = getQueryParam('subtitle'); 
+
+        const titleElement = document.getElementById('movie-title');
+        const errorMessage = document.getElementById('error-message');
+
+        titleElement.textContent = movieName || 'ไม่พบชื่อหนัง';
+        document.title = `ดูหนัง | ${movieName || 'ไม่พบชื่อหนัง'}`;
+
+        if (!movieUrl) {
+             errorMessage.textContent = '❌ ไม่พบ URL ไฟล์หนังที่จำเป็น';
+             errorMessage.classList.remove('hidden');
+             return;
+        }
         
-        /**
-         * ดึงค่าจาก Query Parameter
-         * @param {string} param - ชื่อพารามิเตอร์ (เช่น 'file', 'name', 'subtitle')
-         */
-        function getQueryParam(param) {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get(param);
+        // ตรวจสอบ Type ของไฟล์เพื่อกำหนด type ใน Config
+        let fileType = 'hls'; // Default for .m3u8
+        if (movieUrl.endsWith('.mpd')) {
+            fileType = 'dash';
+        } else if (movieUrl.endsWith('.mp4')) {
+            fileType = 'mp4';
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const movieUrl = getQueryParam('file');
-            const movieName = getQueryParam('name');
-            const subtitleUrl = getQueryParam('subtitle'); 
-
-            const titleElement = document.getElementById('movie-title');
-            const errorMessage = document.getElementById('error-message');
-
-            titleElement.textContent = movieName || 'ไม่พบชื่อหนัง';
-            document.title = `ดูหนัง | ${movieName || 'ไม่พบชื่อหนัง'}`;
-
-            if (!movieUrl) {
-                 errorMessage.textContent = '❌ ไม่พบ URL ไฟล์หนังที่จำเป็น';
-                 errorMessage.classList.remove('hidden');
-                 return;
-            }
+        // --- 1. เตรียม Config สำหรับ JW Player ---
+        let playerConfig = {
+            file: movieUrl,
+            type: fileType,
+            autostart: true,
+            controls: true, // ตรวจสอบให้แน่ใจว่า Controls เปิดอยู่
+            stretching: "uniform", 
+            width: "100%",
+            height: "100%", 
+            crossorigin: 'anonymous', // สำคัญสำหรับ CORS (ทั้ง HLS และ Subtitle)
             
-            // ตรวจสอบ Type ของไฟล์เพื่อกำหนด type ใน Config
-            let fileType = 'hls'; // Default for .m3u8
-            if (movieUrl.endsWith('.mpd')) {
-                fileType = 'dash';
-            } else if (movieUrl.endsWith('.mp4')) {
-                fileType = 'mp4';
-            }
-
-            // --- 1. เตรียม Config สำหรับ JW Player ---
-            let playerConfig = {
-                file: movieUrl,
-                type: fileType,
-                autostart: true,
-                controls: true, // ตรวจสอบให้แน่ใจว่า Controls เปิดอยู่
-                stretching: "uniform", 
-                width: "100%",
-                height: "100%", 
-                crossorigin: 'anonymous', // สำคัญสำหรับ CORS (ทั้ง HLS และ Subtitle)
-                tracks: [], // อาร์เรย์สำหรับ Subtitle Tracks
-            };
-        captions: {
-                    position: 'bottom', // บังคับให้ Subtitle แสดงที่ด้านล่างของจอ
-                    backgroundOpacity: 0,
-                  },
+            // ************************************************
+            // ✅ ตำแหน่งที่ถูกต้อง: captions ต้องอยู่ภายใน playerConfig
+            captions: {
+                position: 'bottom', // บังคับให้ Subtitle แสดงที่ด้านล่างของจอ
+                backgroundOpacity: 0, // ทำให้พื้นหลังโปร่งใส
+            },
+            // ************************************************
             
-            // --- 2. การเพิ่ม Subtitle Track (สำคัญ) ---
-            if (subtitleUrl && subtitleUrl.trim() !== '' && subtitleUrl !== 'undefined') {
-                playerConfig.tracks.push({
-                    file: subtitleUrl,
-                    label: 'บรรยายไทย',
-                    kind: 'captions', // VTT/SRT ใช้ 'captions'
-                    default: true // ตั้งค่าให้เปิด Subtitle นี้เป็นค่าเริ่มต้น
-                });
-                console.log(`✅ Subtitle URL ถูกเพิ่มใน Config: ${subtitleUrl}`);
-            } else {
-                 // หากไม่พบ URL Subtitle
-                 console.log("ℹ️ ไม่พบ Subtitle URL ใน Query Parameter.");
-            }
-            
-            // --- 3. Initialise JW Player ---
-            try {
-                // ติดตั้ง Player ใน div id="jwplayerDiv"
-                const playerInstance = jwplayer("jwplayerDiv").setup(playerConfig);
+            tracks: [], // อาร์เรย์สำหรับ Subtitle Tracks
+        };
+        
+        // --- 2. การเพิ่ม Subtitle Track (สำคัญ) ---
+        if (subtitleUrl && subtitleUrl.trim() !== '' && subtitleUrl !== 'undefined') {
+            playerConfig.tracks.push({
+                file: subtitleUrl,
+                label: 'บรรยายไทย',
+                kind: 'captions', // VTT/SRT ใช้ 'captions'
+                default: true // ตั้งค่าให้เปิด Subtitle นี้เป็นค่าเริ่มต้น
+            });
+            console.log(`✅ Subtitle URL ถูกเพิ่มใน Config: ${subtitleUrl}`);
+        } else {
+             // หากไม่พบ URL Subtitle
+             console.log("ℹ️ ไม่พบ Subtitle URL ใน Query Parameter.");
+        }
+        
+        // --- 3. Initialise JW Player ---
+        try {
+            // ติดตั้ง Player ใน div id="jwplayerDiv"
+            const playerInstance = jwplayer("jwplayerDiv").setup(playerConfig);
 
-                // 4. Error Handling
-                playerInstance.on('error', function(event) {
-                    const errorMsg = `❌ ข้อผิดพลาดในการเล่นวิดีโอ: ${event.message}`;
-                    errorMessage.textContent = errorMsg;
-                    errorMessage.classList.remove('hidden');
-                    console.error("JW Player Error:", event);
-                });
-
-                console.log("JW Player Setup Complete.");
-
-            } catch (e) {
-                console.error("JW Player Setup Error:", e);
-                errorMessage.textContent = '❌ ข้อผิดพลาดร้ายแรงในการสร้าง Player';
+            // 4. Error Handling
+            playerInstance.on('error', function(event) {
+                const errorMsg = `❌ ข้อผิดพลาดในการเล่นวิดีโอ: ${event.message}`;
+                errorMessage.textContent = errorMsg;
                 errorMessage.classList.remove('hidden');
-            }
-        });
-    </script>
+                console.error("JW Player Error:", event);
+            });
+
+            console.log("JW Player Setup Complete.");
+
+        } catch (e) {
+            console.error("JW Player Setup Error:", e);
+            errorMessage.textContent = '❌ ข้อผิดพลาดร้ายแรงในการสร้าง Player';
+            errorMessage.classList.remove('hidden');
+        }
+    });
+</script>
 </body>
 </html>
+
 
 
