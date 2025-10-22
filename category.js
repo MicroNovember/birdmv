@@ -9,21 +9,30 @@ const CATEGORIES_FULL_NAME = {
 };
 
 const ITEMS_PER_PAGE = 48; // จำกัดรายการสูงสุด 48 เรื่องต่อหน้า
-let allMovies = [];        // เก็บรายการหนังทั้งหมดของหมวดหมู่ปัจจุบัน
-let currentPage = 1;       // หน้าปัจจุบันที่กำลังแสดง
+let allMovies = [];      // เก็บรายการหนังทั้งหมดของหมวดหมู่ปัจจุบัน
+let currentPage = 1;      // หน้าปัจจุบันที่กำลังแสดง
 let currentCategory = '';  // หมวดหมู่ที่กำลังแสดง
 
 // --- [ COMMON FUNCTIONS ] ---
 
 /**
-/**
  * ฟังก์ชันสร้าง Movie Card HTML String (แนวตั้ง 150x225)
- * ปรับปรุง: แก้ไขขนาดให้เป็นแนวตั้ง 150px (กว้าง) x 225px (สูง)
+ * ปรับปรุง: แก้ไขให้ส่งค่า subtitle เข้าไปใน watchUrl ด้วย
  */
 function createMovieCard(movie) {
     const movieFile = movie.file || movie.url;
-    // ใช้ encodeURIComponent สำหรับ URL ที่อาจมีสัญลักษณ์พิเศษ
-    const watchUrl = `watch.html?file=${encodeURIComponent(movieFile || '')}&name=${encodeURIComponent(movie.name || '')}`;
+    const movieName = movie.name || '';
+    // *** 1. ดึง URL ของ Subtitle จาก Object ***
+    const movieSubtitle = movie.subtitle; 
+
+    // 2. สร้าง URL พื้นฐาน (File และ Name)
+    let watchUrl = `watch.html?file=${encodeURIComponent(movieFile || '')}&name=${encodeURIComponent(movieName)}`;
+
+    // 3. *** ส่วนที่ถูกแก้ไข: เพิ่ม Subtitle URL ถ้ามีค่า ***
+    if (movieSubtitle && movieSubtitle.trim() !== '') {
+        watchUrl += `&subtitle=${encodeURIComponent(movieSubtitle)}`;
+    }
+    // *******************************************************
 
     return `
         <div class="flex-shrink-0 w-[150px] bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-red-500/30 transition duration-300 poster-card group cursor-pointer">
@@ -193,7 +202,7 @@ function searchMovies() {
     }
     
     // กรองรายการหนัง
-    const filteblueMovies = allMovies.filter(movie => {
+    const filteredMovies = allMovies.filter(movie => {
         const name = (movie.name || '').toLowerCase();
         const info = (movie.info || '').toLowerCase();
         return name.includes(query) || info.includes(query);
@@ -201,7 +210,7 @@ function searchMovies() {
     
     // เมื่อค้นหา ให้เริ่มแสดงที่หน้า 1 ของผลลัพธ์การค้นหา
     currentPage = 1; 
-    displayMovies(filteblueMovies, `ผลการค้นหา "${query}" ใน ${CATEGORIES_FULL_NAME[currentCategory]}`);
+    displayMovies(filteredMovies, `ผลการค้นหา "${query}" ใน ${CATEGORIES_FULL_NAME[currentCategory]}`);
 }
 
 // โหลดรายการตามพารามิเตอร์เมื่อหน้าเว็บโหลดเสร็จ
