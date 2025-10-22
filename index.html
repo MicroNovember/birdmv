@@ -1,7 +1,53 @@
-<script>
-<!--
-document.write(unescape(
-"%3C%21DOCTYPE%20html%3E%0A%3Chtml%20lang%3D%22th%22%3E%0A%3Chead%3E%0A%20%20%20%20%3Ctitle%3ESAMORN%20Movie%20%7C%20%u0E2B%u0E19%u0E49%u0E32%u0E2B%u0E25%u0E31%u0E01%3C/title%3E%0A%20%20%20%20%3Cmeta%20charset%3D%22UTF-8%22%3E%0A%20%20%20%20%3Cmeta%20name%3D%22viewport%22%20content%3D%22width%3Ddevice-width%2C%20initial-scale%3D1.0%22%3E%0A%20%20%20%20%0A%20%20%20%20%3Cscript%20src%3D%22https%3A//cdn.tailwindcss.com%22%3E%3C/script%3E%0A%20%20%20%20%3Clink%20rel%3D%22stylesheet%22%20href%3D%22style.css%22%3E%20%0A%3C/head%3E%0A%3Cbody%20class%3D%22bg-gray-900%20text-white%22%3E%0A%0A%20%20%20%20%3Cheader%20class%3D%22sticky%20top-0%20z-50%20bg-gray-900/90%20backdrop-blur-sm%20shadow-xl%22%3E%0A%20%20%20%20%20%20%20%20%3Cdiv%20class%3D%22container%20mx-auto%20px-4%20py-4%20flex%20flex-wrap%20justify-between%20items-center%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Ca%20href%3D%22index.html%22%20class%3D%22mb-2%20sm%3Amb-0%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Ch1%20class%3D%22text-3xl%20font-extrabold%20text-blue-600%20tracking-wider%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20SAMORN%20%3Cspan%20class%3D%22text-white%22%3EMovie%3C/span%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3C/h1%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C/a%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cnav%20id%3D%22main-nav%22%20class%3D%22flex%20flex-wrap%20space-x-2%20space-y-2%20sm%3Aspace-y-0%20text-sm%20font-medium%20pt-2%20sm%3Apt-0%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Ca%20href%3D%22index.html%22%20class%3D%22py-1%20px-3%20rounded-full%20bg-blue-600%20text-white%20transition%20duration-300%20flex-shrink-0%22%3E%u0E2B%u0E19%u0E49%u0E32%u0E2B%u0E25%u0E31%u0E01%3C/a%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Ca%20href%3D%22category.html%3Fcat%3Dthai%22%20class%3D%22py-1%20px-3%20rounded-full%20hover%3Abg-gray-700%20transition%20duration-300%20flex-shrink-0%22%3E%u0E44%u0E17%u0E22%3C/a%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Ca%20href%3D%22category.html%3Fcat%3Dkorea%22%20class%3D%22py-1%20px-3%20rounded-full%20hover%3Abg-gray-700%20transition%20duration-300%20flex-shrink-0%22%3E%u0E40%u0E01%u0E32%u0E2B%u0E25%u0E35%3C/a%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Ca%20href%3D%22category.html%3Fcat%3Dchina%22%20class%3D%22py-1%20px-3%20rounded-full%20hover%3Abg-gray-700%20transition%20duration-300%20flex-shrink-0%22%3E%u0E08%u0E35%u0E19/%u0E2E%u0E48%u0E2D%u0E07%u0E01%u0E07%3C/a%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Ca%20href%3D%22category.html%3Fcat%3Dinter%22%20class%3D%22py-1%20px-3%20rounded-full%20hover%3Abg-gray-700%20transition%20duration-300%20flex-shrink-0%22%3E%u0E2A%u0E32%u0E01%u0E25%3C/a%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Ca%20href%3D%22category.html%3Fcat%3Dcartoon%22%20class%3D%22py-1%20px-3%20rounded-full%20hover%3Abg-gray-700%20transition%20duration-300%20flex-shrink-0%22%3E%u0E01%u0E32%u0E23%u0E4C%u0E15%u0E39%u0E19%3C/a%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Ca%20href%3D%22category.html%3Fcat%3Dindia%22%20class%3D%22py-1%20px-3%20rounded-full%20hover%3Abg-gray-700%20transition%20duration-300%20flex-shrink-0%22%3E%u0E2D%u0E34%u0E19%u0E40%u0E14%u0E35%u0E22%3C/a%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C/nav%3E%0A%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cform%20id%3D%22search-form%22%20class%3D%22w-full%20mt-2%20sm%3Aw-auto%20sm%3Amt-0%20flex%20space-x-2%22%20onsubmit%3D%22return%20false%3B%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cinput%20type%3D%22text%22%20id%3D%22search-input%22%20placeholder%3D%22%u0E04%u0E49%u0E19%u0E2B%u0E32%u0E2B%u0E19%u0E31%u0E07...%22%20class%3D%22px-4%20py-2%20rounded-full%20bg-gray-800%20border%20border-gray-700%20text-sm%20focus%3Aoutline-none%20focus%3Aring-2%20focus%3Aring-blue-600%20w-full%20sm%3Aw-64%22%20oninput%3D%22searchMovies%28%29%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cbutton%20type%3D%22submit%22%20onclick%3D%22searchMovies%28%29%22%20class%3D%22px-3%20py-2%20bg-blue-600%20text-white%20rounded-full%20hover%3Abg-blue-700%20transition%20duration-300%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%uD83D%uDD0D%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3C/button%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3C/form%3E%0A%20%20%20%20%20%20%20%20%3C/div%3E%0A%20%20%20%20%3C/header%3E%0A%0A%20%20%20%20%3Cmain%20class%3D%22container%20mx-auto%20px-4%20mt-8%22%3E%0A%20%20%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%3Cdiv%20id%3D%22search-result-container%22%3E%3C/div%3E%0A%20%20%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%3Cdiv%20id%3D%22movie-sections-container%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Cp%20class%3D%22text-gray-400%22%3E%u0E01%u0E33%u0E25%u0E31%u0E07%u0E42%u0E2B%u0E25%u0E14%u0E23%u0E32%u0E22%u0E01%u0E32%u0E23%u0E2B%u0E19%u0E31%u0E07%u0E17%u0E31%u0E49%u0E07%u0E2B%u0E21%u0E14...%3C/p%3E%0A%20%20%20%20%20%20%20%20%3C/div%3E%0A%20%20%20%20%20%20%20%20%0A%20%20%20%20%3C/main%3E%0A%0A%20%20%20%20%3Cscript%20src%3D%22script.js%22%3E%3C/script%3E%0A%3C/body%3E%0A%3C/html%3E"
-));
--->
-</script>
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <title>SAMORN Movie | หน้าหลัก</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css"> 
+</head>
+<body class="bg-gray-900 text-white">
+
+    <header class="sticky top-0 z-50 bg-gray-900/90 backdrop-blur-sm shadow-xl">
+        <div class="container mx-auto px-4 py-4 flex flex-wrap justify-between items-center">
+            <a href="index.html" class="mb-2 sm:mb-0">
+                <h1 class="text-3xl font-extrabold text-blue-600 tracking-wider">
+                    SAMORN <span class="text-white">Movie</span>
+                </h1>
+            </a>
+            
+            <nav id="main-nav" class="flex flex-wrap space-x-2 space-y-2 sm:space-y-0 text-sm font-medium pt-2 sm:pt-0">
+                <a href="index.html" class="py-1 px-3 rounded-full bg-blue-600 text-white transition duration-300 flex-shrink-0">หน้าหลัก</a>
+                
+                <a href="category.html?cat=thai" class="py-1 px-3 rounded-full hover:bg-gray-700 transition duration-300 flex-shrink-0">ไทย</a>
+                <a href="category.html?cat=korea" class="py-1 px-3 rounded-full hover:bg-gray-700 transition duration-300 flex-shrink-0">เกาหลี</a>
+                <a href="category.html?cat=china" class="py-1 px-3 rounded-full hover:bg-gray-700 transition duration-300 flex-shrink-0">จีน/ฮ่องกง</a>
+                <a href="category.html?cat=inter" class="py-1 px-3 rounded-full hover:bg-gray-700 transition duration-300 flex-shrink-0">สากล</a>
+                <a href="category.html?cat=cartoon" class="py-1 px-3 rounded-full hover:bg-gray-700 transition duration-300 flex-shrink-0">การ์ตูน</a>
+                <a href="category.html?cat=india" class="py-1 px-3 rounded-full hover:bg-gray-700 transition duration-300 flex-shrink-0">อินเดีย</a>
+            </nav>
+
+            <form id="search-form" class="w-full mt-2 sm:w-auto sm:mt-0 flex space-x-2" onsubmit="return false;">
+                <input type="text" id="search-input" placeholder="ค้นหาหนัง..." class="px-4 py-2 rounded-full bg-gray-800 border border-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 w-full sm:w-64" oninput="searchMovies()">
+                <button type="submit" onclick="searchMovies()" class="px-3 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition duration-300">
+                    🔍
+                </button>
+            </form>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 mt-8">
+        
+        <div id="search-result-container"></div>
+        
+        <div id="movie-sections-container">
+            <p class="text-gray-400">กำลังโหลดรายการหนังทั้งหมด...</p>
+        </div>
+        
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
