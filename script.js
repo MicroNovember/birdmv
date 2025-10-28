@@ -6,6 +6,7 @@ const CATEGORIES = [
     { key: 'inter', title: 'หนังฝรั่ง/สากล' },
     { key: 'cartoon', title: 'การ์ตูน/อนิเมชั่น' },
     { key: 'india', title: 'หนังอินเดีย' },
+    { key: 'thai2', title: 'หนังฝรั่งเศส' },
 ];
 
 const ITEMS_PER_ROW = 16; 
