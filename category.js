@@ -6,7 +6,7 @@ const CATEGORIES_FULL_NAME = {
     'inter': 'หนังฝรั่ง/สากล',
     'cartoon': 'การ์ตูน/อนิเมชั่น',
     'india': 'หนังอินเดีย',
-    'france': 'หนังฝรั่งเศส',
+    'asia': 'หนังเอเซีย',
 };
 
 const ITEMS_PER_PAGE = 48; // จำกัดรายการสูงสุด 48 เรื่องต่อหน้า

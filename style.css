@@ -9,7 +9,7 @@ body {
     height: 8px;
 }
 .horizontal-scroll-container::-webkit-scrollbar-thumb {
-    background-color: #ef4444; /* red-500 */
+    background-color: #ffffff8e; /* red-500 */
     border-radius: 4px;
 }
 .horizontal-scroll-container::-webkit-scrollbar-track {

@@ -6,7 +6,7 @@ const CATEGORIES = [
     { key: 'inter', title: 'หนังฝรั่ง/สากล' },
     { key: 'cartoon', title: 'การ์ตูน/อนิเมชั่น' },
     { key: 'india', title: 'หนังอินเดีย' },
-    { key: 'france', title: 'หนังฝรั่งเศส' },
+    { key: 'asia', title: 'หนังเอเซีย' },
 ];
 
 const ITEMS_PER_ROW = 16; 
@@ -185,4 +185,3 @@ document.addEventListener('DOMContentLoaded', () => {
         loadAllMovies(); 
     }
 });
-
