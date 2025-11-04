@@ -1,10 +1,12 @@
 [
+
   {
-    "name": "แม่ซื้อ (2025) Host",
-    "info": "พากย์ไทย",
-    "logo": "https://movie22hd.com/wp-content/uploads/2025/10/Host.webp",
-    "file": "https://text-lb.xmoviedo24.com/playlist2/e721e9d5HzvEq/master.m3u8"
-  },
+    "name": "แม่ซื้อ",
+    "logo": "https://statics-01.duckduckcdn.com/1f54cee2-6dca-57d2-8643-716737fa337b/poster.jpg",
+    "file": "https://statics-01.duckduckcdn.com/1f54cee2-6dca-57d2-8643-716737fa337b/audio-default/audio.m3u8",
+    "subtitle": "https://statics-01.duckduckcdn.com/1f54cee2-6dca-57d2-8643-716737fa337b/sub_tha.vtt",
+    "info": "พากย์ไทย"
+  }ม
     {
         "name": "ลักกันวันตาย",
         "image": "https://statics-01.duckduckcdn.com/5ea1dd73-ede4-5aa1-bb31-a59ae92517e9/poster.jpg",
@@ -9029,4 +9031,5 @@
         "subtitle": "https://pastebin.com/raw/XjDpyhzb",
         "url": "https://text-lb.xmoviedo24.com/playlist2/6178510aa2b5dDsk/master.m3u8"
     }
+
       ]
