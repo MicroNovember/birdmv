@@ -1,10 +1,16 @@
 [
-
   {
-    "name": "แม่ซื้อ",
+    "name": "แม่ซื้อ (2025) Host",
     "logo": "https://statics-01.duckduckcdn.com/1f54cee2-6dca-57d2-8643-716737fa337b/poster.jpg",
     "file": "https://statics-01.duckduckcdn.com/1f54cee2-6dca-57d2-8643-716737fa337b/audio-default/audio.m3u8",
     "subtitle": "https://statics-01.duckduckcdn.com/1f54cee2-6dca-57d2-8643-716737fa337b/sub_tha.vtt",
+    "info": "พากย์ไทย"
+  },
+  {
+    "name": "วิญญาณเลขที่ 13 (2025) Attack 13",
+    "logo": "https://statics-02.duckduckcdn.com/801e081c-b60c-539e-af11-efc17fa67790/poster.jpg",
+    "file": "https://statics-02.duckduckcdn.com/801e081c-b60c-539e-af11-efc17fa67790/audio-default/audio.m3u8",
+    "subtitle": "https://statics-02.duckduckcdn.com/801e081c-b60c-539e-af11-efc17fa67790/sub_tha.vtt",
     "info": "พากย์ไทย"
   },
     {
@@ -9031,6 +9037,4 @@
         "subtitle": "https://pastebin.com/raw/XjDpyhzb",
         "url": "https://text-lb.xmoviedo24.com/playlist2/6178510aa2b5dDsk/master.m3u8"
     }
-
       ]
-
