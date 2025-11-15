@@ -1,21 +1,32 @@
 [
+    {
+    "name": "In Your Dreams (2025) ผจญภัยในฝัน",
+    "info": "บรรยายไทย",
+    "logo": "https://movie22hd.com/wp-content/uploads/2025/11/In-Your-Dreams.webp",
+    "file": "https://text-lb.xmoviedo24.com/playlist2/fa9e989bWcZ8j/master.m3u8"
+  },
   {
     "name": "Grand Prix of Europe (2025)",
-    "info": "บรรยายไทย",
-    "logo": "https://movie22hd.com/wp-content/uploads/2025/10/Grand-Prix-of-Europe.webp",
-    "file": "https://text-lb.xmoviedo24.com/playlist2/2bf5f066bhkLX/master.m3u8"
+    "logo": "https://statics-01.duckduckcdn.com/7862b838-67b9-5686-a2be-55a9dc2770d4/poster.jpg",
+    "file": "https://statics-01.duckduckcdn.com/7862b838-67b9-5686-a2be-55a9dc2770d4/audio-default/audio.m3u8",
+    "subtitle": "https://statics-01.duckduckcdn.com/7862b838-67b9-5686-a2be-55a9dc2770d4/sub_tha.vtt",
+    "info": "บรรยายไทย"
   },
+
   {
     "name": "The Twits (2025) คนซื่อบื้อ",
-    "info": "พากย์ไทย",
-    "logo": "https://movie22hd.com/wp-content/uploads/2025/10/The-Twits.webp",
-    "file": "https://text-lb.xmoviedo24.com/playlist2/f5e1bf6dYem54/master.m3u8"
+    "logo": "https://statics-02.duckduckcdn.com/1ed989af-874f-5493-94e8-b71878c9f21a/poster.jpg",
+    "file": "https://statics-02.duckduckcdn.com/1ed989af-874f-5493-94e8-b71878c9f21a/audio-tha/audio.m3u8",
+    "subtitle": "https://statics-02.duckduckcdn.com/1ed989af-874f-5493-94e8-b71878c9f21a/sub_tha.vtt",
+    "info": "พากย์ไทย"
   },
+
   {
     "name": "The Twits (2025) คนซื่อบื้อ",
-    "info": "บรรยายไทย",
-    "logo": "https://movie22hd.com/wp-content/uploads/2025/10/The-Twits.webp",
-    "file": "https://text-lb.xmoviedo24.com/playlist2/9b5f5926rl1ch/master.m3u8"
+    "logo": "https://statics-02.duckduckcdn.com/1ed989af-874f-5493-94e8-b71878c9f21a/poster.jpg",
+    "file": "https://statics-02.duckduckcdn.com/1ed989af-874f-5493-94e8-b71878c9f21a/audio-eng/audio.m3u8",
+    "subtitle": "https://statics-02.duckduckcdn.com/1ed989af-874f-5493-94e8-b71878c9f21a/sub_tha.vtt",
+    "info": "บรรยายไทย"
   },
   {
     "name": "Chainsaw Man-The Movie: Reze Arc (2025) เชนซอว์ แมน เดอะ มูฟวี่ เรื่องราวของเรเซ่",
