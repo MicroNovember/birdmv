@@ -177,10 +177,10 @@ class AdminDashboard {
                     <td class="py-3 px-4 text-gray-300">${lastUsed}</td>
                     <td class="py-3 px-4">
                         <div class="flex space-x-2">
-                            <button onclick="adminDashboard.toggleCodeStatus('${code.id}', ${code.is_active !== false})" class="px-3 py-1 ${isActive ? 'bg-yellow-600 hover:bg-yellow-700' : 'bg-green-600 hover:bg-green-700'} text-white rounded text-sm transition">
+                            <button onclick="toggleCodeStatus('${code.id}', ${code.is_active !== false})" class="px-3 py-1 ${isActive ? 'bg-yellow-600 hover:bg-yellow-700' : 'bg-green-600 hover:bg-green-700'} text-white rounded text-sm transition">
                                 ${isActive ? 'ปิดใช้' : 'เปิดใช้'}
                             </button>
-                            <button onclick="adminDashboard.deleteCode('${code.id}')" class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded text-sm transition">
+                            <button onclick="deleteCode('${code.id}')" class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded text-sm transition">
                                 ลบ
                             </button>
                         </div>
@@ -207,18 +207,39 @@ class AdminDashboard {
 
     // Delete code
     async deleteCode(codeId) {
-        if (!confirm('คุณแน่ใจหรือไม่ที่จะลบรหัสนี้?')) {
+        const result = await Alert2.confirm(
+            'ยืนยันการลบรหัส',
+            'คุณแน่ใจหรือไม่ที่จะลบรหัส VIP นี้? การดำเนินการนี้ไม่สามารถยกเลิกได้'
+        );
+        
+        if (!result.isConfirmed) {
             return;
         }
 
         try {
+            // Show loading
+            Alert2.loading('กำลังลบรหัส...');
+            
             await this.db.collection('vip_codes').doc(codeId).delete();
+            
+            // Close loading and show success
+            Alert2.close();
+            Alert2.success('ลบรหัสสำเร็จ', `รหัส ${codeId} ถูกลบแล้ว`);
             
             // Reload codes
             this.loadVipCodes();
         } catch (error) {
             console.error('Error deleting code:', error);
-            Alert2.error('เกิดข้อผิดพลาด', 'ในการลบรหัส');
+            Alert2.close();
+            
+            // Handle Firebase errors
+            if (error.message && error.message.includes('blocked')) {
+                Alert2.error('การเชื่อมต่อถูกบล็อก', 'กรุณาปิด adblocker และลองใหม่');
+            } else if (error.message && error.message.includes('permission-denied')) {
+                Alert2.error('ไม่มีสิทธิ์', 'คุณไม่มีสิทธิ์ลบรหัสนี้');
+            } else {
+                Alert2.error('เกิดข้อผิดพลาด', 'ไม่สามารถลบรหัสได้ กรุณาลองใหม่');
+            }
         }
     }
 }
@@ -288,6 +309,24 @@ function adminLogin() {
 function adminLogout() {
     if (window.adminDashboard) {
         window.adminDashboard.adminLogout();
+    }
+}
+
+// Global delete function for reliability
+async function deleteCode(codeId) {
+    if (window.adminDashboard) {
+        await window.adminDashboard.deleteCode(codeId);
+    } else {
+        Alert2.error('ระบบไม่พร้อม', 'กรุณารีเฟรชหน้าเว็บและลองใหม่');
+    }
+}
+
+// Global toggle function for reliability
+async function toggleCodeStatus(codeId, currentStatus) {
+    if (window.adminDashboard) {
+        await window.adminDashboard.toggleCodeStatus(codeId, currentStatus);
+    } else {
+        Alert2.error('ระบบไม่พร้อม', 'กรุณารีเฟรชหน้าเว็บและลองใหม่');
     }
 }
 
