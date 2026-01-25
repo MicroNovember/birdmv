@@ -379,8 +379,12 @@ async function loadCategory(categoryKey) {
         if (!response.ok) throw new Error(`Failed to load: ${jsonFile}`);
         movies = await response.json();
         
-        // ถ้าเป็น erotic หรือ temp ให้อ่กรองเฉพาะที่มี category: "erotic" เท่านั้น
-        if (categoryKey === 'erotic' || categoryKey === 'temp') {
+        // ถ้าเป็น temp ให้แสดงทั้งหมดที่มีใน temp.json
+        if (categoryKey === 'temp') {
+            console.log(`Loading ${movies.length} VIP movies from temp.json`);
+        }
+        // ถ้าเป็น erotic ให้กรองเฉพาะที่มี category: "erotic" เท่านั้น
+        else if (categoryKey === 'erotic') {
             movies = movies.filter(movie => movie.category === 'erotic');
             console.log(`Filtered ${movies.length} erotic movies for VIP category`);
         }
