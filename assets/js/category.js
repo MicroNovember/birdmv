@@ -35,6 +35,7 @@ function createMovieCard(movie) {
     const movieSubtitle = movie.subtitle1 || movie.subtitle;
     const movieLogo = movie.logo || movie.image;
     const movieInfo = movie.info || '';
+    const movieYear = movie.year || '';
 
     // ตรวจสอบว่ามีข้อมูลครบถ้วนหรือไม่
     if (!movieFile || !movieName || movieName.trim() === '') {
