@@ -1,23 +1,26 @@
 const CACHE_NAME = 'samorn-movie-v1';
 const urlsToCache = [
-  '../',
-  '../index.html',
-  '../pages/category.html',
-  '../pages/login.html',
-  '../pages/watch.html',
-  '../assets/css/style.css',
-  '../assets/css/watch.css',
-  '../assets/css/category-responsive.css',
-  '../assets/css/menu.css',
-  '../assets/js/script.js',
-  '../assets/js/category.js',
-  '../assets/js/watch.js',
-  '../assets/js/menu.js',
-  '../assets/js/vip-auth.js',
-  '../assets/js/auth-check.js',
-  '../pwa/manifest.json',
-  'https://cdn.tailwindcss.com',
-  'https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js'
+  '/',
+  'index.html',
+  'login.html',
+  'pages/category.html',
+  'pages/watch.html',
+  'pages/admin.html',
+  'assets/css/style.css',
+  'assets/css/watch.css',
+  'assets/css/category-responsive.css',
+  'assets/css/menu.css',
+  'assets/js/script.js',
+  'assets/js/category.js',
+  'assets/js/watch.js',
+  'assets/js/menu.js',
+  'assets/js/vip-auth.js',
+  'assets/js/auth-check.js',
+  'assets/js/firebase-setup.js',
+  'assets/js/tv-detection.js',
+  'assets/js/tv-navigation.js',
+  'pwa/manifest.json',
+  'https://cdn.tailwindcss.com'
 ];
 
 // Install Service Worker
@@ -120,8 +123,8 @@ self.addEventListener('sync', (e) => {
 self.addEventListener('push', (e) => {
   const options = {
     body: e.data ? e.data.text() : 'SAMORN Movie - มีอัปเดตใหม่!',
-    icon: '../assets/icons/icon-192.png',
-    badge: '../assets/icons/icon-192.png',
+    icon: 'assets/icons/icon-192.png',
+    badge: 'assets/icons/icon-192.png',
     vibrate: [100, 50, 100],
     data: {
       dateOfArrival: Date.now(),
@@ -131,12 +134,12 @@ self.addEventListener('push', (e) => {
       {
         action: 'explore',
         title: 'ดูหนังเลย',
-        icon: '../assets/icons/icon-192.png'
+        icon: 'assets/icons/icon-192.png'
       },
       {
         action: 'close',
         title: 'ปิด',
-        icon: '../assets/icons/icon-192.png'
+        icon: 'assets/icons/icon-192.png'
       }
     ]
   };
