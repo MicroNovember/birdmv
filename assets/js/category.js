@@ -67,12 +67,12 @@ function createMovieCard(movie) {
     }
 
     return `
-        <div class="w-[130px] sm:w-[140px] md:w-[150px] lg:w-[160px] xl:w-[170px] flex-shrink-0 bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-red-500/30 transition duration-300 poster-card group cursor-pointer">
+        <div class="w-[140px] sm:w-[150px] md:w-[160px] lg:w-[170px] xl:w-[180px] flex-shrink-0 bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-red-500/30 transition duration-300 poster-card group cursor-pointer">
             <div class="relative">
                 <a href="${watchUrl}">
-                    <div class="w-full h-[195px] bg-gray-700">
+                    <div class="w-full h-[210px] bg-gray-700">
                         <img src="${movieLogo}"
-                             onerror="this.onerror=null;this.src='https://via.placeholder.com/130x195?text=No+Image';"
+                             onerror="this.onerror=null;this.src='https://via.placeholder.com/140x210?text=No+Image';"
                              alt="${movieName}"
                              class="w-full h-full object-cover transition duration-500">
                     </div>

@@ -8,12 +8,12 @@
     }
     
     .poster-card {
-        width: 120px !important;
+        width: 130px !important;
         border-radius: 0.5rem;
     }
     
     .poster-card img {
-        height: 180px !important;
+        height: 195px !important;
         border-radius: 0.5rem 0.5rem 0 0;
     }
 }
@@ -27,12 +27,12 @@
     }
     
     .poster-card {
-        width: 125px !important;
+        width: 135px !important;
         border-radius: 0.75rem;
     }
     
     .poster-card img {
-        height: 188px !important;
+        height: 203px !important;
         border-radius: 0.75rem 0.75rem 0 0;
     }
 }
@@ -297,11 +297,11 @@
 /* TV Landscape Mode (1920x1080 and above) */
 @media (min-width: 1920px) {
     .poster-card {
-        width: 180px !important;
+        width: 190px !important;
     }
     
     .poster-card img {
-        height: 270px !important;
+        height: 285px !important;
     }
     
     .poster-card p {
@@ -321,11 +321,11 @@
 /* iPad Landscape (1024x768) */
 @media (min-width: 1024px) and (max-width: 1366px) and (orientation: landscape) {
     .poster-card {
-        width: 155px !important;
+        width: 165px !important;
     }
     
     .poster-card img {
-        height: 233px !important;
+        height: 248px !important;
     }
     
     .poster-card p {
@@ -348,11 +348,11 @@
 /* iPad Portrait (768x1024) */
 @media (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
     .poster-card {
-        width: 145px !important;
+        width: 155px !important;
     }
     
     .poster-card img {
-        height: 218px !important;
+        height: 233px !important;
     }
     
     .poster-card p {
