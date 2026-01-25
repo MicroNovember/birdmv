@@ -13,9 +13,9 @@ class AuthCheck {
         const userType = localStorage.getItem('user_type');
         const vipData = localStorage.getItem('vip_access');
         
-        // If no user type, redirect to login
+        // If no user type, set as guest (don't force redirect on main page)
         if (!userType) {
-            window.location.href = 'login.html';
+            localStorage.setItem('user_type', 'guest');
             return;
         }
         
