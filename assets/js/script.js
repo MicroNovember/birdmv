@@ -133,6 +133,9 @@ function createMovieCard(movie) {
         watchUrl += `&quality=${encodeURIComponent(movie.quality)}`;
     }
 
+    // Extract year from movie name if available
+    const movieYear = movie.year || (movie.name.match(/\((\d{4})\)/) ? movie.name.match(/\((\d{4})\)/)[1] : '');
+    
     return `
         <div class="mx-auto flex-shrink-0 w-[150px] bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-blue-500/30 transition duration-300 poster-card group cursor-pointer">
             <div class="relative">
@@ -141,11 +144,13 @@ function createMovieCard(movie) {
                          onerror="this.onerror=null;this.src='https://via.placeholder.com/150x225?text=No+Image';"
                          alt="${movieName}"
                          class="w-full h-[225px] object-cover transition duration-500">
+                    ${movieYear ? `<div class="absolute top-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded">${movieYear}</div>` : ''}
+                    ${movieInfo ? `<div class="absolute bottom-2 right-2 bg-transparent text-white text-xs px-2 py-1 rounded font-medium" style="background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);">${movieInfo}</div>` : ''}
                 </a>
             </div>
             <div class="p-2">
                 <p class="text-sm font-semibold truncate" title="${movieName}">${movieName}</p>
-                <p class="text-xs text-gray-400">${movieInfo}</p>
+                ${movieYear ? `<div class="text-xs text-gray-500 text-center">${movieYear}</div>` : ''}
             </div>
         </div>
     `;
