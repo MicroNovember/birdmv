@@ -66,17 +66,20 @@ function createMovieCard(movie) {
     }
 
     return `
-        <div class="flex-shrink-0 bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-red-500/30 transition duration-300 poster-card group cursor-pointer">
+        <div class="w-[150px] sm:w-[160px] md:w-[170px] lg:w-[180px] xl:w-[190px] flex-shrink-0 bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-red-500/30 transition duration-300 poster-card group cursor-pointer">
             <div class="relative">
                 <a href="${watchUrl}">
-                    <img src="${movieLogo}"
-                         onerror="this.onerror=null;this.src='https://via.placeholder.com/150x225?text=No+Image';"
-                         alt="${movieName}"
-                         class="w-full h-auto aspect-[2/3] object-cover transition duration-500">
+                    <div class="w-full h-[225px] bg-gray-700">
+                        <img src="${movieLogo}"
+                             onerror="this.onerror=null;this.src='https://via.placeholder.com/150x225?text=No+Image';"
+                             alt="${movieName}"
+                             class="w-full h-full object-cover transition duration-500">
+                    </div>
+                    ${movieYear ? `<div class="absolute top-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded">${movieYear}</div>` : ''}
                 </a>
             </div>
-            <div class="p-2 sm:p-3">
-                <p class="text-xs sm:text-sm font-semibold truncate" title="${movieName}">${movieName}</p>
+            <div class="p-3">
+                <p class="text-sm font-semibold truncate" title="${movieName}">${movieName}</p>
                 <p class="text-xs text-gray-400 truncate">${movieInfo}</p>
             </div>
         </div>

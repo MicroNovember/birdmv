@@ -1,18 +1,19 @@
 /* Category Page Responsive Design */
 
-/* Base responsive grid adjustments */
+/* Base responsive adjustments for fixed-width cards */
 @media (max-width: 320px) {
     /* Extra small phones */
     #movie-list-grid {
-        grid-template-columns: repeat(2, 1fr);
         gap: 0.5rem;
     }
     
     .poster-card {
+        width: 140px !important;
         border-radius: 0.5rem;
     }
     
     .poster-card img {
+        height: 210px !important;
         border-radius: 0.5rem 0.5rem 0 0;
     }
 }
@@ -20,8 +21,19 @@
 @media (min-width: 321px) and (max-width: 480px) {
     /* Small phones */
     #movie-list-grid {
-        grid-template-columns: repeat(2, 1fr);
+        display: flex;
+        flex-wrap: wrap;
         gap: 0.75rem;
+    }
+    
+    .poster-card {
+        width: 145px !important;
+        border-radius: 0.75rem;
+    }
+    
+    .poster-card img {
+        height: 218px !important;
+        border-radius: 0.75rem 0.75rem 0 0;
     }
 }
 
