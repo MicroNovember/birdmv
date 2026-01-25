@@ -209,18 +209,32 @@
     }
 }
 
-/* Line clamp utility */
-.line-clamp-2 {
-    display: -webkit-box;
-    display: -moz-box;
-    display: box;
-    -webkit-line-clamp: 2;
-    -moz-line-clamp: 2;
-    line-clamp: 2;
-    -webkit-box-orient: vertical;
-    -moz-box-orient: vertical;
-    box-orient: vertical;
+/* Movie title display fallback */
+.poster-card p:first-child {
+    max-height: 2.4em;
     overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    line-height: 1.2em;
+    min-height: 1.2em;
+}
+
+/* Fallback for browsers that don't support line-clamp */
+@supports not (-webkit-line-clamp: 2) {
+    .poster-card p:first-child {
+        max-height: 2.4em;
+        position: relative;
+    }
+    
+    .poster-card p:first-child::after {
+        content: "...";
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        background: inherit;
+        padding-left: 2px;
+    }
 }
 
 /* Movie card text responsive */

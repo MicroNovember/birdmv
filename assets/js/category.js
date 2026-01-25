@@ -80,7 +80,7 @@ function createMovieCard(movie) {
                 </a>
             </div>
             <div class="p-2">
-                <p class="text-xs font-bold leading-tight line-clamp-2" title="${movieName}">${movieName}</p>
+                <p class="text-xs font-bold leading-tight" style="max-height: 2.4em; overflow: hidden;" title="${movieName}">${movieName}</p>
                 <div class="flex items-center justify-between mt-1">
                     <span class="text-xs text-gray-400 truncate flex-1">${movieInfo}</span>
                     ${movieYear ? `<span class="text-xs text-blue-400 font-medium ml-1">${movieYear}</span>` : ''}
