@@ -77,7 +77,7 @@ function createMovieCard(movie) {
                              class="w-full h-full object-cover transition duration-500">
                     </div>
                     ${movieYear ? `<div class="absolute top-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded">${movieYear}</div>` : ''}
-                    ${movieInfo ? `<div class="absolute bottom-2 right-2 bg-blue-600/90 text-white text-xs px-2 py-1 rounded font-medium">${movieInfo}</div>` : ''}
+                    ${movieInfo ? `<div class="absolute bottom-2 right-2 bg-transparent text-white text-xs px-2 py-1 rounded font-medium" style="background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);">${movieInfo}</div>` : ''}
                 </a>
             </div>
             <div class="p-2">
