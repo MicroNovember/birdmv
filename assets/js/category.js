@@ -353,7 +353,7 @@ async function loadCategory(categoryKey) {
                         </div>
                         <h3 class="text-xl font-bold text-yellow-500 mb-2">VIP Access Required</h3>
                         <p class="text-gray-300 mb-4">กรุณา Login และใส่รหัส VIP เพื่อดูหนังในหมวดนี้</p>
-                        <button onclick="window.location.href='login.html'" class="px-6 py-3 bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 text-white rounded-lg transition font-medium">
+                        <button onclick="window.location.href='../login.html'" class="px-6 py-3 bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 text-white rounded-lg transition font-medium">
                             Login & Get VIP Access
                         </button>
                     </div>

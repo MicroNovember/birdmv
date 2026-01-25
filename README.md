@@ -37,9 +37,9 @@ samorn-movie-1.0/
 │   │
 │   └── 📂 images/                # 📷 รูปภาพ (ว่างไว้สำหรับอนาคต)
 │
+├── 📄 login.html                 # 📝 หน้าเข้าสู่ระบบ (ย้ายมา root)
 ├── 📂 pages/                     # 📄 หน้าเพจต่างๆ
 │   ├── category.html            # หน้าหมวดหมู่หนัง
-│   ├── login.html               # หน้าเข้าสู่ระบบ
 │   ├── watch.html               # หน้าดูหนัง
 │   └── admin.html               # หน้าจัดการระบบ
 │
@@ -52,8 +52,7 @@ samorn-movie-1.0/
 │       ├── cartoon.json         # การ์ตูน
 │       ├── india.json           # หนังอินเดีย
 │       ├── asia.json            # หนังเอเซีย
-│       ├── erotic.json          # หนัง 18+
-│       ├── temp.json            # หนัง VIP
+│       ├ 
 │       └── video.json           # ข้อมูลวิดีโอ
 │
 └── 📂 pwa/                       # 📱 ไฟล์ PWA

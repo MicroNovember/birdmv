@@ -43,7 +43,7 @@
       "name": "Login",
       "short_name": "Login",
       "description": "เข้าสู่ระบบ",
-      "url": "../pages/login.html",
+      "url": "login.html",
       "icons": [
         {
           "src": "../assets/icons/icon-192.png",
