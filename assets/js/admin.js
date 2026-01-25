@@ -266,15 +266,31 @@ class AdminDashboard {
                 return;
             }
             
-            // Add new code
-            await docRef.set({
+            // Get form values
+            const maxUsage = document.getElementById('max-usage').value ? parseInt(document.getElementById('max-usage').value) : null;
+            const expirationDate = document.getElementById('expiration-date').value;
+            
+            // Prepare data
+            const codeData = {
                 is_active: true,
                 created_at: new Date(),
                 usage_count: 0,
-                max_usage: null,
-                expires: null,
+                max_usage: maxUsage,
                 last_used: null
-            });
+            };
+            
+            // Add expiration date if provided
+            if (expirationDate) {
+                // Set to end of day (23:59:59) in Thailand timezone
+                const expiryDate = new Date(expirationDate);
+                expiryDate.setHours(23, 59, 59, 999);
+                codeData.expires = expiryDate;
+            } else {
+                codeData.expires = null;
+            }
+            
+            // Add new code
+            await docRef.set(codeData);
             
             Alert2.success('เพิ่มรหัส VIP สำเร็จ!', `รหัส ${code} ถูกเพิ่มเรียบร้อย`);
             

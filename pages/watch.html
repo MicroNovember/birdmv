@@ -260,7 +260,7 @@
     <!-- VIP Expiry Check -->
     <script>
         // Check VIP expiry and update menu status
-        function checkVipExpiry() {
+        async function checkVipExpiry() {
             const vipData = localStorage.getItem('vip_access');
             const vipStatus = document.getElementById('vip-status');
             
@@ -276,8 +276,26 @@
                     return;
                 }
                 
-                // Handle both Date object and ISO string
-                const expiryDate = data.expires instanceof Date ? data.expires : new Date(data.expires);
+                let expiryDate = data.expires instanceof Date ? data.expires : new Date(data.expires);
+                
+                // Verify expiration date from Firebase if available
+                if (window.db && data.code) {
+                    try {
+                        const vipDoc = await window.db.collection('vip_codes').doc(data.code).get();
+                        if (vipDoc.exists) {
+                            const firebaseData = vipDoc.data();
+                            if (firebaseData.expires) {
+                                expiryDate = new Date(firebaseData.expires);
+                                // Update localStorage with Firebase expiration
+                                data.expires = expiryDate.toISOString();
+                                localStorage.setItem('vip_access', JSON.stringify(data));
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Error checking Firebase expiration:', error);
+                    }
+                }
+                
                 const now = new Date();
                 
                 // Check if date is valid
@@ -291,6 +309,7 @@
                 
                 // Debug logging
                 console.error('VIP Expiry Check:', {
+                    code: data.code,
                     expires: data.expires,
                     expiryDate: expiryDate.toISOString(),
                     now: now.toISOString(),

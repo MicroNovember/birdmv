@@ -254,8 +254,15 @@ class VipAuth {
                 return;
             }
             
-            // Set expiration (12 hours from now)
-            const expires = new Date(Date.now() + 12 * 60 * 60 * 1000);
+            // Get expiration date from Firebase or use default
+            let expires;
+            if (vipData && vipData.expires) {
+                // Use expiration date from Firebase
+                expires = new Date(vipData.expires);
+            } else {
+                // Default to 12 hours from now for fallback codes
+                expires = new Date(Date.now() + 12 * 60 * 60 * 1000);
+            }
             
             // Create session ID
             const sessionId = this.generateSessionId();
@@ -292,7 +299,7 @@ class VipAuth {
             const deviceCount = existingSessions.length + 1;
             this.showSuccessMessage(`VIP Access Granted! Device ${deviceCount}/3`);
             
-            console.log('VIP Access granted, user_type set to vip');
+            console.error('VIP Access granted, user_type set to vip');
             
         } catch (error) {
             console.error('VIP Access Error:', error);
@@ -304,7 +311,7 @@ class VipAuth {
     async updateUsageCount(code) {
         try {
             if (!this.db) {
-                console.log('Firebase not available, skipping usage count update');
+                console.error('Firebase not available, skipping usage count update');
                 return;
             }
             
@@ -355,7 +362,7 @@ class VipAuth {
         const isLoggedIn = userType === 'guest' || userType === 'vip';
         
         if (!isLoggedIn) {
-            console.log('User not logged in, hiding VIP categories');
+            console.error('User not logged in, hiding VIP categories');
             return;
         }
         
@@ -378,7 +385,7 @@ class VipAuth {
             mobileVipCategory.style.display = 'block';
         }
         
-        console.log('VIP categories shown for logged in user');
+        console.error('VIP categories shown for logged in user');
     }
 
     // Hide VIP categories
@@ -483,7 +490,7 @@ class VipAuth {
     async checkIPSessions(ip) {
         try {
             if (!this.db) {
-                console.log('Firebase not available, skipping IP session check');
+                console.error('Firebase not available, skipping IP session check');
                 return [];
             }
             
@@ -504,7 +511,7 @@ class VipAuth {
     async saveVipSession(ip, sessionId, code, expires) {
         try {
             if (!this.db) {
-                console.log('Firebase not available, skipping session save');
+                console.error('Firebase not available, skipping session save');
                 return;
             }
             
@@ -526,7 +533,7 @@ class VipAuth {
     async removeVipSession(sessionId) {
         try {
             if (!this.db) {
-                console.log('Firebase not available, skipping session removal');
+                console.error('Firebase not available, skipping session removal');
                 return;
             }
             
