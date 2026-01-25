@@ -374,8 +374,6 @@ class VipAuth {
         if (mobileVipCategory) {
             mobileVipCategory.style.display = 'block';
         }
-        
-        console.error('VIP categories shown for logged in user');
     }
 
     // Hide VIP categories
