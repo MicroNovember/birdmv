@@ -150,7 +150,6 @@ function createMovieCard(movie) {
             </div>
             <div class="p-2">
                 <p class="text-sm font-semibold truncate" title="${movieName}">${movieName}</p>
-                ${movieYear ? `<div class="text-xs text-gray-500 text-center">${movieYear}</div>` : ''}
             </div>
         </div>
     `;
