@@ -78,7 +78,7 @@ function createMovieCard(movie) {
     }
 
     // สร้าง URL สำหรับดูหนัง
-    let watchUrl = `watch.html?video1=${encodeURIComponent(movieFile)}&name=${encodeURIComponent(movieName)}`;
+    let watchUrl = `pages/watch.html?video1=${encodeURIComponent(movieFile)}&name=${encodeURIComponent(movieName)}`;
     
     // เพิ่ม subtitle ถ้ามี
     if (movieSubtitle && movieSubtitle.trim() !== '') {
@@ -182,7 +182,7 @@ function createMovieSection(title, movies, categoryKey, isSearch = false) {
     
     const cardsHtml = limitedMovies.map(createMovieCard).join(''); 
     
-    const categoryUrl = categoryKey === 'temp' ? 'category.html?cat=temp' : `category.html?cat=${categoryKey}`;
+    const categoryUrl = categoryKey === 'temp' ? 'pages/category.html?cat=temp' : `pages/category.html?cat=${categoryKey}`;
     
     return `
         <section class="mb-10">
