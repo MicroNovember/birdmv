@@ -209,8 +209,123 @@
     }
 }
 
+/* Line clamp utility */
+.line-clamp-2 {
+    display: -webkit-box;
+    display: -moz-box;
+    display: box;
+    -webkit-line-clamp: 2;
+    -moz-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    -moz-box-orient: vertical;
+    box-orient: vertical;
+    overflow: hidden;
+}
+
 /* Movie card text responsive */
 @media (max-width: 480px) {
+    .poster-card p {
+        font-size: 0.7rem;
+        line-height: 1.1;
+    }
+    
+    .poster-card .p-2 {
+        padding: 0.4rem;
+    }
+    
+    .poster-card .text-xs {
+        font-size: 0.65rem;
+    }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+    .poster-card p {
+        font-size: 0.75rem;
+        line-height: 1.2;
+    }
+    
+    .poster-card .p-2 {
+        padding: 0.5rem;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    .poster-card p {
+        font-size: 0.8rem;
+        line-height: 1.3;
+    }
+    
+    .poster-card .p-2 {
+        padding: 0.6rem;
+    }
+}
+
+@media (min-width: 1025px) {
+    .poster-card p {
+        font-size: 0.85rem;
+        line-height: 1.4;
+    }
+    
+    .poster-card .p-2 {
+        padding: 0.7rem;
+    }
+}
+
+/* TV Landscape Mode (1920x1080 and above) */
+@media (min-width: 1920px) {
+    .poster-card {
+        width: 180px !important;
+    }
+    
+    .poster-card img {
+        height: 270px !important;
+    }
+    
+    .poster-card p {
+        font-size: 0.9rem;
+        line-height: 1.5;
+    }
+    
+    .poster-card .p-2 {
+        padding: 0.8rem;
+    }
+    
+    #movie-list-grid {
+        gap: 1.5rem;
+    }
+}
+
+/* iPad Landscape (1024x768) */
+@media (min-width: 1024px) and (max-width: 1366px) and (orientation: landscape) {
+    .poster-card {
+        width: 155px !important;
+    }
+    
+    .poster-card img {
+        height: 233px !important;
+    }
+    
+    .poster-card p {
+        font-size: 0.8rem;
+        line-height: 1.3;
+    }
+    
+    .poster-card .p-2 {
+        padding: 0.6rem;
+    }
+}
+
+/* iPad Portrait (768x1024) */
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
+    .poster-card {
+        width: 145px !important;
+    }
+    
+    .poster-card img {
+        height: 218px !important;
+    }
+    
     .poster-card p {
         font-size: 0.75rem;
         line-height: 1.2;
