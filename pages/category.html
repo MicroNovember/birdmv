@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-    <title>SAMORN ฟรี Movie | อย่าโง่เสียเงิน</title>
+    <title>SAMORN Movie | หมวดหมู่หนัง</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
@@ -22,6 +22,36 @@
     <link rel="icon" type="image/png" sizes="16x16" href="../assets/icons/favicon-16.png">
     
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    
+    <!-- Firebase Configuration -->
+    <script>
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBt8BVo655fDa1YZJrLFdfiJ2eID40ei9A",
+            authDomain: "samorn-mv.firebaseapp.com",
+            projectId: "samorn-mv",
+            storageBucket: "samorn-mv.firebasestorage.app",
+            messagingSenderId: "812347002959",
+            appId: "1:812347002959:web:69e39d2827308dfb571a3a",
+            measurementId: "G-3DG3NS8VLF"
+        };
+
+        // Initialize Firebase (check if already initialized)
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+        
+        // Make Firebase available globally
+        window.db = db;
+        window.auth = auth;
+    </script>
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/menu.css">
     <link rel="stylesheet" href="../assets/css/category-responsive.css"> 
