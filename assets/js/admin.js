@@ -375,24 +375,3 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 1000);
 });
 
-// Create default admin user and VIP code for testing
-async function setupTestData() {
-    try {
-        // Create admin user (you'll need to do this in Firebase Console)
-        // Email: admin@samorn.com
-        // Password: admin123
-        
-        // Create default VIP code
-        await window.db.collection('vip_codes').doc('1234').set({
-            is_active: true,
-            created_at: new Date(),
-            usage_count: 0,
-            max_usage: null,
-            expires: null
-        });
-        
-        console.error('Test data created successfully');
-    } catch (error) {
-        console.error('Error creating test data:', error);
-    }
-}

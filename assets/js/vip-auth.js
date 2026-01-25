@@ -219,22 +219,11 @@ class VipAuth {
                 this.grantVipAccess(code, vipData);
                 
             } else {
-                // Fallback to hardcoded code for testing
-                if (code === '1234') {
-                    this.grantVipAccess(code, { expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) });
-                } else {
-                    this.showVipError('รหัสไม่ถูกต้อง กรุณาลองใหม่');
-                }
+                this.showVipError('รหัสไม่ถูกต้อง กรุณาลองใหม่');
             }
         } catch (error) {
             console.error('Error verifying VIP code:', error);
-            
-            // Fallback to hardcoded code
-            if (code === '1234') {
-                this.grantVipAccess(code, { expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) });
-            } else {
-                this.showVipError('เกิดข้อผิดพลาด กรุณาลองใหม่');
-            }
+            this.showVipError('เกิดข้อผิดพลาด กรุณาลองใหม่');
         }
     }
 
@@ -254,14 +243,15 @@ class VipAuth {
                 return;
             }
             
-            // Get expiration date from Firebase or use default
+            // Get expiration date from Firebase (required)
             let expires;
             if (vipData && vipData.expires) {
                 // Use expiration date from Firebase
                 expires = new Date(vipData.expires);
             } else {
-                // Default to 12 hours from now for fallback codes
-                expires = new Date(Date.now() + 12 * 60 * 60 * 1000);
+                // No expiration date provided - reject access
+                this.showVipError('รหัสไม่มีวันหมดอายุกำหนด กรุณาติดต่อผู้ดูแลระบบ');
+                return;
             }
             
             // Create session ID
