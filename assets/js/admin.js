@@ -242,6 +242,60 @@ class AdminDashboard {
             }
         }
     }
+
+    // Add new VIP code
+    async addVipCode(code) {
+        try {
+            // Validate code
+            if (!code || code.length !== 4) {
+                Alert2.warning('กรุณาใส่รหัส VIP 4 ตัว');
+                return;
+            }
+            
+            if (!/^\d{4}$/.test(code)) {
+                Alert2.warning('รหัสต้องเป็นตัวเลข 4 ตัวเท่านั้น');
+                return;
+            }
+            
+            // Check if code already exists
+            const docRef = this.db.collection('vip_codes').doc(code);
+            const doc = await docRef.get();
+            
+            if (doc.exists) {
+                Alert2.error('รหัสนี้มีอยู่แล้ว', `รหัส ${code} ถูกสร้างไว้เมื่อ ${doc.data().created_at?.toDate().toLocaleDateString('th-TH') || 'ไม่ทราบ'}`);
+                return;
+            }
+            
+            // Add new code
+            await docRef.set({
+                is_active: true,
+                created_at: new Date(),
+                usage_count: 0,
+                max_usage: null,
+                expires: null,
+                last_used: null
+            });
+            
+            Alert2.success('เพิ่มรหัส VIP สำเร็จ!', `รหัส ${code} ถูกเพิ่มเรียบร้อย`);
+            
+            // Close modal and reload codes
+            hideAddCodeModal();
+            this.loadVipCodes();
+            
+        } catch (error) {
+            console.error('Error adding VIP code:', error);
+            Alert2.close();
+            
+            // Handle Firebase errors
+            if (error.message && error.message.includes('blocked')) {
+                Alert2.error('การเชื่อมต่อถูกบล็อก', 'กรุณาปิด adblocker และลองใหม่');
+            } else if (error.message && error.message.includes('permission-denied')) {
+                Alert2.error('ไม่มีสิทธิ์', 'คุณไม่มีสิทธิ์เพิ่มรหัส VIP');
+            } else {
+                Alert2.error('เกิดข้อผิดพลาด', 'ไม่สามารถเพิ่มรหัสได้ กรุณาลองใหม่');
+            }
+        }
+    }
 }
 
 // Add Code Modal Functions
@@ -255,55 +309,6 @@ function hideAddCodeModal() {
     document.getElementById('new-code').value = '';
     document.getElementById('max-usage').value = '';
     document.getElementById('expiration-date').value = '';
-}
-
-async function addVipCode() {
-    const code = document.getElementById('new-code').value;
-    const maxUsage = document.getElementById('max-usage').value;
-    const expirationDate = document.getElementById('expiration-date').value;
-
-    if (!code || code.length !== 4) {
-        Alert2.warning('กรุณาใส่รหัส VIP 4 ตัว');
-        return;
-    }
-
-    if (!/^\d{4}$/.test(code)) {
-        Alert2.warning('รหัสต้องเป็นตัวเลข 4 ตัวเท่านั้น');
-        return;
-    }
-
-    try {
-        const codeData = {
-            is_active: true,
-            created_at: new Date(),
-            usage_count: 0
-        };
-
-        if (maxUsage) {
-            codeData.max_usage = parseInt(maxUsage);
-        }
-
-        if (expirationDate) {
-            codeData.expires = new Date(expirationDate);
-        }
-
-        await window.db.collection('vip_codes').doc(code).set(codeData);
-        
-        hideAddCodeModal();
-        adminDashboard.loadVipCodes();
-        
-        Alert2.success('เพิ่มรหัส VIP สำเร็จ!');
-    } catch (error) {
-        console.error('Error adding VIP code:', error);
-        Alert2.error('เกิดข้อผิดพลาด', 'ในการเพิ่มรหัส');
-    }
-}
-
-// Global functions for HTML onclick handlers
-function adminLogin() {
-    if (window.adminDashboard) {
-        window.adminDashboard.adminLogin();
-    }
 }
 
 function adminLogout() {
@@ -325,6 +330,15 @@ async function deleteCode(codeId) {
 async function toggleCodeStatus(codeId, currentStatus) {
     if (window.adminDashboard) {
         await window.adminDashboard.toggleCodeStatus(codeId, currentStatus);
+    } else {
+        Alert2.error('ระบบไม่พร้อม', 'กรุณารีเฟรชหน้าเว็บและลองใหม่');
+    }
+}
+
+// Global add function for reliability
+async function addVipCode(code) {
+    if (window.adminDashboard) {
+        await window.adminDashboard.addVipCode(code);
     } else {
         Alert2.error('ระบบไม่พร้อม', 'กรุณารีเฟรชหน้าเว็บและลองใหม่');
     }
@@ -361,7 +375,7 @@ async function setupTestData() {
             expires: null
         });
         
-        console.log('Test data created successfully');
+        console.error('Test data created successfully');
     } catch (error) {
         console.error('Error creating test data:', error);
     }
