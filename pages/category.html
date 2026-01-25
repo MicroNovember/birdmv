@@ -320,5 +320,51 @@
     <script src="../assets/js/vip-auth.js"></script>
     <script src="../assets/js/tv-detection.js"></script>
     <script src="../assets/js/tv-navigation.js"></script>
+
+    <!-- VIP Expiry Check -->
+    <script>
+        // Check VIP expiry and show warning
+        function checkVipExpiry() {
+            const vipData = localStorage.getItem('vip_access');
+            if (!vipData) return;
+            
+            try {
+                const { expires } = JSON.parse(vipData);
+                if (!expires) return;
+                
+                const expiryDate = new Date(expires);
+                const now = new Date();
+                const daysUntilExpiry = Math.ceil((expiryDate - now) / (1000 * 60 * 60 * 24));
+                
+                // Show warning if expiring within 3 days
+                if (daysUntilExpiry <= 3 && daysUntilExpiry > 0) {
+                    const message = daysUntilExpiry === 1 
+                        ? 'VIP ของคุณจะหมดอายุในวันนี้!'
+                        : `VIP ของคุณจะหมดอายุในอีก ${daysUntilExpiry} วัน`;
+                    
+                    Alert2.warning('VIP กำลังจะหมดอายุ', message);
+                }
+                
+                // Show expired message
+                if (daysUntilExpiry <= 0) {
+                    Alert2.error('VIP หมดอายุแล้ว', 'กรุณาเข้าสู่ระบบใหม่เพื่อใช้งานต่อ');
+                    // Clear expired VIP data
+                    localStorage.removeItem('vip_access');
+                    localStorage.removeItem('user_type');
+                    setTimeout(() => location.reload(), 3000);
+                }
+            } catch (error) {
+                console.error('Error checking VIP expiry:', error);
+            }
+        }
+        
+        // Check expiry on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(checkVipExpiry, 2000);
+        });
+        
+        // Check expiry every hour
+        setInterval(checkVipExpiry, 60 * 60 * 1000);
+    </script>
 </body>
 </html>

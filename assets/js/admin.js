@@ -126,10 +126,20 @@ class AdminDashboard {
         const active = codes.filter(code => code.is_active !== false && (!code.expires || new Date(code.expires) > new Date())).length;
         const expired = codes.filter(code => code.expires && new Date(code.expires) <= new Date()).length;
         const totalUsage = codes.reduce((sum, code) => sum + (code.usage_count || 0), 0);
+        
+        // Calculate expiring soon (within 7 days)
+        const sevenDaysFromNow = new Date();
+        sevenDaysFromNow.setDate(sevenDaysFromNow.getDate() + 7);
+        const expiringSoon = codes.filter(code => {
+            if (!code.expires || code.is_active === false) return false;
+            const expiryDate = new Date(code.expires);
+            return expiryDate > new Date() && expiryDate <= sevenDaysFromNow;
+        }).length;
 
         document.getElementById('total-codes').textContent = total;
         document.getElementById('active-codes').textContent = active;
         document.getElementById('expired-codes').textContent = expired;
+        document.getElementById('expiring-codes').textContent = expiringSoon;
         document.getElementById('total-usage').textContent = totalUsage;
     }
 
