@@ -285,10 +285,21 @@
                         if (vipDoc.exists) {
                             const firebaseData = vipDoc.data();
                             if (firebaseData.expires) {
-                                expiryDate = new Date(firebaseData.expires);
-                                // Update localStorage with Firebase expiration
-                                data.expires = expiryDate.toISOString();
-                                localStorage.setItem('vip_access', JSON.stringify(data));
+                                // Handle Firebase Timestamp properly
+                                if (firebaseData.expires.toDate) {
+                                    expiryDate = firebaseData.expires.toDate();
+                                } else {
+                                    expiryDate = new Date(firebaseData.expires);
+                                }
+                                
+                                // Validate the date before updating
+                                if (!isNaN(expiryDate.getTime())) {
+                                    // Update localStorage with Firebase expiration
+                                    data.expires = expiryDate.toISOString();
+                                    localStorage.setItem('vip_access', JSON.stringify(data));
+                                } else {
+                                    console.error('Invalid Firebase date:', firebaseData.expires);
+                                }
                             }
                         }
                     } catch (error) {
