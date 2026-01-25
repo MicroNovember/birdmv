@@ -209,15 +209,23 @@
     }
 }
 
-/* Movie title display fallback */
+/* Movie title display */
 .poster-card p:first-child {
-    max-height: 2.4em;
-    overflow: hidden;
+    color: white !important;
+    font-weight: bold !important;
+    margin-bottom: 0.25rem !important;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: 2.4em;
     line-height: 1.2em;
-    min-height: 1.2em;
+}
+
+/* Movie info display */
+.poster-card .text-blue-400 {
+    color: #60a5fa !important;
+    font-weight: 500 !important;
 }
 
 /* Fallback for browsers that don't support line-clamp */
