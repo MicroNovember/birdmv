@@ -30,11 +30,23 @@ self.addEventListener('install', (e) => {
     caches.open(CACHE_NAME)
       .then((cache) => {
         console.log('Service Worker: Caching files');
-        return cache.addAll(urlsToCache);
+        // Cache files one by one to avoid failing all if one fails
+        return Promise.all(
+          urlsToCache.map(url => {
+            return cache.add(url).catch(error => {
+              console.warn('Failed to cache:', url, error);
+              // Continue even if some files fail to cache
+              return Promise.resolve();
+            });
+          })
+        );
       })
       .then(() => {
         console.log('Service Worker: Installed');
         return self.skipWaiting();
+      })
+      .catch(error => {
+        console.error('Service Worker installation failed:', error);
       })
   );
 });
