@@ -8,12 +8,12 @@
     }
     
     .poster-card {
-        width: 140px !important;
+        width: 120px !important;
         border-radius: 0.5rem;
     }
     
     .poster-card img {
-        height: 210px !important;
+        height: 180px !important;
         border-radius: 0.5rem 0.5rem 0 0;
     }
 }
@@ -27,12 +27,12 @@
     }
     
     .poster-card {
-        width: 145px !important;
+        width: 125px !important;
         border-radius: 0.75rem;
     }
     
     .poster-card img {
-        height: 218px !important;
+        height: 188px !important;
         border-radius: 0.75rem 0.75rem 0 0;
     }
 }
