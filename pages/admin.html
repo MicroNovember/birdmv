@@ -115,6 +115,21 @@
             </div>
         </header>
 
+        <!-- Admin User Info Bar -->
+        <div class="bg-gray-800/50 border-b border-gray-700">
+            <div class="container mx-auto px-4 py-3">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-4">
+                        <span class="text-gray-400 text-sm">Admin:</span>
+                        <span id="admin-user" class="text-white font-medium">-</span>
+                    </div>
+                    <button onclick="adminLogout()" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition text-sm font-medium">
+                        ออกจากระบบ
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <!-- Main Content -->
         <main class="container mx-auto px-4 py-8">
             <!-- Stats Cards -->

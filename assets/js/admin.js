@@ -41,7 +41,11 @@ class AdminDashboard {
     showDashboard() {
         document.getElementById('admin-login-modal').classList.add('hidden');
         document.getElementById('admin-dashboard').classList.remove('hidden');
-        document.getElementById('admin-user').textContent = this.currentUser.email;
+        
+        const adminUserElement = document.getElementById('admin-user');
+        if (adminUserElement && this.currentUser && this.currentUser.email) {
+            adminUserElement.textContent = this.currentUser.email;
+        }
     }
 
     // Admin login
