@@ -8,6 +8,7 @@ class AdminDashboard {
         // Check if Firebase is available
         if (!this.db || !this.auth) {
             console.error('Firebase not initialized');
+            Alert2.error('ระบบไม่พร้อม', 'ไม่สามารถเชื่อมต่อ Firebase ได้');
             return;
         }
         
@@ -94,18 +95,28 @@ class AdminDashboard {
             const snapshot = await this.db.collection('vip_codes').get();
             const codes = [];
             
-            snapshot.forEach(doc => {
+            snapshot.forEach((doc) => {
+                const data = doc.data();
                 codes.push({
                     id: doc.id,
-                    ...doc.data()
+                    ...data,
+                    created_at: data.created_at?.toDate() || new Date(),
+                    expires: data.expires?.toDate() || null,
+                    last_used: data.last_used?.toDate() || null
                 });
             });
-
+            
+            this.displayVipCodes(codes);
             this.updateStats(codes);
-            this.displayCodes(codes);
         } catch (error) {
             console.error('Error loading VIP codes:', error);
-            this.displayCodes([]);
+            
+            // Handle Firebase network errors
+            if (error.message && error.message.includes('blocked')) {
+                Alert2.error('การเชื่อมต่อถูกบล็อก', 'กรุณาปิด adblocker หรือตรวจสอบการเชื่อมต่อเครือข่าย');
+            } else {
+                Alert2.error('ไม่สามารถโหลดข้อมูล', 'กรุณาลองใหม่ภายหลัง');
+            }
         }
     }
 
@@ -123,14 +134,14 @@ class AdminDashboard {
     }
 
     // Display VIP codes in table
-    displayCodes(codes) {
+    displayVipCodes(codes) {
         const tbody = document.getElementById('vip-codes-table');
         
         if (codes.length === 0) {
             tbody.innerHTML = `
                 <tr>
                     <td colspan="6" class="text-center py-8 text-gray-400">
-                        No VIP codes found. Add your first code to get started.
+                        ไม่พบรหัส VIP กรุณาเพิ่มรหัสแรก
                     </td>
                 </tr>
             `;
@@ -144,8 +155,8 @@ class AdminDashboard {
                 : '<span class="px-2 py-1 bg-red-500/20 text-red-400 rounded-full text-xs font-medium">Inactive</span>';
             
             const usage = `${code.usage_count || 0}${code.max_usage ? `/${code.max_usage}` : ''}`;
-            const expires = code.expires ? new Date(code.expires).toLocaleDateString('th-TH') : 'Never';
-            const lastUsed = code.last_used ? new Date(code.last_used).toLocaleDateString('th-TH') : 'Never';
+            const expires = code.expires ? new Date(code.expires).toLocaleDateString('th-TH') : 'ไม่มีกำหนด';
+            const lastUsed = code.last_used ? new Date(code.last_used).toLocaleDateString('th-TH') : 'ไม่เคยใช้';
 
             return `
                 <tr class="border-b border-gray-700 hover:bg-gray-700/50 transition">
@@ -157,10 +168,10 @@ class AdminDashboard {
                     <td class="py-3 px-4">
                         <div class="flex space-x-2">
                             <button onclick="adminDashboard.toggleCodeStatus('${code.id}', ${code.is_active !== false})" class="px-3 py-1 ${isActive ? 'bg-yellow-600 hover:bg-yellow-700' : 'bg-green-600 hover:bg-green-700'} text-white rounded text-sm transition">
-                                ${isActive ? 'Disable' : 'Enable'}
+                                ${isActive ? 'ปิดใช้' : 'เปิดใช้'}
                             </button>
                             <button onclick="adminDashboard.deleteCode('${code.id}')" class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded text-sm transition">
-                                Delete
+                                ลบ
                             </button>
                         </div>
                     </td>
@@ -180,7 +191,7 @@ class AdminDashboard {
             this.loadVipCodes();
         } catch (error) {
             console.error('Error toggling code status:', error);
-            alert2('เกิดข้อผิดพลาดในการเปลี่ยนสถานะ', 'error');
+            Alert2.error('เกิดข้อผิดพลาด', 'ในการเปลี่ยนสถานะ');
         }
     }
 
@@ -197,7 +208,7 @@ class AdminDashboard {
             this.loadVipCodes();
         } catch (error) {
             console.error('Error deleting code:', error);
-            alert2('เกิดข้อผิดพลาดในการลบรหัส', 'error');
+            Alert2.error('เกิดข้อผิดพลาด', 'ในการลบรหัส');
         }
     }
 }
@@ -221,12 +232,12 @@ async function addVipCode() {
     const expirationDate = document.getElementById('expiration-date').value;
 
     if (!code || code.length !== 4) {
-        alert2('กรุณาใส่รหัส VIP 4 ตัว', 'warning');
+        Alert2.warning('กรุณาใส่รหัส VIP 4 ตัว');
         return;
     }
 
     if (!/^\d{4}$/.test(code)) {
-        alert2('รหัสต้องเป็นตัวเลข 4 ตัวเท่านั้น', 'warning');
+        Alert2.warning('รหัสต้องเป็นตัวเลข 4 ตัวเท่านั้น');
         return;
     }
 
@@ -250,10 +261,10 @@ async function addVipCode() {
         hideAddCodeModal();
         adminDashboard.loadVipCodes();
         
-        alert2('เพิ่มรหัส VIP สำเร็จ!', 'success');
+        Alert2.success('เพิ่มรหัส VIP สำเร็จ!');
     } catch (error) {
         console.error('Error adding VIP code:', error);
-        alert2('เกิดข้อผิดพลาดในการเพิ่มรหัส', 'error');
+        Alert2.error('เกิดข้อผิดพลาด', 'ในการเพิ่มรหัส');
     }
 }
 
