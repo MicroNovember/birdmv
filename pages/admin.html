@@ -271,14 +271,38 @@
                     <button onclick="hideAddCodeModal()" class="flex-1 px-4 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition font-medium">
                         Cancel
                     </button>
-                    <button onclick="addVipCode()" class="flex-1 px-4 py-3 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white rounded-lg transition font-medium">
+                    <button onclick="addVipCode(document.getElementById('new-code').value)" class="flex-1 px-4 py-3 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white rounded-lg transition font-medium">
                         Add Code
                     </button>
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="../assets/js/admin.js"></script>
     <script>
         // Make sure Firebase is available globally
         window.db = db;
         window.auth = auth;
+        
+        // Handle VIP code input - only allow numbers
+        document.getElementById('new-code').addEventListener('input', function(e) {
+            e.target.value = e.target.value.replace(/[^0-9]/g, '');
+        });
+        
+        // Handle Enter key in VIP code input
+        document.getElementById('new-code').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && e.target.value.length === 4) {
+                addVipCode(e.target.value);
+            }
+        });
+        
+        // Auto-focus VIP code input when modal opens
+        function showAddCodeModal() {
+            document.getElementById('add-code-modal').classList.remove('hidden');
+            setTimeout(() => {
+                document.getElementById('new-code').focus();
+            }, 100);
+        }
     </script>
     <script src="../assets/js/tv-detection.js"></script>
     <script src="../assets/js/tv-navigation.js"></script>
