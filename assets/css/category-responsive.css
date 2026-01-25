@@ -329,12 +329,19 @@
     }
     
     .poster-card p {
-        font-size: 0.8rem;
-        line-height: 1.3;
+        font-size: 0.75rem !important;
+        line-height: 1.2 !important;
+        height: 2.4em !important;
+        overflow: hidden !important;
+        word-wrap: break-word !important;
     }
     
     .poster-card .p-2 {
-        padding: 0.6rem;
+        padding: 0.5rem !important;
+    }
+    
+    .poster-card .text-xs {
+        font-size: 0.7rem !important;
     }
 }
 
@@ -349,12 +356,19 @@
     }
     
     .poster-card p {
-        font-size: 0.75rem;
-        line-height: 1.2;
+        font-size: 0.7rem !important;
+        line-height: 1.2 !important;
+        height: 2.4em !important;
+        overflow: hidden !important;
+        word-wrap: break-word !important;
     }
     
     .poster-card .p-2 {
-        padding: 0.5rem;
+        padding: 0.4rem !important;
+    }
+    
+    .poster-card .text-xs {
+        font-size: 0.65rem !important;
     }
 }
 
