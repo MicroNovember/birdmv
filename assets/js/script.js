@@ -220,7 +220,7 @@ async function loadAllMovies() {
         let movies = [];
         try {
             // ถ้าเป็นหมวด temp (VIP) ให้โหลดจาก temp.json
-            let jsonFile = category.key === 'temp' ? '../data/playlist/temp.json' : `../data/playlist/${category.key}.json`;
+            let jsonFile = category.key === 'temp' ? 'data/playlist/temp.json' : `data/playlist/${category.key}.json`;
             console.log(`Loading category: ${category.key} from file: ${jsonFile}`);
             const response = await fetch(jsonFile); 
             if (!response.ok) {
