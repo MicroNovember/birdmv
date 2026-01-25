@@ -329,12 +329,28 @@
             if (!vipData) return;
             
             try {
-                const { expires } = JSON.parse(vipData);
-                if (!expires) return;
+                const data = JSON.parse(vipData);
+                if (!data.expires) return;
                 
-                const expiryDate = new Date(expires);
+                // Handle both Date object and ISO string
+                const expiryDate = data.expires instanceof Date ? data.expires : new Date(data.expires);
                 const now = new Date();
+                
+                // Check if date is valid
+                if (isNaN(expiryDate.getTime())) {
+                    console.error('Invalid expiry date:', data.expires);
+                    return;
+                }
+                
                 const daysUntilExpiry = Math.ceil((expiryDate - now) / (1000 * 60 * 60 * 24));
+                
+                // Debug logging
+                console.error('VIP Expiry Check:', {
+                    expires: data.expires,
+                    expiryDate: expiryDate.toISOString(),
+                    now: now.toISOString(),
+                    daysUntilExpiry: daysUntilExpiry
+                });
                 
                 // Show warning if expiring within 3 days
                 if (daysUntilExpiry <= 3 && daysUntilExpiry > 0) {
