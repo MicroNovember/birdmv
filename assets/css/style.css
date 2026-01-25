@@ -1,0 +1,242 @@
+/* การนำเข้าฟอนต์ */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+/* 1. Custom Scrollbar สำหรับรายการหนังที่เลื่อนได้ */
+.horizontal-scroll-container::-webkit-scrollbar {
+    height: 8px;
+}
+.horizontal-scroll-container::-webkit-scrollbar-thumb {
+    background-color: #ffffff8e; /* red-500 */
+    border-radius: 4px;
+}
+.horizontal-scroll-container::-webkit-scrollbar-track {
+    background: #1f2937; /* gray-800 */
+}
+
+/* 2. Card Hover Effect: แสดงชื่อเรื่องซ้อนทับเมื่อเมาส์วางอยู่ */
+.poster-card:hover .title-overlay {
+    opacity: 1;
+}
+
+/* 3. Mobile Bottom Navigation */
+.mobile-bottom-nav {
+    backdrop-filter: blur(10px);
+    background-color: rgba(17, 24, 39, 0.95);
+}
+
+.mobile-bottom-nav a {
+    transition: all 0.3s ease;
+}
+
+.mobile-bottom-nav a:hover {
+    transform: translateY(-2px);
+}
+
+.mobile-bottom-nav a.active {
+    color: #3B82F6;
+}
+
+/* Mobile Search Overlay */
+#mobile-search-overlay {
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Add padding to main content on mobile to avoid bottom nav overlap */
+@media (max-width: 768px) {
+    main {
+        padding-bottom: 80px;
+    }
+}
+
+/* [TAG: จัดการข้อความชื่อหนังให้สวยงาม] */
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;  
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ปรับระยะห่าง Container หลักบนมือถือ */
+@media (max-width: 767px) {
+    .container {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+}
+
+/* เอฟเฟกต์รูปหนัง */
+img {
+    transition: transform 0.3s ease-in-out;
+}
+
+/* Android TV & Remote Control Support */
+.tv-focus {
+    outline: 3px solid #3B82F6 !important;
+    outline-offset: 2px !important;
+    transform: scale(1.05) !important;
+    transition: all 0.2s ease !important;
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.5) !important;
+}
+
+.tv-focus:hover {
+    transform: scale(1.08) !important;
+}
+
+/* TV Navigation Focus States */
+button:focus,
+a:focus,
+input:focus,
+select:focus,
+.movie-card:focus,
+.poster-card:focus,
+.vip-input:focus {
+    outline: 3px solid #3B82F6 !important;
+    outline-offset: 2px !important;
+    transform: scale(1.05) !important;
+    transition: all 0.2s ease !important;
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.5) !important;
+}
+
+/* TV Safe Area */
+.tv-safe-area {
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
+/* TV Optimized Typography */
+.tv-text {
+    font-size: 1.2em;
+    line-height: 1.6;
+}
+
+/* TV Button Sizes */
+.tv-button {
+    min-height: 60px;
+    min-width: 120px;
+    padding: 15px 30px;
+    font-size: 1.1em;
+}
+
+/* TV Movie Card */
+.tv-movie-card {
+    min-height: 280px;
+    min-width: 200px;
+    margin: 10px;
+}
+
+/* TV Search Input */
+.tv-search-input {
+    min-height: 50px;
+    font-size: 1.2em;
+    padding: 15px;
+}
+
+/* TV Modal */
+.tv-modal {
+    max-width: 90vw;
+    max-height: 90vh;
+}
+
+/* TV Navigation */
+.tv-nav-item {
+    min-height: 60px;
+    padding: 15px 20px;
+    font-size: 1.1em;
+}
+
+/* TV Loading Animation */
+.tv-loading {
+    width: 60px;
+    height: 60px;
+    border-width: 6px;
+}
+
+/* TV Grid Layout */
+.tv-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+/* TV Scroll Indicators */
+.tv-scroll-indicator {
+    position: fixed;
+    bottom: 100px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 10px 15px;
+    border-radius: 20px;
+    font-size: 0.9em;
+    z-index: 1000;
+}
+
+/* TV Keyboard Navigation Hints */
+.tv-hint {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 15px;
+    border-radius: 10px;
+    font-size: 0.9em;
+    max-width: 300px;
+    z-index: 1000;
+}
+
+/* TV Responsive Design */
+@media (min-width: 1920px) {
+    .tv-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    }
+    
+    .tv-movie-card {
+        min-height: 350px;
+        min-width: 250px;
+    }
+}
+
+/* TV Browser Detection */
+.tv-browser {
+    font-size: 1.1em;
+    line-height: 1.8;
+}
+
+.tv-browser button,
+.tv-browser a {
+    min-height: 50px;
+    padding: 12px 24px;
+    margin: 8px;
+}
+
+/* TV Focus Management */
+.tv-focus-trap {
+    position: relative;
+}
+
+.tv-focus-trap::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* TV Animation Performance */
+.tv-optimized {
+    will-change: transform;
+    backface-visibility: hidden;
+    perspective: 1000px;
+}

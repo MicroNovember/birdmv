@@ -1,0 +1,60 @@
+/* Watch page specific styles */
+body { 
+    margin: 0px; 
+}
+
+/* กำหนดให้ Player Container รักษาอัตราส่วน 16:9 และกำหนดความกว้างสูงสุด */
+#jwplayerDiv {
+    aspect-ratio: 16/9; 
+    max-width: 854px; /* กำหนดความกว้างสูงสุดที่เหมาะสม */
+    width: 100%;
+    margin: 0 auto;
+}
+
+/* สำหรับ Audio/Subtitle Selection */
+.control-panel {
+    background: rgba(30, 41, 59, 0.9);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.control-group {
+    margin-bottom: 1rem;
+}
+
+.control-group:last-child {
+    margin-bottom: 0;
+}
+
+select {
+    background: rgba(17, 24, 39, 0.9);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+select:hover {
+    border-color: rgba(59, 130, 246, 0.6);
+    background: rgba(17, 24, 39, 1);
+}
+
+select:focus {
+    outline: none;
+    border-color: rgba(59, 130, 246, 0.8);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+}
+
+label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: #e2e8f0;
+}

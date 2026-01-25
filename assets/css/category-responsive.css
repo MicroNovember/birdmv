@@ -1,0 +1,219 @@
+/* Category Page Responsive Design */
+
+/* Base responsive grid adjustments */
+@media (max-width: 320px) {
+    /* Extra small phones */
+    #movie-list-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.5rem;
+    }
+    
+    .poster-card {
+        border-radius: 0.5rem;
+    }
+    
+    .poster-card img {
+        border-radius: 0.5rem 0.5rem 0 0;
+    }
+}
+
+@media (min-width: 321px) and (max-width: 480px) {
+    /* Small phones */
+    #movie-list-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+    }
+}
+
+@media (min-width: 481px) and (max-width: 640px) {
+    /* Large phones */
+    #movie-list-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+    }
+}
+
+@media (min-width: 641px) and (max-width: 768px) {
+    /* Tablets */
+    #movie-list-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    /* Small desktops / large tablets */
+    #movie-list-grid {
+        grid-template-columns: repeat(5, 1fr);
+        gap: 1.25rem;
+    }
+}
+
+@media (min-width: 1025px) and (max-width: 1280px) {
+    /* Desktops */
+    #movie-list-grid {
+        grid-template-columns: repeat(6, 1fr);
+        gap: 1.5rem;
+    }
+}
+
+@media (min-width: 1281px) {
+    /* Large desktops */
+    #movie-list-grid {
+        grid-template-columns: repeat(8, 1fr);
+        gap: 1.5rem;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+}
+
+/* Movie card responsive adjustments */
+.poster-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.poster-card:hover {
+    transform: translateY(-4px);
+}
+
+.poster-card img {
+    transition: transform 0.5s ease;
+}
+
+.poster-card:hover img {
+    transform: scale(1.05);
+}
+
+/* Pagination responsive */
+@media (max-width: 640px) {
+    #pagination-container nav {
+        padding: 1rem 0.5rem;
+    }
+    
+    #pagination-container button {
+        min-width: 44px;
+        min-height: 44px; /* Touch-friendly size */
+    }
+}
+
+/* Ensure pagination is always visible */
+#pagination-container {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+#pagination-container nav {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    justify-content: center !important;
+    align-items: center !important;
+    flex-wrap: wrap !important;
+    gap: 0.5rem !important;
+}
+
+#pagination-container nav button {
+    display: inline-flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    min-width: 44px !important;
+    min-height: 44px !important;
+    justify-content: center !important;
+    align-items: center !important;
+    border: none !important;
+    border-radius: 0.5rem !important;
+    font-weight: 500 !important;
+    transition: all 0.2s ease !important;
+    cursor: pointer !important;
+}
+
+#pagination-container nav button:hover:not(:disabled) {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3) !important;
+}
+
+#pagination-container nav button:disabled {
+    cursor: not-allowed !important;
+    opacity: 0.5 !important;
+}
+
+#pagination-container nav span {
+    display: inline-flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    align-items: center !important;
+    font-weight: 500 !important;
+}
+
+/* Items per page selector responsive */
+@media (max-width: 640px) {
+    #items-per-page-selector {
+        padding: 0 0.5rem;
+    }
+    
+    #items-per-page-selector select {
+        font-size: 14px;
+        padding: 0.5rem;
+    }
+}
+
+/* Title responsive */
+#category-title {
+    font-size: clamp(1.5rem, 4vw, 2.25rem);
+    line-height: 1.2;
+}
+
+/* Container padding adjustments */
+@media (max-width: 640px) {
+    main.container {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+    }
+}
+
+@media (min-width: 1281px) {
+    main.container {
+        max-width: 1400px;
+    }
+}
+
+/* Search form responsive */
+@media (max-width: 768px) {
+    #search-form {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    #search-form input {
+        width: 100%;
+    }
+    
+    #search-form button {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Movie card text responsive */
+@media (max-width: 480px) {
+    .poster-card p {
+        font-size: 0.75rem;
+        line-height: 1.2;
+    }
+    
+    .poster-card .p-2 {
+        padding: 0.5rem;
+    }
+}
+
+/* Loading state responsive */
+@media (max-width: 640px) {
+    #movie-list-grid .text-gray-400 {
+        font-size: 0.875rem;
+        text-align: center;
+        padding: 2rem 1rem;
+    }
+}
