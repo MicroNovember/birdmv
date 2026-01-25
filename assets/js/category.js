@@ -77,14 +77,12 @@ function createMovieCard(movie) {
                              class="w-full h-full object-cover transition duration-500">
                     </div>
                     ${movieYear ? `<div class="absolute top-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded">${movieYear}</div>` : ''}
+                    ${movieInfo ? `<div class="absolute bottom-2 right-2 bg-blue-600/90 text-white text-xs px-2 py-1 rounded font-medium">${movieInfo}</div>` : ''}
                 </a>
             </div>
             <div class="p-2">
                 <p class="text-xs font-bold text-white leading-tight mb-1 truncate" style="max-height: 2.4em; overflow: hidden;" title="${movieName}">${movieName}</p>
-                <div class="flex items-center justify-between">
-                    <span class="text-xs text-blue-400 font-medium">${movieInfo}</span>
-                    ${movieYear ? `<span class="text-xs text-gray-500">${movieYear}</span>` : ''}
-                </div>
+                ${movieYear ? `<div class="text-xs text-gray-500 text-center">${movieYear}</div>` : ''}
             </div>
         </div>
     `;
