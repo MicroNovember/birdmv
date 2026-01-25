@@ -278,11 +278,27 @@
             </div>
         </div>
     </div>
+    <script src="../assets/js/alert2.js"></script>
     <script src="../assets/js/admin.js"></script>
     <script>
         // Make sure Firebase is available globally
         window.db = db;
         window.auth = auth;
+        
+        // Check if Alert2 is available
+        if (typeof Alert2 === 'undefined') {
+            console.error('Alert2 is not loaded! Please check script loading order.');
+            // Fallback to console errors if Alert2 is not available
+            window.Alert2 = {
+                error: (title, text) => console.error(`${title}: ${text}`),
+                success: (title, text) => console.error(`${title}: ${text}`),
+                warning: (title, text) => console.error(`${title}: ${text}`),
+                info: (title, text) => console.error(`${title}: ${text}`),
+                confirm: (title, text) => Promise.resolve({ isConfirmed: confirm(`${title}\n${text}`) }),
+                loading: (text) => console.error('Loading:', text),
+                close: () => console.error('Close loading')
+            };
+        }
         
         // Handle VIP code input - only allow numbers
         document.getElementById('new-code').addEventListener('input', function(e) {
