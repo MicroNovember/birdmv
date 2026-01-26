@@ -191,9 +191,9 @@ function createMovieSection(title, movies, categoryKey, isSearch = false) {
     return `
         <section class="mb-10">
             <a href="${categoryUrl}" class="group block mb-6">
-                <h3 class="text-3xl font-bold border-l-4 border-red-600 pl-3 transition duration-300 group-hover:text-red-500">
+                <h3 class="text-3xl font-bold border-l-4 border-blue-600 pl-3 transition duration-300 group-hover:text-blue-500">
                     ${title} 
-                    <span class="text-red-600 text-xl ml-2 group-hover:ml-3 transition-all duration-300">›</span>
+                    <span class="text-blue-600 text-xl ml-2 group-hover:ml-3 transition-all duration-300">›</span>
                 </h3>
             </a>
             
@@ -223,21 +223,23 @@ async function loadAllMovies() {
     for (const category of getFilteredCategories()) {
         let movies = [];
         try {
-            // ถ้าเป็นหมวด temp (VIP) ให้โหลดจาก temp.json
-            let jsonFile = category.key === 'temp' ? 'data/playlist/temp.json' : `data/playlist/${category.key}.json`;
-            console.log(`Loading category: ${category.key} from file: ${jsonFile}`);
-            const response = await fetch(jsonFile); 
-            if (!response.ok) {
-                console.warn(`Skipping category ${category.key}: File not found or failed to load.`);
-                continue; 
-            }
-            movies = await response.json();
-            console.log(`Loaded ${movies.length} movies from ${category.key}`);
+            // ใช้ function จาก JS files ที่เข้ารหัส
+            let functionName;
             
-            // ถ้าเป็นหมวด temp (VIP) ให้แสดงทั้งหมดที่มีใน temp.json
-            if (category.key === 'temp') {
-                console.log(`Loading ${movies.length} VIP movies from temp.json`);
+            // ถ้าเป็นหมวด erotic ให้ใช้ข้อมูลจาก TEMP
+            if (category.key === 'erotic') {
+                functionName = 'getTEMP';
+                movies = typeof window[functionName] === 'function' ? window[functionName]() : [];
+                // กรองเฉพาะที่มี category: "erotic" เท่านั้น
+                movies = movies.filter(movie => movie.category === 'erotic');
+                console.error(`Filtered ${movies.length} erotic movies for VIP category`);
+            } else {
+                functionName = 'get' + category.key.toUpperCase();
+                movies = typeof window[functionName] === 'function' ? window[functionName]() : [];
             }
+            
+            console.error(`Loaded ${movies.length} movies from ${category.key} (JavaScript)`);
+            
         } catch (error) {
             console.error(`Error loading JSON for ${category.key}:`, error);
             continue; 
@@ -245,7 +247,7 @@ async function loadAllMovies() {
         
         if (movies && movies.length > 0) {
             // ส่ง category.key เข้าไปใน createMovieSection
-            console.log(`Adding section for category: ${category.key} (${category.title})`);
+            console.error(`Adding section for category: ${category.key} (${category.title})`);
             allSectionsHtml += createMovieSection(category.title, movies, category.key); 
             
             movies.forEach(movie => {

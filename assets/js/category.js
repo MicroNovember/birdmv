@@ -371,17 +371,27 @@ async function loadCategory(categoryKey) {
     // 1. ดึงข้อมูล
     let movies = [];
     try {
-        // ถ้าเป็นหมวด erotic หรือ temp ให้อ่านจาก temp.json (VIP) เท่านั้น
-        let jsonFile = (categoryKey === 'erotic' || categoryKey === 'temp') ? '../data/playlist/temp.json' : `../data/playlist/${categoryKey}.json`;
+        // ใช้ JavaScript files แทน JSON files
+        let functionName;
+        if (categoryKey === 'erotic' || categoryKey === 'temp') {
+            functionName = 'getTEMP';
+        } else {
+            functionName = 'get' + categoryKey.toUpperCase();
+        }
         
-        console.log(`Loading category ${categoryKey} from file: ${jsonFile}`);
-        const response = await fetch(jsonFile); 
-        if (!response.ok) throw new Error(`Failed to load: ${jsonFile}`);
-        movies = await response.json();
+        console.log(`Loading category ${categoryKey} from function: ${functionName}`);
+        
+        // ตรวจสอบว่าฟังก์ชันมีอยู่หรือไม่
+        if (typeof window[functionName] === 'function') {
+            movies = window[functionName]();
+            console.error(`Loaded ${movies.length} movies from ${functionName} (JavaScript)`);
+        } else {
+            throw new Error(`Function ${functionName} not found`);
+        }
         
         // ถ้าเป็น temp ให้แสดงทั้งหมดที่มีใน temp.json
         if (categoryKey === 'temp') {
-            console.log(`Loading ${movies.length} VIP movies from temp.json`);
+            console.log(`Loading ${movies.length} VIP movies from temp.js`);
         }
         // ถ้าเป็น erotic ให้กรองเฉพาะที่มี category: "erotic" เท่านั้น
         else if (categoryKey === 'erotic') {
@@ -390,7 +400,7 @@ async function loadCategory(categoryKey) {
         }
         
     } catch (error) {
-        console.error(`Error loading JSON for ${categoryKey}:`, error);
+        console.error(`Error loading JavaScript for ${categoryKey}:`, error);
         document.getElementById('category-title').textContent = CATEGORIES_FULL_NAME[categoryKey] || 'รายการหนัง';
         listContainer.innerHTML = `<p class="text-blue-500 col-span-full">❌ เกิดข้อผิดพลาดในการโหลดรายการ **${CATEGORIES_FULL_NAME[categoryKey]}** หรือไม่พบไฟล์</p>`;
         return; 

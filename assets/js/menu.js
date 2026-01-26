@@ -129,14 +129,14 @@ document.addEventListener('DOMContentLoaded', function() {
 // Mobile search functionality
 function mobileSearchMovies() {
     const searchInput = document.getElementById('mobile-search-input');
-    const searchResult = document.getElementById('mobile-search-result');
+    const searchResult = document.getElementById('mobile-search-result-grid');
     
     if (!searchInput || !searchResult) return;
     
     const query = searchInput.value.trim().toLowerCase();
     
     if (query.length < 2) {
-        searchResult.innerHTML = '<p class="text-gray-400 text-center">กรุณาพิมพ์อย่างน้อย 2 ตัวอักษร</p>';
+        searchResult.innerHTML = '<p class="text-gray-400 text-center col-span-full">กรุณาพิมพ์อย่างน้อย 2 ตัวอักษร</p>';
         return;
     }
     
@@ -151,15 +151,15 @@ function mobileSearchMovies() {
             searchMovies();
             
             // Copy results to mobile search
-            const desktopResults = document.getElementById('search-result-container');
-            if (desktopResults) {
-                searchResult.innerHTML = desktopResults.innerHTML;
+            const movieGrid = document.getElementById('movie-list-grid');
+            if (movieGrid) {
+                searchResult.innerHTML = movieGrid.innerHTML;
             }
             
             // Restore original value
             desktopInput.value = originalValue;
         }
     } else {
-        searchResult.innerHTML = '<p class="text-gray-400 text-center">ฟังก์ชันค้นหาไม่พร้อมใช้งาน</p>';
+        searchResult.innerHTML = '<p class="text-gray-400 text-center col-span-full">ฟังก์ชันค้นหาไม่พร้อมใช้งาน</p>';
     }
 }

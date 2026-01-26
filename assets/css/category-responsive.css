@@ -1,15 +1,36 @@
-/* Category Page Responsive Design */
+/* Category Page Responsive Design - Modern Blue Theme */
+
+/* Base grid centering for all screen sizes */
+#movie-list-grid {
+    justify-content: center;
+    align-items: start;
+}
+
+/* Modern Blue Theme Variables */
+:root {
+    --category-primary: #3b82f6;
+    --category-primary-light: #60a5fa;
+    --category-primary-dark: #1e40af;
+    --category-navy: #1e3a8a;
+    --category-bg: #0f172a;
+    --category-bg-secondary: #1e293b;
+    --category-text: #f8fafc;
+    --category-text-secondary: #cbd5e1;
+    --category-text-muted: #94a3b8;
+}
 
 /* Base responsive adjustments for fixed-width cards */
 @media (max-width: 320px) {
     /* Extra small phones */
     #movie-list-grid {
         gap: 0.5rem;
+        justify-content: center;
     }
     
     .poster-card {
         width: 130px !important;
         border-radius: 0.5rem;
+        flex-shrink: 0;
     }
     
     .poster-card img {
@@ -24,11 +45,13 @@
         display: flex;
         flex-wrap: wrap;
         gap: 0.75rem;
+        justify-content: center;
     }
     
     .poster-card {
         width: 135px !important;
         border-radius: 0.75rem;
+        flex-shrink: 0;
     }
     
     .poster-card img {
@@ -42,6 +65,13 @@
     #movie-list-grid {
         grid-template-columns: repeat(3, 1fr);
         gap: 1rem;
+        justify-content: center;
+    }
+    
+    .poster-card {
+        width: auto !important;
+        max-width: 140px;
+        margin: 0 auto;
     }
 }
 
@@ -50,6 +80,13 @@
     #movie-list-grid {
         grid-template-columns: repeat(4, 1fr);
         gap: 1rem;
+        justify-content: center;
+    }
+    
+    .poster-card {
+        width: auto !important;
+        max-width: 150px;
+        margin: 0 auto;
     }
 }
 
@@ -58,6 +95,13 @@
     #movie-list-grid {
         grid-template-columns: repeat(5, 1fr);
         gap: 1.25rem;
+        justify-content: center;
+    }
+    
+    .poster-card {
+        width: auto !important;
+        max-width: 170px;
+        margin: 0 auto;
     }
 }
 
@@ -66,6 +110,13 @@
     #movie-list-grid {
         grid-template-columns: repeat(6, 1fr);
         gap: 1.5rem;
+        justify-content: center;
+    }
+    
+    .poster-card {
+        width: auto !important;
+        max-width: 180px;
+        margin: 0 auto;
     }
 }
 
@@ -75,6 +126,13 @@
         grid-template-columns: repeat(8, 1fr);
         gap: 1.5rem;
         max-width: 1400px;
+        margin: 0 auto;
+        justify-content: center;
+    }
+    
+    .poster-card {
+        width: auto !important;
+        max-width: 180px;
         margin: 0 auto;
     }
 }
@@ -216,6 +274,7 @@
     margin-bottom: 0.25rem !important;
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
     min-height: 2.4em;
@@ -233,6 +292,12 @@
     .poster-card p:first-child {
         max-height: 2.4em;
         position: relative;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        -webkit-box-orient: vertical;
+        box-orient: vertical;
+        overflow: hidden;
     }
     
     .poster-card p:first-child::after {

@@ -182,43 +182,54 @@ class VipAuth {
 
     // Verify VIP code
     async verifyVipCode() {
+        console.error('verifyVipCode called');
         const code = this.getVipCode();
+        console.error('VIP code entered:', code);
         
         // Check if code is complete
         if (code.length !== 4) {
+            console.error('Code not complete, length:', code.length);
             this.showVipError('กรุณาใส่รหัสให้ครบ 4 ตัว');
             return;
         }
 
         try {
+            console.error('Checking Firebase for code:', code);
             // Check in Firebase
             const vipDoc = await this.db.collection('vip_codes').doc(code).get();
+            console.error('Firebase doc exists:', vipDoc.exists);
             
             if (vipDoc.exists) {
                 const vipData = vipDoc.data();
+                console.error('VIP data:', vipData);
                 
                 // Check if code is active
                 if (vipData.is_active === false) {
+                    console.error('Code is inactive');
                     this.showVipError('รหัสนี้ถูกระงับการใช้งาน');
                     return;
                 }
                 
                 // Check expiration
                 if (vipData.expires && new Date(vipData.expires) < new Date()) {
+                    console.error('Code expired');
                     this.showVipError('รหัสนี้หมดอายุแล้ว');
                     return;
                 }
                 
                 // Check usage limit
                 if (vipData.max_usage && vipData.usage_count >= vipData.max_usage) {
+                    console.error('Usage limit reached');
                     this.showVipError('รหัสนี้ถูกใช้งานครบแล้ว');
                     return;
                 }
                 
+                console.error('Code validation passed, granting access');
                 // Success! Enable VIP mode
                 this.grantVipAccess(code, vipData);
                 
             } else {
+                console.error('Code not found in Firebase');
                 this.showVipError('รหัสไม่ถูกต้อง กรุณาลองใหม่');
             }
         } catch (error) {
@@ -229,65 +240,101 @@ class VipAuth {
 
     // Grant VIP access
     async grantVipAccess(code, vipData) {
+        console.error('grantVipAccess called with code:', code);
         try {
             // Get user IP
             const ipResponse = await fetch('https://api.ipify.org?format=json');
             const ipData = await ipResponse.json();
             const userIP = ipData.ip;
+            console.error('User IP:', userIP);
             
-            // Check existing VIP sessions for this IP
-            const existingSessions = await this.checkIPSessions(userIP);
-            
-            if (existingSessions.length >= 3) {
-                this.showVipError('IP นี้ล็อกอิน VIP ครบ 3 อุปกรณ์แล้ว');
-                return;
-            }
+            // Skip IP session check for now (Firebase index issue)
+            // const existingSessions = await this.checkIPSessions(userIP);
+            // if (existingSessions.length >= 3) {
+            //     this.showVipError('IP นี้ล็อกอิน VIP ครบ 3 อุปกรณ์แล้ว');
+            //     return;
+            // }
             
             // Get expiration date from Firebase (required)
             let expires;
             if (vipData && vipData.expires) {
-                // Use expiration date from Firebase
-                expires = new Date(vipData.expires);
+                console.error('Raw expires from Firebase:', vipData.expires);
+                console.error('Type of expires:', typeof vipData.expires);
+                
+                // Handle Firebase Timestamp
+                if (vipData.expires.toDate) {
+                    // Firebase Timestamp object
+                    expires = vipData.expires.toDate();
+                    console.error('Using Firebase Timestamp toDate():', expires);
+                } else if (typeof vipData.expires === 'string') {
+                    // String date
+                    expires = new Date(vipData.expires);
+                    console.error('Using string date:', expires);
+                } else if (typeof vipData.expires === 'number') {
+                    // Timestamp number
+                    expires = new Date(vipData.expires);
+                    console.error('Using number timestamp:', expires);
+                } else {
+                    // Try direct conversion
+                    expires = new Date(vipData.expires);
+                    console.error('Using direct conversion:', expires);
+                }
+                
+                console.error('Final expires date:', expires);
+                
+                // Validate the date
+                if (isNaN(expires.getTime())) {
+                    console.error('Invalid date');
+                    this.showVipError('วันหมดอายุไม่ถูกต้อง กรุณาติดต่อผู้ดูแลระบบ');
+                    return;
+                }
             } else {
                 // No expiration date provided - reject access
+                console.error('No expiration date');
                 this.showVipError('รหัสไม่มีวันหมดอายุกำหนด กรุณาติดต่อผู้ดูแลระบบ');
                 return;
             }
             
             // Create session ID
             const sessionId = this.generateSessionId();
+            console.error('Session ID:', sessionId);
             
             // Save to localStorage with IP and session ID
-            localStorage.setItem('vip_access', JSON.stringify({
+            const vipAccess = {
                 code: code,
                 expires: expires.toISOString(),
                 verified: true,
                 ip: userIP,
                 sessionId: sessionId,
                 deviceName: this.getDeviceName()
-            }));
+            };
+            console.error('Saving to localStorage:', vipAccess);
+            localStorage.setItem('vip_access', JSON.stringify(vipAccess));
             
-            // Save session to Firebase
-            await this.saveVipSession(userIP, sessionId, code, expires);
+            // Skip saving session to Firebase for now (index issue)
+            // await this.saveVipSession(userIP, sessionId, code, expires);
             
             // Set user type as VIP
+            console.error('Setting user_type to vip');
             localStorage.setItem('user_type', 'vip');
             
-            // Update usage count in Firebase
-            this.updateUsageCount(code);
+            // Skip updating usage count in Firebase for now
+            // this.updateUsageCount(code);
             
             // Mark as not page load (user action)
             this.isPageLoad = false;
             
+            console.error('Enabling VIP mode');
             // Enable VIP mode
             this.enableVipMode();
             
             // Close modal
+            console.error('Closing modal');
             this.closeVipModal();
             
-            // Show success message with device count
-            const deviceCount = existingSessions.length + 1;
-            this.showSuccessMessage(`VIP Access Granted! Device ${deviceCount}/3`);
+            // Show success message
+            console.error('Showing success message');
+            this.showSuccessMessage('VIP Access Granted!');
             
             console.error('VIP Access granted, user_type set to vip');
             
@@ -325,12 +372,12 @@ class VipAuth {
         // Toggle buttons
         this.toggleVipButtons(true);
         
-        // Reload movies to show VIP category (only if not on page load)
-        if (!this.isPageLoad) {
-            setTimeout(() => {
-                window.location.reload();
-            }, 1000);
-        }
+        // Skip page reload for now
+        // if (!this.isPageLoad) {
+        //     setTimeout(() => {
+        //         window.location.reload();
+        //     }, 1000);
+        // }
     }
 
     // Disable VIP mode
@@ -443,9 +490,15 @@ class VipAuth {
 
     // Toggle VIP buttons
     toggleVipButtons(isVip) {
+        // Desktop buttons
         const loginBtn = document.getElementById('vip-login-btn');
         const logoutBtn = document.getElementById('vip-logout-btn');
         
+        // Mobile buttons
+        const mobileLoginBtn = document.getElementById('mobile-vip-login-btn');
+        const mobileLogoutBtn = document.getElementById('mobile-vip-logout-btn');
+        
+        // Toggle desktop buttons
         if (loginBtn && logoutBtn) {
             if (isVip) {
                 loginBtn.classList.add('hidden');
@@ -453,6 +506,17 @@ class VipAuth {
             } else {
                 loginBtn.classList.remove('hidden');
                 logoutBtn.classList.add('hidden');
+            }
+        }
+        
+        // Toggle mobile buttons
+        if (mobileLoginBtn && mobileLogoutBtn) {
+            if (isVip) {
+                mobileLoginBtn.classList.add('hidden');
+                mobileLogoutBtn.classList.remove('hidden');
+            } else {
+                mobileLoginBtn.classList.remove('hidden');
+                mobileLogoutBtn.classList.add('hidden');
             }
         }
     }
@@ -490,6 +554,11 @@ class VipAuth {
             
             return sessions.docs.map(doc => doc.data());
         } catch (error) {
+            // Handle Firebase index error gracefully
+            if (error.message && error.message.includes('requires an index')) {
+                console.error('Firebase index required. Please create the index from the provided URL. Skipping IP session check for now.');
+                return []; // Allow login without IP session check
+            }
             console.error('Error checking IP sessions:', error);
             return [];
         }

@@ -1,19 +1,86 @@
-/* การนำเข้าฟอนต์ */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+/* การนำเข้าฟอนต์ Sukhumvit Set สำหรับภาษาไทย */
+@import url('https://fonts.googleapis.com/css2?family=Sukhumvit:wght@100..700&display=swap');
+
 body {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Sukhumvit', sans-serif;
 }
 
-/* 1. Custom Scrollbar สำหรับรายการหนังที่เลื่อนได้ */
-.horizontal-scroll-container::-webkit-scrollbar {
-    height: 8px;
+/* สำหรับข้อความภาษาอังกฤษ */
+.text-en {
+    font-family: 'Sukhumvit', sans-serif;
 }
+
+/* สำหรับข้อความภาษาไทย */
+.text-th {
+    font-family: 'Sukhumvit', sans-serif;
+}
+
+/* Netflix-style Typography */
+.netflix-title {
+    font-family: 'Sukhumvit', sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+}
+
+.netflix-subtitle {
+    font-family: 'Sukhumvit', sans-serif;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    line-height: 1.4;
+}
+
+.netflix-button {
+    font-family: 'Sukhumvit', sans-serif;
+    font-weight: 600;
+    letter-spacing: 0.025em;
+    text-transform: none;
+}
+
+/* ปรับขนาดฟอนต์สำหรับหน้าจอต่างๆ */
+@media (max-width: 640px) {
+    body {
+        font-size: 14px;
+    }
+    .netflix-title {
+        font-size: 1.5rem;
+    }
+    .netflix-subtitle {
+        font-size: 0.875rem;
+    }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+    body {
+        font-size: 15px;
+    }
+    .netflix-title {
+        font-size: 1.75rem;
+    }
+    .netflix-subtitle {
+        font-size: 0.95rem;
+    }
+}
+
+@media (min-width: 1025px) {
+    body {
+        font-size: 16px;
+    }
+    .netflix-title {
+        font-size: 2rem;
+    }
+    .netflix-subtitle {
+        font-size: 1rem;
+    }
+}
+
 .horizontal-scroll-container::-webkit-scrollbar-thumb {
-    background-color: #ffffff8e; /* red-500 */
+    background-color: #60a5fa; /* blue-400 - สีฟ้าอ่อน */
     border-radius: 4px;
 }
+
 .horizontal-scroll-container::-webkit-scrollbar-track {
-    background: #1f2937; /* gray-800 */
+    background: #1e3a8a; /* blue-900 - สีน้ำเงินเข้ม */
 }
 
 /* 2. Card Hover Effect: แสดงชื่อเรื่องซ้อนทับเมื่อเมาส์วางอยู่ */
@@ -24,19 +91,24 @@ body {
 /* 3. Mobile Bottom Navigation */
 .mobile-bottom-nav {
     backdrop-filter: blur(10px);
-    background-color: rgba(17, 24, 39, 0.95);
+    background-color: rgba(30, 58, 138, 0.95); /* blue-900 */
+    border: 1px solid rgba(96, 165, 250, 0.2); /* blue-400 */
 }
 
 .mobile-bottom-nav a {
     transition: all 0.3s ease;
+    color: #94a3b8; /* slate-400 */
 }
 
 .mobile-bottom-nav a:hover {
     transform: translateY(-2px);
+    color: #60a5fa; /* blue-400 */
 }
 
 .mobile-bottom-nav a.active {
-    color: #3B82F6;
+    color: #3b82f6; /* blue-500 */
+    background-color: rgba(59, 130, 246, 0.1);
+    border-radius: 0.5rem;
 }
 
 /* Mobile Search Overlay */
@@ -80,11 +152,11 @@ img {
 
 /* Android TV & Remote Control Support */
 .tv-focus {
-    outline: 3px solid #3B82F6 !important;
+    outline: 3px solid #3b82f6 !important; /* blue-500 */
     outline-offset: 2px !important;
     transform: scale(1.05) !important;
     transition: all 0.2s ease !important;
-    box-shadow: 0 0 20px rgba(59, 130, 246, 0.5) !important;
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.4) !important;
 }
 
 .tv-focus:hover {
@@ -99,11 +171,11 @@ select:focus,
 .movie-card:focus,
 .poster-card:focus,
 .vip-input:focus {
-    outline: 3px solid #3B82F6 !important;
+    outline: 2px solid #3b82f6 !important; /* blue-500 */
     outline-offset: 2px !important;
-    transform: scale(1.05) !important;
+    transform: scale(1.02) !important;
     transition: all 0.2s ease !important;
-    box-shadow: 0 0 20px rgba(59, 130, 246, 0.5) !important;
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.3) !important;
 }
 
 /* TV Safe Area */
@@ -240,3 +312,134 @@ select:focus,
     backface-visibility: hidden;
     perspective: 1000px;
 }
+
+/* ใส่ไว้ในส่วน <style> หรือไฟล์ CSS */
+.category-panel {
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.category-hidden {
+    transform: translateY(100%); /* ซ่อนลงด้านล่าง */
+}
+
+.category-visible {
+    transform: translateY(0); /* เลื่อนขึ้นมา */
+}
+
+/* Modern Blue-Navy Theme Colors */
+:root {
+    --primary-blue: #3b82f6;      /* blue-500 */
+    --primary-blue-light: #60a5fa; /* blue-400 */
+    --primary-blue-dark: #1e40af;  /* blue-800 */
+    --navy-primary: #1e3a8a;       /* blue-900 */
+    --navy-secondary: #1e293b;     /* slate-900 */
+    --text-primary: #f8fafc;       /* slate-50 */
+    --text-secondary: #cbd5e1;      /* slate-200 */
+    --text-muted: #94a3b8;         /* slate-400 */
+    --bg-primary: #0f172a;         /* slate-950 */
+    --bg-secondary: #1e293b;       /* slate-900 */
+    --bg-tertiary: #334155;        /* slate-800 */
+    --accent-blue: #0ea5e9;        /* sky-500 */
+    --accent-cyan: #06b6d4;        /* cyan-500 */
+}
+
+/* Body Background */
+body {
+    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--navy-primary) 100%);
+    color: var(--text-primary);
+}
+
+/* Modern Card Styles */
+.poster-card {
+    background: var(--bg-secondary);
+    border: 1px solid rgba(96, 165, 250, 0.1);
+    border-radius: 1rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.poster-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(59, 130, 246, 0.15);
+    border-color: rgba(96, 165, 250, 0.3);
+}
+
+/* Modern Button Styles */
+button {
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-dark) 100%);
+    border: 1px solid rgba(96, 165, 250, 0.2);
+    color: var(--text-primary);
+    border-radius: 0.75rem;
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    background: linear-gradient(135deg, var(--primary-blue-light) 0%, var(--primary-blue) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(59, 130, 246, 0.25);
+}
+
+/* Input Styles */
+input, select, textarea {
+    background: var(--bg-tertiary);
+    border: 1px solid rgba(96, 165, 250, 0.2);
+    color: var(--text-primary);
+    border-radius: 0.75rem;
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Link Styles */
+a {
+    color: var(--primary-blue-light);
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: var(--primary-blue);
+}
+
+/* Header Styles */
+header {
+    background: rgba(30, 58, 138, 0.8);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(96, 165, 250, 0.1);
+}
+
+/* Sidebar Styles */
+aside {
+    background: rgba(30, 41, 59, 0.8);
+    backdrop-filter: blur(12px);
+    border-right: 1px solid rgba(96, 165, 250, 0.1);
+}
+
+/* VIP Button Styles */
+.vip-button {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.vip-button:hover {
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    box-shadow: 0 10px 25px rgba(245, 158, 11, 0.25);
+}
+
+/* Loading Spinner */
+.animate-spin {
+    border-color: var(--primary-blue);
+    border-top-color: transparent;
+}
+
+/* Text Colors */
+.text-blue-400 { color: var(--primary-blue-light) !important; }
+.text-blue-500 { color: var(--primary-blue) !important; }
+.text-gray-400 { color: var(--text-muted) !important; }
+.text-gray-500 { color: var(--text-secondary) !important; }
+.text-white { color: var(--text-primary) !important; }
+
+/* Background Colors */
+.bg-gray-800 { background: var(--bg-secondary) !important; }
+.bg-gray-900 { background: var(--bg-primary) !important; }
+.bg-gray-700 { background: var(--bg-tertiary) !important; }

@@ -1,100 +1,200 @@
 /* Menu Styles - Desktop & Mobile Separation */
 
+
+
 /* Desktop Menu - Visible on Desktop, Hidden on Mobile */
+
 @media (min-width: 768px) {
+
     .desktop-menu {
+
         display: block !important;
+
     }
+
 }
 
+
+
 @media (max-width: 767px) {
+
     .desktop-menu {
+
         display: none !important;
+
     }
+
 }
+
+
 
 /* Mobile Menu - Visible on Mobile, Hidden on Desktop */
+
 @media (max-width: 767px) {
+
     .mobile-menu {
+
         display: block !important;
+
     }
+
 }
+
+
 
 @media (min-width: 768px) {
+
     .mobile-menu {
+
         display: none !important;
+
     }
+
 }
+
+
 
 /* Mobile Bottom Navigation */
+
 .mobile-bottom-nav {
+
     position: fixed;
+
     bottom: 0;
+
     left: 0;
+
     right: 0;
+
     background: rgba(17, 24, 39, 0.95);
+
     backdrop-filter: blur(10px);
+
     border-top: 1px solid rgba(55, 65, 81, 0.8);
+
     z-index: 50;
+
     padding: 0.5rem 0;
+
 }
+
+
 
 /* Mobile Search Overlay */
+
 .mobile-search-overlay {
+
     position: fixed;
+
     top: 0;
+
     left: 0;
+
     right: 0;
+
     bottom: 0;
+
     background: rgba(17, 24, 39, 0.95);
+
     backdrop-filter: blur(10px);
+
     z-index: 50;
+
     overflow-y: auto;
+
 }
+
+
 
 .mobile-search-overlay.hidden {
+
     display: none;
+
 }
+
+
 
 /* Desktop Navigation */
+
 .desktop-nav {
+
     display: flex;
+
     flex-wrap: wrap;
+
     gap: 0.5rem;
+
     align-items: center;
+
 }
+
+
 
 .desktop-nav a {
+
     padding: 0.5rem 1rem;
+
     border-radius: 9999px;
+
     font-size: 0.875rem;
+
     font-weight: 500;
+
     transition: all 0.3s ease;
+
     white-space: nowrap;
+
     flex-shrink: 0;
+
 }
+
+
 
 /* Active states */
+
 .nav-active {
-    background-color: #2563eb;
+
+    background-color: transparent;
+
     color: white;
+
 }
+
+
 
 .nav-inactive {
+
     background-color: transparent;
+
     color: #d1d5db;
+
 }
+
+
 
 .nav-inactive:hover {
+
     background-color: #374151;
+
 }
+
+
 
 /* VIP menu item special styling */
+
 .nav-vip {
+
     background-color: #dc2626;
+
     color: white;
+
 }
 
+
+
 .nav-vip:hover {
+
     background-color: #b91c1c;
+
 }
+

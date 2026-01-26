@@ -15,6 +15,26 @@
     <link rel="stylesheet" href="../assets/css/menu.css"> 
     
     <script src="https://cdn.jwplayer.com/libraries/IDzF9Zmk.js"></script>
+    <script>
+        // ตรวจสอบว่า JW Player โหลดสำเร็จหรือไม่
+        window.addEventListener('load', function() {
+            if (typeof jwplayer === 'undefined') {
+                console.error('❌ JW Player library failed to load');
+                // ลองโหลดจาก CDN อื่น
+                const script = document.createElement('script');
+                script.src = 'https://content.jwplatform.com/libraries/IDzF9Zmk.js';
+                script.onload = function() {
+                    console.log('✅ JW Player loaded from backup CDN');
+                };
+                script.onerror = function() {
+                    console.error('❌ Backup JW Player CDN also failed');
+                };
+                document.head.appendChild(script);
+            } else {
+                console.log('✅ JW Player library loaded successfully');
+            }
+        });
+    </script>
     
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -61,22 +81,8 @@
                     </a>
                 </div>
 
-                <div class="hidden md:flex items-center ml-4">
-                    <form id="search-form" class="relative group" onsubmit="return false;">
-                        <input type="text" id="search-input" placeholder="ค้นหาหนัง..." 
-                               class="w-48 lg:w-64 bg-gray-800 border border-gray-700 rounded-full py-2 px-4 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all"
-                               oninput="searchMovies()">
-                        <button type="submit" onclick="searchMovies()" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white">
-                            🔍
-                        </button>
-                    </form>
-                </div>
-
-                <div class="md:hidden">
-                    <button onclick="toggleSearch()" class="p-2 text-gray-400 hover:text-white transition">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                    </button>
-                </div>
+                 
+ 
 
             </div>
         </div>
@@ -154,6 +160,12 @@
                             VIP Logout
                         </button>
                     </div>
+                    <button onclick="logout()" class="w-full flex items-center px-4 py-3 rounded-lg bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white transition text-sm font-medium group">
+                        <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clip-rule="evenodd"></path>
+                        </svg>
+                        Logout All
+                    </button>
                 </div>
             </nav>
         </aside>
@@ -208,54 +220,178 @@
     </p>
 </main>
 
-    <!-- Mobile Search Overlay -->
-    <div id="mobile-search-overlay" class="fixed inset-0 bg-gray-900 bg-opacity-95 z-50 hidden">
-        <div class="p-4">
-            <div class="flex items-center space-x-2 mb-4">
-                <button onclick="toggleSearch()" class="text-gray-400 hover:text-white">
-                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+     
+        
+    </div>
+
+       <!-- Mobile Bottom Navigation -->
+ 
+<nav class="mobile-bottom-nav md:hidden fixed bottom-4 left-4 right-4 bg-gray-900/80 backdrop-blur-xl border border-white/10 rounded-3xl z-50 shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
+    <div class="flex justify-around items-center h-16 px-2">
+        <a href="../index.html" class="flex flex-col items-center justify-center w-full h-full text-blue-500 nav-active transition-all duration-300">
+            <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+            </svg>
+            <span class="text-[10px] font-bold tracking-wider">หน้าหลัก</span>
+        </a>
+
+        <button onclick="toggleMobileCategories()" class="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-white transition-all duration-300">
+            <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+            </svg>
+            <span class="text-[10px] font-bold tracking-wider">หมวดหมู่</span>
+        </button>
+        
+        <button onclick="showVipModal()" id="mobile-vip-login-btn" class="flex flex-col items-center justify-center w-full h-full text-yellow-500 hover:scale-110 transition-all duration-300">
+            <svg class="w-7 h-7 mb-0.5 animate-pulse" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+            </svg>
+            <span class="text-[10px] font-bold tracking-wider">VIP</span>
+        </button>
+
+        <button onclick="logoutVip()" id="mobile-vip-logout-btn" class="hidden flex flex-col items-center justify-center w-full h-full text-green-500 transition-all duration-300">
+            <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+            </svg>
+            <span class="text-[10px] font-bold tracking-wider">ACTIVE</span>
+        </button>
+
+        <button onclick="logout()" class="flex flex-col items-center justify-center w-full h-full text-red-500/80 hover:text-red-500 transition-all duration-300">
+            <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+            </svg>
+            <span class="text-[10px] font-bold tracking-wider">ออก</span>
+        </button>
+    </div>
+</nav>
+
+<div id="mobile-categories-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-md z-[60] hidden transition-opacity duration-300">
+    <div class="absolute bottom-0 left-0 right-0 bg-[#0f172a] rounded-t-[2.5rem] border-t border-white/10 p-6 shadow-2xl transform transition-transform duration-300">
+        <div class="w-12 h-1.5 bg-gray-700 rounded-full mx-auto mb-6"></div>
+
+        <div class="flex items-center justify-between mb-8">
+            <h3 class="text-xl font-extrabold text-white tracking-tight">สำรวจหมวดหมู่</h3>
+            <button onclick="toggleMobileCategories()" class="w-10 h-10 flex items-center justify-center bg-gray-800 rounded-full text-gray-400 hover:text-white transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+
+        <div class="grid grid-cols-3 sm:grid-cols-4 gap-4 pb-12">
+            <a href="pages/category.html?cat=thai" class="group flex flex-col items-center gap-2">
+                <div class="w-full aspect-square bg-white/5 border border-white/5 rounded-2xl flex items-center justify-center transition-all group-hover:bg-blue-600/20 group-hover:border-blue-500/50 active:scale-90">
+                    <span class="text-2xl">🇹🇭</span>
+                </div>
+                <span class="text-xs font-semibold text-gray-400 group-hover:text-white">ไทย</span>
+            </a>
+
+            <a href="pages/category.html?cat=korea" class="group flex flex-col items-center gap-2">
+                <div class="w-full aspect-square bg-white/5 border border-white/5 rounded-2xl flex items-center justify-center transition-all group-hover:bg-red-600/20 group-hover:border-red-500/50 active:scale-90">
+                    <span class="text-2xl">🇰🇷</span>
+                </div>
+                <span class="text-xs font-semibold text-gray-400 group-hover:text-white">เกาหลี</span>
+            </a>
+
+            <a href="pages/category.html?cat=china" class="group flex flex-col items-center gap-2">
+                <div class="w-full aspect-square bg-white/5 border border-white/5 rounded-2xl flex items-center justify-center transition-all group-hover:bg-red-600/20 group-hover:border-red-500/50 active:scale-90">
+                    <span class="text-2xl">🇨🇳</span>
+                </div>
+                <span class="text-xs font-semibold text-gray-400 group-hover:text-white">จีน</span>
+            </a>
+
+            <a href="pages/category.html?cat=inter" class="group flex flex-col items-center gap-2">
+                <div class="w-full aspect-square bg-white/5 border border-white/5 rounded-2xl flex items-center justify-center transition-all group-hover:bg-green-600/20 group-hover:border-green-500/50 active:scale-90">
+                    <span class="text-2xl">🌎</span>
+                </div>
+                <span class="text-xs font-semibold text-gray-400 group-hover:text-white">สากล</span>
+            </a>
+
+            <a href="pages/category.html?cat=cartoon" class="group flex flex-col items-center gap-2">
+                <div class="w-full aspect-square bg-white/5 border border-white/5 rounded-2xl flex items-center justify-center transition-all group-hover:bg-yellow-600/20 group-hover:border-yellow-500/50 active:scale-90">
+                    <span class="text-2xl">🎬</span>
+                </div>
+                <span class="text-xs font-semibold text-gray-400 group-hover:text-white">การ์ตูน</span>
+            </a>
+
+            <a href="pages/category.html?cat=india" class="group flex flex-col items-center gap-2">
+                <div class="w-full aspect-square bg-white/5 border border-white/5 rounded-2xl flex items-center justify-center transition-all group-hover:bg-orange-600/20 group-hover:border-orange-500/50 active:scale-90">
+                    <span class="text-2xl">🇮🇳</span>
+                </div>
+                <span class="text-xs font-semibold text-gray-400 group-hover:text-white">อินเดีย</span>
+            </a>
+
+            <a href="pages/category.html?cat=asia" class="group flex flex-col items-center gap-2">
+                <div class="w-full aspect-square bg-white/5 border border-white/5 rounded-2xl flex items-center justify-center transition-all group-hover:bg-purple-600/20 group-hover:border-purple-500/50 active:scale-90">
+                    <span class="text-2xl">🌏</span>
+                </div>
+                <span class="text-xs font-semibold text-gray-400 group-hover:text-white">เอเซีย</span>
+            </a>
+
+            <button onclick="showVipModal()" class="group flex flex-col items-center gap-2">
+                <div class="w-full aspect-square bg-gradient-to-br from-yellow-400 via-orange-500 to-red-600 rounded-2xl flex items-center justify-center shadow-lg active:scale-90 transition-transform">
+                    <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
                     </svg>
-                </button>
-                <h3 class="text-lg font-semibold">ค้นหาหนัง</h3>
+                </div>
+                <span class="text-xs font-bold text-yellow-500">VIP</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+    <!-- VIP Login Modal -->
+    <div id="vip-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[70] hidden flex items-center justify-center p-4">
+        <div class="bg-gray-800 rounded-2xl p-8 max-w-md w-full border border-gray-700 shadow-2xl">
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-gradient-to-br from-red-500 to-pink-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"></path>
+                    </svg>
+                </div>
+                <h2 class="text-2xl font-bold text-white mb-2">VIP Access</h2>
+                <p class="text-gray-400 text-sm">กรุณาใส่รหัส VIP 4 ตัวเพื่อเข้าใช้งาน</p>
             </div>
-            <input type="text" id="mobile-search-input" placeholder="ค้นหาหนัง..." class="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-600" oninput="mobileSearchMovies()">
-            <div id="mobile-search-result" class="mt-4"></div>
+            
+            <div class="space-y-4">
+                <div class="flex justify-center space-x-2">
+                    <input type="text" maxlength="1" class="vip-input w-14 h-14 bg-gray-700 border border-gray-600 rounded-lg text-center text-2xl font-bold focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition" data-index="0">
+                    <input type="text" maxlength="1" class="vip-input w-14 h-14 bg-gray-700 border border-gray-600 rounded-lg text-center text-2xl font-bold focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition" data-index="1">
+                    <input type="text" maxlength="1" class="vip-input w-14 h-14 bg-gray-700 border border-gray-600 rounded-lg text-center text-2xl font-bold focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition" data-index="2">
+                    <input type="text" maxlength="1" class="vip-input w-14 h-14 bg-gray-700 border border-gray-600 rounded-lg text-center text-2xl font-bold focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition" data-index="3">
+                </div>
+                
+                <div id="vip-error" class="hidden bg-red-500/20 border border-red-500/50 rounded-lg p-3 text-red-400 text-sm text-center">
+                    รหัสไม่ถูกต้อง กรุณาลองใหม่
+                </div>
+                
+                <div class="flex space-x-3">
+                    <button onclick="closeVipModal()" class="flex-1 px-4 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition font-medium">
+                        ยกเลิก
+                    </button>
+                    <button onclick="verifyVipCode()" class="flex-1 px-4 py-3 bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white rounded-lg transition font-medium">
+                        เข้าสู่ระบบ
+                    </button>
+                </div>
+            </div>
+            
+            </div>
         </div>
     </div>
 
-    <!-- Mobile Bottom Navigation -->
-    <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-gray-900/95 backdrop-blur-lg border-t border-gray-800 z-50 shadow-2xl">
-        <div class="flex justify-around items-center h-16">
-            <a href="../index.html" class="flex flex-col items-center p-2 text-gray-400 hover:text-blue-500 transition">
-                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
-                <span class="text-[10px] mt-1 font-bold">HOME</span>
-            </a>
-            
-            <a href="category.html?cat=thai" class="flex flex-col items-center p-2 text-gray-400 hover:text-blue-500 transition">
-                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"></path></svg>
-                <span class="text-[10px] mt-1 font-bold">CATEGORIES</span>
-            </a>
-            
-            <button onclick="toggleSearch()" class="flex flex-col items-center p-2 text-gray-400">
-                <div class="bg-gray-800 p-2 rounded-full border border-gray-700">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                </div>
-            </button>
-            
-            <button onclick="showVipModal()" class="flex flex-col items-center p-2 text-yellow-500">
-                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                <span class="text-[10px] mt-1 font-bold tracking-tighter">VIP</span>
-            </button>
-        </div>
-    </nav>
-
+    <script src="../assets/js/auth-check.js"></script>
     <script src="../assets/js/menu.js"></script>
     <script src="../assets/js/alert2.js"></script>
-    <script src="../assets/js/watch.js"></script>
     <script src="../assets/js/script.js"></script>
+    <script src="../assets/js/vip-auth.js"></script>
+    <script src="../assets/js/firebase-setup.js"></script>
     <script src="../assets/js/tv-detection.js"></script>
     <script src="../assets/js/tv-navigation.js"></script>
+    <script src="../assets/js/watch.js"></script>
+
+
+
+
     
     <!-- VIP Expiry Check -->
     <script>
