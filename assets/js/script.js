@@ -217,15 +217,17 @@ async function loadAllMovies() {
     container.style.display = 'block';
 
     container.innerHTML = '<p class="text-gray-400">กำลังโหลดรายการหนังทั้งหมด...</p>';
+    // โหลดข้อมูลจาก JSON ที่มี Gzip compression
     let allSectionsHtml = '';
     moviesDatabase = {};
     
     for (const category of getFilteredCategories()) {
+        // โหลดข้อมูลจาก JSON files ที่ถูกบีบอัดด้วย Gzip
         let movies = [];
         try {
-            // ถ้าเป็นหมวด temp (VIP) ให้โหลดจาก temp.json
-            let jsonFile = category.key === 'temp' ? 'data/playlist/temp.json' : `data/playlist/${category.key}.json`;
-            console.log(`Loading category: ${category.key} from file: ${jsonFile}`);
+            let jsonFile = category.key === 'temp' ? 'assets/js/data/temp.json' : `assets/js/data/${category.key}.json`;
+            console.log(`Loading ${category.key} from: ${jsonFile}`);
+            
             const response = await fetch(jsonFile); 
             if (!response.ok) {
                 console.warn(`Skipping category ${category.key}: File not found or failed to load.`);
@@ -234,16 +236,19 @@ async function loadAllMovies() {
             movies = await response.json();
             console.log(`Loaded ${movies.length} movies from ${category.key}`);
             
-            // ถ้าเป็นหมวด temp (VIP) ให้แสดงทั้งหมดที่มีใน temp.json
-            if (category.key === 'temp') {
-                console.log(`Loading ${movies.length} VIP movies from temp.json`);
-            }
         } catch (error) {
             console.error(`Error loading JSON for ${category.key}:`, error);
             continue; 
         }
         
         if (movies && movies.length > 0) {
+            console.log(`Loaded ${movies.length} movies from ${category.key}`);
+            
+            // ถ้าเป็นหมวด temp (VIP) ให้แสดงทั้งหมดที่มี
+            if (category.key === 'temp') {
+                console.log(`Loading ${movies.length} VIP movies from VIP_MOVIES`);
+            }
+            
             // ส่ง category.key เข้าไปใน createMovieSection
             console.log(`Adding section for category: ${category.key} (${category.title})`);
             allSectionsHtml += createMovieSection(category.title, movies, category.key); 
@@ -263,6 +268,8 @@ async function loadAllMovies() {
                     }
                 }
             });
+        } else {
+            console.warn(`No movies found for category: ${category.key}`);
         }
     }
 
@@ -270,7 +277,7 @@ async function loadAllMovies() {
         container.innerHTML = allSectionsHtml;
         originalSectionsHtml = allSectionsHtml; // เก็บ HTML เดิมไว้
     } else {
-        container.innerHTML = '<p class="text-blue-500">ไม่พบรายการหนังในทุกหมวดหมู่. โปรดตรวจสอบไฟล์ JSON ในโฟลเดอร์ **data/playlist/**</p>';
+        container.innerHTML = '<p class="text-blue-500">ไม่พบรายการหนังในทุกหมวดหมู่. โปรดตรวจสอบไฟล์ JS ในโฟลเดอร์ **assets/js/data/**</p>';
         originalSectionsHtml = '';
     }
 }

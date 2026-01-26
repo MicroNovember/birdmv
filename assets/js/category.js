@@ -368,32 +368,42 @@ async function loadCategory(categoryKey) {
         }
     }
     
-    // 1. ดึงข้อมูล
+    // 1. ดึงข้อมูลจาก JSON files ที่ถูกบีบอัดด้วย Gzip
     let movies = [];
+    
     try {
         // ถ้าเป็นหมวด erotic หรือ temp ให้อ่านจาก temp.json (VIP) เท่านั้น
-        let jsonFile = (categoryKey === 'erotic' || categoryKey === 'temp') ? '../data/playlist/temp.json' : `../data/playlist/${categoryKey}.json`;
+        let jsonFile = (categoryKey === 'erotic' || categoryKey === 'temp') ? '../assets/js/data/temp.json' : `../assets/js/data/${categoryKey}.json`;
         
         console.log(`Loading category ${categoryKey} from file: ${jsonFile}`);
         const response = await fetch(jsonFile); 
         if (!response.ok) throw new Error(`Failed to load: ${jsonFile}`);
         movies = await response.json();
         
-        // ถ้าเป็น temp ให้แสดงทั้งหมดที่มีใน temp.json
-        if (categoryKey === 'temp') {
-            console.log(`Loading ${movies.length} VIP movies from temp.json`);
-        }
-        // ถ้าเป็น erotic ให้กรองเฉพาะที่มี category: "erotic" เท่านั้น
-        else if (categoryKey === 'erotic') {
-            movies = movies.filter(movie => movie.category === 'erotic');
-            console.log(`Filtered ${movies.length} erotic movies for VIP category`);
-        }
-        
     } catch (error) {
         console.error(`Error loading JSON for ${categoryKey}:`, error);
         document.getElementById('category-title').textContent = CATEGORIES_FULL_NAME[categoryKey] || 'รายการหนัง';
         listContainer.innerHTML = `<p class="text-blue-500 col-span-full">❌ เกิดข้อผิดพลาดในการโหลดรายการ **${CATEGORIES_FULL_NAME[categoryKey]}** หรือไม่พบไฟล์</p>`;
         return; 
+    }
+    
+    console.log(`Loaded ${movies.length} movies from ${categoryKey}`);
+    
+    // ถ้าเป็น temp ให้แสดงทั้งหมดที่มีใน VIP_MOVIES
+    if (categoryKey === 'temp') {
+        console.log(`Loading ${movies.length} VIP movies from VIP_MOVIES`);
+    }
+    // ถ้าเป็น erotic ให้กรองเฉพาะที่มี category: "erotic" เท่านั้น
+    if (categoryKey === 'erotic') {
+        movies = movies.filter(movie => movie.category === 'erotic');
+        console.log(`Filtered ${movies.length} erotic movies for VIP category`);
+    }
+    
+    if (movies.length === 0) {
+        console.warn(`No movies found for category: ${categoryKey}`);
+        document.getElementById('category-title').textContent = CATEGORIES_FULL_NAME[categoryKey] || 'รายการหนัง';
+        listContainer.innerHTML = `<p class="text-blue-500 col-span-full">❌ ไม่พบรายการหนังในหมวด **${CATEGORIES_FULL_NAME[categoryKey]}**</p>`;
+        return;
     }
     
     // 2. กรองและเก็บข้อมูลที่ถูกต้องเท่านั้น
