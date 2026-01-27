@@ -1,31 +1,34 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-    <title>SAMORN Movie | หน้าหลัก</title>
     <meta charset="UTF-8">
+    <title>ดูหนัง - SAMORN MOVIE</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <!-- PWA Meta Tags -->
     <meta name="theme-color" content="#3B82F6">
-    <meta name="description" content="SAMORN Movie - ดูฟรี ไม่มี โฆษณา 100%">
+    <meta name="description" content="ดูหนัง VIP กับ SAMORN Movie - ระบบ VIP Login พร้อม PWA">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="SAMORN Movie - ดูฟรี ไม่มี โฆษณา 100%">
-    <meta name="application-name" content="SAMORN Movie - ดูฟรี ไม่มี โฆษณา 100%">
+    <meta name="apple-mobile-web-app-title" content="SAMORN">
+    <meta name="application-name" content="SAMORN Movie">
     <meta name="msapplication-TileColor" content="#3B82F6">
-    <meta name="msapplication-config" content="pwa/browserconfig.xml">
+    <meta name="msapplication-config" content="../pwa/browserconfig.xml">
     
     <!-- PWA Manifest -->
-    <link rel="manifest" href="pwa/manifest.json">
-    <link rel="apple-touch-icon" href="assets/icons/icon-192.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="assets/icons/favicon-16.png">
+    <link rel="manifest" href="../pwa/manifest.json">
+    <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/icons/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/icons/favicon-16.png">
     
     <!-- CSS Files -->
-    <link rel="stylesheet" href="assets/css/netflix-style.css">
-    <link rel="stylesheet" href="assets/css/movie-cards.css">
-    <link rel="stylesheet" href="assets/css/style.css"> 
-    <link rel="stylesheet" href="assets/css/menu.css">
+    <link href="https://vjs.zencdn.net/8.3.0/video-js.css" rel="stylesheet" />
+    <link href="https://unpkg.com/@videojs/themes@1.0.1/dist/netflix/index.css" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/netflix-style.css">
+    <link rel="stylesheet" href="../assets/css/movie-cards.css">
+    <link rel="stylesheet" href="../assets/css/style.css"> 
+    <link rel="stylesheet" href="../assets/css/menu.css">
+    <link rel="stylesheet" href="../assets/css/watch.css">
     
     <!-- JavaScript Files -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -121,95 +124,21 @@
             }
         }, 1000);
     </script>
-    
-    <!-- Load Encrypted Data Files -->
-    <script src="assets/data/thai.js"></script>
-    <script src="assets/data/korea.js"></script>
-    <script src="assets/data/china.js"></script>
-    <script src="assets/data/inter.js"></script>
-    <script src="assets/data/cartoon.js"></script>
-    <script src="assets/data/india.js"></script>
-    <script src="assets/data/asia.js"></script>
-    <script src="assets/data/temp.js"></script>
-    
-    <!-- Decode Movie Data -->
-    <script>
-        // ถอดรหัสข้อมูลหนัง
-        try {
-            window.thai = window.getTHAI ? window.getTHAI() : [];
-            window.korea = window.getKOREA ? window.getKOREA() : [];
-            window.china = window.getCHINA ? window.getCHINA() : [];
-            window.inter = window.getINTER ? window.getINTER() : [];
-            window.cartoon = window.getCARTOON ? window.getCARTOON() : [];
-            window.india = window.getINDIA ? window.getINDIA() : [];
-            window.asia = window.getASIA ? window.getASIA() : [];
-            window.temp = window.getTEMP ? window.getTEMP() : [];
-            
-            console.log('✅ Movie data decoded successfully');
-            console.log('📊 Thai movies:', window.thai.length);
-            console.log('📊 Korea movies:', window.korea.length);
-            console.log('📊 China movies:', window.china.length);
-        } catch (error) {
-            console.error('❌ Error decoding movie data:', error);
-            // ถอดรหัสล้มเหลว ใช้ข้อมูลว่าง
-            window.thai = [];
-            window.korea = [];
-            window.china = [];
-            window.inter = [];
-            window.cartoon = [];
-            window.india = [];
-            window.asia = [];
-            window.temp = [];
-        }
-    </script>
-    
-    <!-- Smart TV Detection and Keyboard Navigation -->
-    <script>
-        // ตรวจจับ Smart TV
-        const isSmartTV = /tv|smart|tizen|webos|roku|chromecast|apple.tv/i.test(navigator.userAgent) || 
-                         (screen.width >= 1920 && screen.height >= 1080 && !/mobile|tablet/i.test(navigator.userAgent));
-        
-        if (isSmartTV) {
-            document.documentElement.classList.add('smart-tv');
-            console.log('Smart TV mode detected');
-            
-            // เพิ่ม keyboard navigation support
-            document.addEventListener('keydown', function(e) {
-                const focusableElements = document.querySelectorAll('a, button, [tabindex]:not([tabindex="-1"])');
-                const firstElement = focusableElements[0];
-                const lastElement = focusableElements[focusableElements.length - 1];
-                
-                if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
-                    e.preventDefault();
-                    const current = document.activeElement;
-                    const currentIndex = Array.from(focusableElements).indexOf(current);
-                    const nextIndex = (currentIndex + 1) % focusableElements.length;
-                    focusableElements[nextIndex].focus();
-                } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
-                    e.preventDefault();
-                    const current = document.activeElement;
-                    const currentIndex = Array.from(focusableElements).indexOf(current);
-                    const prevIndex = currentIndex === 0 ? focusableElements.length - 1 : currentIndex - 1;
-                    focusableElements[prevIndex].focus();
-                }
-            });
-        }
-    </script>
 </head>
-<body class="bg-gray-900 text-white font-sans overflow-x-hidden">
-    
+<body class="bg-[#0f172a] text-white font-sans overflow-x-hidden">
+
     <!-- Desktop Header - Glassmorphism -->
     <header class="desktop-header">
         <nav class="desktop-nav">
-            <a href="index.html" class="netflix-logo">SAMORN MOVIE - ดูฟรี ไม่มี โฆษณา 100%</a>
+            <a href="../index.html" class="netflix-logo">SAMORN MOVIE</a>
             <div class="nav-links">
-                <a href="pages/category.html?cat=thai">ไทย</a>
-                <a href="pages/category.html?cat=korea">เกาหลี</a>
-                <a href="pages/category.html?cat=china">จีน</a>
-                <a href="pages/category.html?cat=inter">สากล</a>
-                <a href="pages/category.html?cat=cartoon">การ์ตูน</a>
-                <a href="pages/category.html?cat=india">อินเดีย</a>
-                <a href="pages/category.html?cat=asia">เอเซีย</a>
+                <a href="category.html?cat=thai">ไทย</a>
+                <a href="category.html?cat=korea">เกาหลี</a>
+                <a href="category.html?cat=china">จีน</a>
+                <a href="category.html?cat=inter">สากล</a>
+                <a href="category.html?cat=cartoon">การ์ตูน</a>
+                <a href="category.html?cat=india">อินเดีย</a>
+                <a href="category.html?cat=asia">เอเซีย</a>
                 <button onclick="showVipModal()" class="vip-button">VIP</button>
                 <button onclick="logoutVip()" id="desktop-vip-logout-btn" class="vip-button hidden" style="background: linear-gradient(135deg, #3b82f6, #94a3b8);">Logout VIP</button>
             </div>
@@ -217,16 +146,46 @@
     </header>
 
     <!-- Main Content -->
-    <main class="pt-20">
-        <div id="movie-sections-container">
-            <!-- Netflix-style sections will be loaded here -->
+    <main class="pt-1 pb-20">
+        <div class="max-w-5xl mx-auto pt-1 px-4">
+            <div class="relative group rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-black">
+                <video id="movie-player" 
+                       class="video-js vjs-big-play-centered vjs-theme-netflix w-full aspect-video" 
+                       controls preload="auto">
+                    <p class="vjs-no-js">กรุณาเปิดใช้งาน JavaScript เพื่อดูวิดีโอ</p>
+                </video>
+            </div>
+
+            <div class="mt-8 p-8 bg-white/5 rounded-3xl border border-white/10 backdrop-blur-lg">
+                <h1 id="movie-title" class="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
+                    กำลังโหลด...
+                </h1>
+
+                <div class="flex flex-wrap items-center gap-4 text-sm text-gray-400 mb-8">
+                    <span class="text-green-500 font-bold">ดูฟรี ไม่มีโฆษณา </span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-gray-600"></span>
+                    <span id="movie-year">2026</span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-gray-600"></span>
+                    <span class="border border-gray-600 px-2 py-0.5 rounded text-[10px] text-gray-300 font-bold uppercase">HD</span>
+                </div>
+
+                <div class="border-t border-white/10 pt-8">
+                    <h2 class="text-xl font-semibold text-white mb-4 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20"><path d="M9 4.804A7.993 7.993 0 002 12a7.993 7.993 0 007 7.196V4.804z"></path></svg>
+                        เรื่องย่อ
+                    </h2>
+                    <p id="movie-description" class="text-gray-400 leading-relaxed text-lg max-w-4xl">
+                        ขออภัย ไม่พบข้อมูลเรื่องย่อของภาพยนตร์เรื่องนี้
+                    </p>
+                </div>
+            </div>
         </div>
     </main>
 
     <!-- Mobile Bottom Navigation -->
     <nav class="mobile-nav">
         <div class="mobile-nav-content">
-            <a href="index.html" class="mobile-nav-item active">
+            <a href="../index.html" class="mobile-nav-item">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
                 </svg>
@@ -276,49 +235,49 @@
             </div>
 
             <div class="categories-grid">
-                <a href="pages/category.html?cat=thai" class="category-item">
+                <a href="category.html?cat=thai" class="category-item">
                     <div class="category-icon">
                         <span>🇹🇭</span>
                     </div>
                     <span class="category-name">ไทย</span>
                 </a>
 
-                <a href="pages/category.html?cat=korea" class="category-item">
+                <a href="category.html?cat=korea" class="category-item">
                     <div class="category-icon">
                         <span>🇰🇷</span>
                     </div>
                     <span class="category-name">เกาหลี</span>
                 </a>
 
-                <a href="pages/category.html?cat=china" class="category-item">
+                <a href="category.html?cat=china" class="category-item">
                     <div class="category-icon">
                         <span>🇨🇳</span>
                     </div>
                     <span class="category-name">จีน</span>
                 </a>
 
-                <a href="pages/category.html?cat=inter" class="category-item">
+                <a href="category.html?cat=inter" class="category-item">
                     <div class="category-icon">
                         <span>🌎</span>
                     </div>
                     <span class="category-name">สากล</span>
                 </a>
 
-                <a href="pages/category.html?cat=cartoon" class="category-item">
+                <a href="category.html?cat=cartoon" class="category-item">
                     <div class="category-icon">
                         <span>🎬</span>
                     </div>
                     <span class="category-name">การ์ตูน</span>
                 </a>
 
-                <a href="pages/category.html?cat=india" class="category-item">
+                <a href="category.html?cat=india" class="category-item">
                     <div class="category-icon">
                         <span>🇮🇳</span>
                     </div>
                     <span class="category-name">อินเดีย</span>
                 </a>
 
-                <a href="pages/category.html?cat=asia" class="category-item">
+                <a href="category.html?cat=asia" class="category-item">
                     <div class="category-icon">
                         <span>🌏</span>
                     </div>
@@ -368,66 +327,17 @@
         </div>
     </div>
 
-    <!-- Load JavaScript Files -->
-    <script src="assets/js/movie-cards.js"></script>
-    <script src="assets/js/auth-check.js"></script>
-    <script src="assets/js/menu.js"></script>
-    <script src="assets/js/alert2.js"></script>
-    <script src="assets/js/vip-auth-fallback.js"></script>
-    <script src="assets/js/firebase-setup.js"></script>
-    <script src="assets/js/tv-detection.js"></script>
-    <script src="assets/js/tv-navigation.js"></script>
-    
-    <!-- Initialize Movie Loading -->
-    <script>
-        // โหลดหนังหลังจากโหลดข้อมูลทั้งหมด
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('🎬 Index page loaded, initializing movie sections...');
-            
-            // ตรวจสอบว่ามีข้อมูลหนังหรือไม่
-            function checkMovieData() {
-                const categories = ['thai', 'korea', 'china', 'inter', 'cartoon', 'india', 'asia', 'temp'];
-                const movieCount = {};
-                
-                categories.forEach(cat => {
-                    movieCount[cat] = (window[cat] && Array.isArray(window[cat])) ? window[cat].length : 0;
-                });
-                
-                console.log('📊 Movie data status:', movieCount);
-                return movieCount;
-            }
-            
-            // รอให้ข้อมูลหนังโหลดเสร็จก่อน (เพิ่มเวลา)
-            setTimeout(() => {
-                const movieData = checkMovieData();
-                
-                try {
-                    // โหลดหนังแนะนำ
-                    if (typeof loadFeaturedMovies === 'function') {
-                        loadFeaturedMovies();
-                    }
-                    
-                    // โหลดหมวดหมู่ต่างๆ
-                    if (typeof loadMovieRows === 'function') {
-                        loadMovieRows([
-                            { category: 'thai', title: 'หนังไทย', limit: 8 },
-                            { category: 'korea', title: 'หนังเกาหลี', limit: 8 },
-                            { category: 'china', title: 'หนังจีน', limit: 8 },
-                            { category: 'inter', title: 'หนังสากล', limit: 8 },
-                            { category: 'cartoon', title: 'การ์ตูน', limit: 8 }
-                        ]);
-                    }
-                    
-                    console.log('✅ Movie sections loaded successfully');
-                } catch (error) {
-                    console.error('❌ Error loading movie sections:', error);
-                }
-            }, 2000); // เพิ่มเป็น 2 วินาที
-            
-            // Check VIP expiry
-            checkVipExpiry();
-        });
-    </script>
+    <!-- JavaScript Files -->
+    <script src="https://vjs.zencdn.net/8.3.0/video.min.js"></script>
+    <script src="../assets/js/movie-cards.js"></script>
+    <script src="../assets/js/auth-check.js"></script>
+    <script src="../assets/js/menu.js"></script>
+    <script src="../assets/js/alert2.js"></script>
+    <script src="../assets/js/vip-auth-fallback.js"></script>
+    <script src="../assets/js/firebase-setup.js"></script>
+    <script src="../assets/js/tv-detection.js"></script>
+    <script src="../assets/js/tv-navigation.js"></script>
+    <script src="../assets/js/watch-simple.js"></script>
     
     <!-- VIP Expiry Check -->
     <script>

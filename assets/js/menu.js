@@ -69,7 +69,7 @@ function setActiveMenuItem() {
     vipLinks.forEach(link => {
         link.classList.add('nav-vip');
         if (link.classList.contains('nav-active')) {
-            link.style.backgroundColor = '#dc2626';
+            link.style.backgroundColor = '#6b7280';
         }
     });
 }

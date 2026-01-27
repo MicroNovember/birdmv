@@ -1,9 +1,43 @@
 /* Category Page Responsive Design - Modern Blue Theme */
 
-/* Base grid centering for all screen sizes */
+/* Netflix Category Page - Responsive Grid System */
+
+/* [TAG: ระบบ Grid อัจฉริยะสำหรับหน้า Category] */
 #movie-list-grid {
-    justify-content: center;
-    align-items: start;
+    display: grid !important;
+    /* เริ่มต้นที่ 2 คอลัมน์สำหรับมือถือ */
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+    padding: 16px !important;
+    width: 100% !important;
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+/* ปรับจำนวนคอลัมน์ตามความกว้างหน้าจอ */
+@media (min-width: 640px) { 
+    #movie-list-grid { 
+        grid-template-columns: repeat(3, 1fr) !important; 
+        gap: 16px !important;
+    } 
+}
+@media (min-width: 768px) { 
+    #movie-list-grid { 
+        grid-template-columns: repeat(4, 1fr) !important; 
+        gap: 20px !important; 
+    } 
+}
+@media (min-width: 1024px) { 
+    #movie-list-grid { 
+        grid-template-columns: repeat(6, 1fr) !important; 
+        gap: 24px !important;
+    } 
+}
+@media (min-width: 1440px) { 
+    #movie-list-grid { 
+        grid-template-columns: repeat(8, 1fr) !important; 
+        gap: 28px !important;
+    } 
 }
 
 /* Modern Blue Theme Variables */
@@ -140,154 +174,60 @@ main::-webkit-scrollbar-thumb:hover {
     transform: translateY(-3px) scale(1.05);
 }
 
-/* Base responsive adjustments for fixed-width cards */
-@media (max-width: 320px) {
-    /* Extra small phones */
-    #movie-list-grid {
-        gap: 0.5rem;
-        justify-content: center;
-    }
-    
-    .poster-card {
-        width: 130px !important;
-        border-radius: 0.5rem;
-        flex-shrink: 0;
-    }
-    
-    .poster-card img {
-        height: 195px !important;
-        border-radius: 0.5rem 0.5rem 0 0;
-    }
+/* [TAG: มาตรฐาน Movie Card สำหรับ Category Page] */
+.movie-card {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    background: #1e293b !important;
+    border-radius: 0.75rem !important;
+    overflow: hidden !important;
+    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
 }
 
-@media (min-width: 321px) and (max-width: 480px) {
-    /* Small phones */
-    #movie-list-grid {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.75rem;
-        justify-content: center;
-    }
-    
-    .poster-card {
-        width: 135px !important;
-        border-radius: 0.75rem;
-        flex-shrink: 0;
-    }
-    
-    .poster-card img {
-        height: 203px !important;
-        border-radius: 0.75rem 0.75rem 0 0;
-    }
+.movie-card:hover {
+    transform: translateY(-4px) !important;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4) !important;
 }
 
-@media (min-width: 481px) and (max-width: 640px) {
-    /* Large phones */
-    #movie-list-grid {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 1rem;
-        justify-content: center;
-    }
-    
-    .poster-card {
-        width: auto !important;
-        max-width: 140px;
-        margin: 0 auto;
-    }
+.movie-card img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    transition: transform 0.5s ease !important;
 }
 
-@media (min-width: 641px) and (max-width: 768px) {
-    /* Tablets */
-    #movie-list-grid {
-        grid-template-columns: repeat(4, 1fr);
-        gap: 1rem;
-        justify-content: center;
-    }
-    
-    .poster-card {
-        width: auto !important;
-        max-width: 150px;
-        margin: 0 auto;
-    }
+.movie-card:hover img {
+    transform: scale(1.05) !important;
 }
 
-@media (min-width: 769px) and (max-width: 1024px) {
-    /* Small desktops / large tablets */
-    #movie-list-grid {
-        grid-template-columns: repeat(5, 1fr);
-        gap: 1.25rem;
-        justify-content: center;
-    }
-    
-    .poster-card {
-        width: auto !important;
-        max-width: 170px;
-        margin: 0 auto;
-    }
+/* สำหรับ Smart TV: เพิ่ม Focus Highlight เมื่อใช้รีโมท */
+.movie-card:focus {
+    outline: 4px solid #3B82F6 !important;
+    transform: scale(1.1);
+    z-index: 10;
 }
 
-@media (min-width: 1025px) and (max-width: 1280px) {
-    /* Desktops */
-    #movie-list-grid {
-        grid-template-columns: repeat(6, 1fr);
-        gap: 1.5rem;
-        justify-content: center;
-    }
-    
-    .poster-card {
-        width: auto !important;
-        max-width: 180px;
-        margin: 0 auto;
-    }
+/* [TAG: การจัดการข้อความชื่อเรื่อง] */
+.movie-title {
+    color: white !important;
+    font-weight: bold !important;
+    margin-bottom: 0.25rem !important;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: 2.4em;
+    line-height: 1.2em;
 }
 
-@media (min-width: 1281px) {
-    /* Large desktops */
-    #movie-list-grid {
-        grid-template-columns: repeat(8, 1fr);
-        gap: 1.5rem;
-        max-width: 1400px;
-        margin: 0 auto;
-        justify-content: center;
-    }
-    
-    .poster-card {
-        width: auto !important;
-        max-width: 180px;
-        margin: 0 auto;
-    }
+.movie-info {
+    color: #60a5fa !important;
+    font-weight: 500 !important;
 }
 
-/* Movie card responsive adjustments */
-.poster-card {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.poster-card:hover {
-    transform: translateY(-4px);
-}
-
-.poster-card img {
-    transition: transform 0.5s ease;
-}
-
-.poster-card:hover img {
-    transform: scale(1.05);
-}
-
-/* Pagination responsive */
-@media (max-width: 640px) {
-    #pagination-container nav {
-        padding: 1rem 0.5rem;
-    }
-    
-    #pagination-container button {
-        min-width: 44px;
-        min-height: 44px; /* Touch-friendly size */
-    }
-}
-
-/* Ensure pagination is always visible */
+/* [TAG: การจัดการ Pagination และ Items Per Page] */
 #pagination-container {
     display: block !important;
     visibility: visible !important;
@@ -351,7 +291,7 @@ main::-webkit-scrollbar-thumb:hover {
     }
 }
 
-/* Title responsive */
+/* [TAG: การจัดการ Title และ Container] */
 #category-title {
     font-size: clamp(1.5rem, 4vw, 2.25rem);
     line-height: 1.2;
@@ -371,7 +311,7 @@ main::-webkit-scrollbar-thumb:hover {
     }
 }
 
-/* Search form responsive */
+/* [TAG: การจัดการ Search Form] */
 @media (max-width: 768px) {
     #search-form {
         flex-direction: column;
@@ -388,177 +328,23 @@ main::-webkit-scrollbar-thumb:hover {
     }
 }
 
-/* Movie title display */
-.poster-card p:first-child {
-    color: white !important;
-    font-weight: bold !important;
-    margin-bottom: 0.25rem !important;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    min-height: 2.4em;
-    line-height: 1.2em;
-}
-
-/* Movie info display */
-.poster-card .text-blue-400 {
-    color: #60a5fa !important;
+/* [TAG: Netflix-style Items Per Page Buttons] */
+.items-per-page-btn {
+    transition: all 0.2s ease !important;
+    cursor: pointer !important;
     font-weight: 500 !important;
 }
 
-/* Fallback for browsers that don't support line-clamp */
-@supports not (-webkit-line-clamp: 2) {
-    .poster-card p:first-child {
-        max-height: 2.4em;
-        position: relative;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        line-clamp: 2;
-        -webkit-box-orient: vertical;
-        box-orient: vertical;
-        overflow: hidden;
-    }
-    
-    .poster-card p:first-child::after {
-        content: "...";
-        position: absolute;
-        bottom: 0;
-        right: 0;
-        background: inherit;
-        padding-left: 2px;
-    }
+.items-per-page-btn:hover {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3) !important;
 }
 
-/* Movie card text responsive */
-@media (max-width: 480px) {
-    .poster-card p {
-        font-size: 0.7rem;
-        line-height: 1.1;
-    }
-    
-    .poster-card .p-2 {
-        padding: 0.4rem;
-    }
-    
-    .poster-card .text-xs {
-        font-size: 0.65rem;
-    }
+.items-per-page-btn:active {
+    transform: translateY(0) !important;
 }
 
-@media (min-width: 481px) and (max-width: 768px) {
-    .poster-card p {
-        font-size: 0.75rem;
-        line-height: 1.2;
-    }
-    
-    .poster-card .p-2 {
-        padding: 0.5rem;
-    }
-}
-
-@media (min-width: 769px) and (max-width: 1024px) {
-    .poster-card p {
-        font-size: 0.8rem;
-        line-height: 1.3;
-    }
-    
-    .poster-card .p-2 {
-        padding: 0.6rem;
-    }
-}
-
-@media (min-width: 1025px) {
-    .poster-card p {
-        font-size: 0.85rem;
-        line-height: 1.4;
-    }
-    
-    .poster-card .p-2 {
-        padding: 0.7rem;
-    }
-}
-
-/* TV Landscape Mode (1920x1080 and above) */
-@media (min-width: 1920px) {
-    .poster-card {
-        width: 190px !important;
-    }
-    
-    .poster-card img {
-        height: 285px !important;
-    }
-    
-    .poster-card p {
-        font-size: 0.9rem;
-        line-height: 1.5;
-    }
-    
-    .poster-card .p-2 {
-        padding: 0.8rem;
-    }
-    
-    #movie-list-grid {
-        gap: 1.5rem;
-    }
-}
-
-/* iPad Landscape (1024x768) */
-@media (min-width: 1024px) and (max-width: 1366px) and (orientation: landscape) {
-    .poster-card {
-        width: 165px !important;
-    }
-    
-    .poster-card img {
-        height: 248px !important;
-    }
-    
-    .poster-card p {
-        font-size: 0.75rem !important;
-        line-height: 1.2 !important;
-        height: 2.4em !important;
-        overflow: hidden !important;
-        word-wrap: break-word !important;
-    }
-    
-    .poster-card .p-2 {
-        padding: 0.5rem !important;
-    }
-    
-    .poster-card .text-xs {
-        font-size: 0.7rem !important;
-    }
-}
-
-/* iPad Portrait (768x1024) */
-@media (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
-    .poster-card {
-        width: 155px !important;
-    }
-    
-    .poster-card img {
-        height: 233px !important;
-    }
-    
-    .poster-card p {
-        font-size: 0.7rem !important;
-        line-height: 1.2 !important;
-        height: 2.4em !important;
-        overflow: hidden !important;
-        word-wrap: break-word !important;
-    }
-    
-    .poster-card .p-2 {
-        padding: 0.4rem !important;
-    }
-    
-    .poster-card .text-xs {
-        font-size: 0.65rem !important;
-    }
-}
-
-/* Loading state responsive */
+/* [TAG: Loading State] */
 @media (max-width: 640px) {
     #movie-list-grid .text-gray-400 {
         font-size: 0.875rem;

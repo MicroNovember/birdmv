@@ -417,7 +417,7 @@ class VipAuth {
         }
         
         // Show VIP in mobile categories
-        const mobileVipCategory = document.querySelector('a[href*="erotic"].bg-red-600\\/20');
+        const mobileVipCategory = document.querySelector('a[href*="erotic"].bg-blue-600\\/20');
         if (mobileVipCategory) {
             mobileVipCategory.style.display = 'block';
         }
@@ -441,7 +441,7 @@ class VipAuth {
         }
         
         // Hide VIP in mobile categories (show as locked)
-        const mobileVipCategory = document.querySelector('a[href*="erotic"].bg-red-600\\/20');
+        const mobileVipCategory = document.querySelector('a[href*="erotic"].bg-blue-600\\/20');
         if (mobileVipCategory) {
             mobileVipCategory.style.display = 'block';
             mobileVipCategory.classList.add('opacity-50', 'pointer-events-none');

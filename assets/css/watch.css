@@ -1,64 +1,62 @@
-/* Watch page specific styles - Modern Blue Theme */
-body { 
-    margin: 0px; 
-    background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+/* [TAG: ตกแต่ง Player ให้เป็นธีม Netflix] */
+:root {
+    --vjs-theme-netflix--primary: #e50914; /* แดง Netflix */
 }
 
-/* กำหนดให้ Player Container รักษาอัตราส่วน 16:9 และกำหนดความกว้างสูงสุด */
-#jwplayerDiv {
-    aspect-ratio: 16/9; 
-    max-width: 854px; /* กำหนดความกว้างสูงสุดที่เหมาะสม */
-    width: 100%;
-    margin: 0 auto;
+/* ปรับแต่งปุ่ม Play กลางจอ */
+.vjs-theme-netflix .vjs-big-play-button {
+    width: 90px !important;
+    height: 90px !important;
+    line-height: 90px !important;
+    border-radius: 50% !important;
+    background-color: rgba(0, 0, 0, 0.6) !important;
+    font-size: 3em !important;
+    border: 3px solid #fff !important;
 }
 
-/* สำหรับ Audio/Subtitle Selection */
-.control-panel {
-    background: rgba(30, 58, 138, 0.9);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(96, 165, 250, 0.2);
-    border-radius: 12px;
-    padding: 1rem;
-    margin-bottom: 1rem;
-    box-shadow: 0 8px 32px rgba(59, 130, 246, 0.1);
+.vjs-theme-netflix:hover .vjs-big-play-button {
+    background-color: var(--vjs-theme-netflix--primary) !important;
+    border-color: var(--vjs-theme-netflix--primary) !important;
 }
 
-.control-group {
-    margin-bottom: 1rem;
+/* ซ่อนแถบเลื่อนและปรับพื้นหลัง */
+body {
+    background-color: #1e293b; /* Changed from #0f172a to #1e293b (less harsh) */
+    background-image: radial-gradient(circle at top right, #1e3a8a 0%, #1e293b 50%); /* Changed from #0f172a to #1e293b */
+    background-attachment: fixed;
+    margin: 0;
+    padding: 0;
 }
 
-.control-group:last-child {
-    margin-bottom: 0;
+/* ปรับแต่ง Video Player container */
+.video-js {
+    border-radius: 16px;
+    overflow: hidden;
 }
 
-select {
-    background: rgba(30, 58, 138, 0.9);
-    border: 1px solid rgba(96, 165, 250, 0.3);
-    color: #f8fafc;
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-    font-size: 0.875rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
+/* ปรับแต่ง controls bar */
+.vjs-theme-netflix .vjs-control-bar {
+    background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+    backdrop-filter: blur(10px);
 }
 
-select:hover {
-    border-color: rgba(96, 165, 250, 0.6);
-    background: rgba(30, 58, 138, 1);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+/* ปรับแต่ง progress bar */
+.vjs-theme-netflix .vjs-play-progress {
+    background-color: var(--vjs-theme-netflix--primary) !important;
 }
 
-select:focus {
-    outline: none;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-}
-
-label {
-    display: block;
-    font-size: 0.875rem;
-    font-weight: 500;
-    margin-bottom: 0.5rem;
-    color: #cbd5e1;
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .max-w-5xl {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    
+    .text-3xl {
+        font-size: 1.875rem;
+    }
+    
+    .text-4xl {
+        font-size: 2.25rem;
+    }
 }

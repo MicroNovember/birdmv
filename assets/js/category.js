@@ -11,7 +11,7 @@ const CATEGORIES_FULL_NAME = {
     'temp': 'VIP',
 };
 
-const ITEMS_PER_PAGE_OPTIONS = [24, 48, 72, 96]; // ตัวเลือกจำนวนรายการต่อหน้า
+const ITEMS_PER_PAGE_OPTIONS = [24, 48, 72, 96]; // ตัวเลือกจำนวนรายการต่อหน้า (Netflix-style)
 let ITEMS_PER_PAGE = 48; // ค่าเริ่มต้น จำกัดรายการสูงสุด 48 เรื่องต่อหน้า
 let allMovies = [];      // เก็บรายการหนังทั้งหมดของหมวดหมู่ปัจจุบัน
 let currentPage = 1;      // หน้าปัจจุบันที่กำลังแสดง
@@ -22,8 +22,8 @@ let isSearchMode = false; // ตรวจสอบว่าอยู่ในโ
 // --- [ COMMON FUNCTIONS ] ---
 
 /**
- * ฟังก์ชันสร้าง Movie Card HTML String (แนวตั้ง 150x225)
- * อัปเดต: รองรับ video-audio1, subtitle1 และการจัดการ error
+ * [TAG: โครงสร้าง Card ที่สมบูรณ์แบบที่สุดสำหรับ Category Page]
+ * ฟังก์ชันสร้าง Movie Card HTML String (Netflix Style)
  */
 function createMovieCard(movie) {
     // ตรวจสอบว่ามีข้อมูลครบถ้วนหรือไม่
@@ -37,6 +37,7 @@ function createMovieCard(movie) {
     const movieSubtitle = movie.subtitle1 || movie.subtitle;
     const movieLogo = movie.logo || movie.image;
     const movieInfo = movie.info || '';
+    const movieDescription = movie.description || movie.info || '';
     const movieYear = movie.year || '';
 
     // ตรวจสอบว่ามีข้อมูลครบถ้วนหรือไม่
@@ -51,43 +52,71 @@ function createMovieCard(movie) {
     }
 
     // สร้าง URL สำหรับดูหนัง
-    let watchUrl = `watch.html?video1=${encodeURIComponent(movieFile)}&name=${encodeURIComponent(movieName)}`;
+    let watchUrl = `pages/watch-simple.html?video1=${encodeURIComponent(movieFile)}&name=${encodeURIComponent(movieName)}&description=${encodeURIComponent(movieDescription)}&year=${movieYear}&t=${Date.now()}`;
+    
+    // Debug URL และตรวจสอบ
+    console.log('🔗 Generated watch URL (category):', watchUrl);
+    console.log('🔍 Current location (category):', window.location.href);
+    console.log('🔍 Base path (category):', window.location.pathname);
+    
+    // บังคับให้แน่ใจว่าไม่มี pages/ ซ้ำ - ตรวจสอบและแก้ไขทุกกรณี
+    let finalUrl = watchUrl;
+    if (finalUrl.includes('pages/pages/')) {
+        console.error('❌ DOUBLE PATH DETECTED! Fixing URL...');
+        finalUrl = finalUrl.replace(/pages\/pages\//g, 'pages/');
+        console.log('✅ Fixed URL (category):', finalUrl);
+    }
+    
+    // ตรวจสอบว่าอยู่ในหน้า category หรือไม่
+    if (window.location.pathname.includes('category.html')) {
+        // ถ้าอยู่ในหน้า category ให้ใช้ relative path
+        finalUrl = finalUrl.replace(/^pages\//, '');
+        console.log('📂 In category page, using relative path:', finalUrl);
+    }
+    
+    // Force cache busting
+    finalUrl += `&cb=${Date.now()}`;
+    
+    console.log('🎯 Final URL to use (category):', finalUrl);
     
     // เพิ่ม subtitle ถ้ามี
     if (movieSubtitle && movieSubtitle.trim() !== '') {
-        watchUrl += `&subtitle1=${encodeURIComponent(movieSubtitle)}`;
+        finalUrl += `&subtitle1=${encodeURIComponent(movieSubtitle)}`;
     }
     
     // เพิ่ม audio2 ถ้ามี
     if (movie['video-audio2'] && movie['video-audio2'].trim() !== '') {
-        watchUrl += `&video2=${encodeURIComponent(movie['video-audio2'])}`;
+        finalUrl += `&video2=${encodeURIComponent(movie['video-audio2'])}`;
     }
     
     // เพิ่ม subtitle2 ถ้ามี
     if (movie['subtitle2'] && movie['subtitle2'].trim() !== '') {
-        watchUrl += `&subtitle2=${encodeURIComponent(movie['subtitle2'])}`;
+        finalUrl += `&subtitle2=${encodeURIComponent(movie['subtitle2'])}`;
     }
 
     return `
-        <div class="w-[140px] sm:w-[150px] md:w-[160px] lg:w-[170px] xl:w-[180px] flex-shrink-0 bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-red-500/30 transition duration-300 poster-card group cursor-pointer">
-            <div class="relative">
-                <a href="${watchUrl}">
-                    <div class="w-full h-[210px] bg-gray-700">
-                        <img src="${movieLogo}"
-                             onerror="this.onerror=null;this.src='https://via.placeholder.com/140x210?text=No+Image';"
-                             alt="${movieName}"
-                             class="w-full h-full object-cover transition duration-500">
-                    </div>
-                    ${movieYear ? `<div class="absolute top-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded">${movieYear}</div>` : ''}
-                    ${movieInfo ? `<div class="absolute bottom-2 right-2 bg-transparent text-white text-xs px-2 py-1 rounded font-medium" style="background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);">${movieInfo}</div>` : ''}
-                </a>
-            </div>
-            <div class="p-2">
-                <p class="text-xs font-bold text-white leading-tight mb-1" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; max-height: 2.4em;" title="${movieName}">${movieName}</p>
-                ${movieYear ? `<div class="text-xs text-gray-500 text-center">${movieYear}</div>` : ''}
-            </div>
+    <div class="movie-card group flex flex-col focus:outline-none" tabindex="0">
+        <div class="relative aspect-[2/3] w-full overflow-hidden rounded-lg bg-gray-800 shadow-lg">
+            <a href="${finalUrl}" class="block w-full h-full">
+                <img src="${movieLogo}" 
+                     alt="${movieName}"
+                     class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                     loading="lazy"
+                     onerror="this.src='https://via.placeholder.com/200x280?text=No+Image';">
+                
+                <div class="absolute top-2 right-2 flex gap-1">
+                    ${movieYear ? `<span class="bg-black/70 text-white text-xs px-2 py-1 rounded font-medium">${movieYear}</span>` : ''}
+                    ${movieInfo ? `<span class="bg-transparent text-white text-xs px-2 py-1 rounded font-medium" style="background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);">${movieInfo}</span>` : ''}
+                </div>
+            </a>
         </div>
-    `;
+
+        <div class="mt-2 h-[38px] md:h-[44px] overflow-hidden">
+            <h3 class="movie-title text-[12px] md:text-sm font-medium leading-tight group-hover:text-blue-400 transition" title="${movieName}">
+                ${movieName}
+            </h3>
+        </div>
+    </div>`;
 }
 
 // --- [ PAGINATION LOGIC ] ---
@@ -262,7 +291,10 @@ function displayMovies(moviesToDisplay, title) {
     }
 
     renderPagination(totalItems, totalPages);
-    renderItemsPerPageSelector(totalItems);
+    
+    // [TAG: อัปเดต Netflix-style Items Per Page Controls]
+    updateItemsPerPageButtons(ITEMS_PER_PAGE);
+    updateTotalItemsDisplay(totalItems);
     
     // Debug: Force pagination to show if it should be visible
     if (totalItems > 0 && !document.getElementById('pagination-container').innerHTML.trim()) {
@@ -289,40 +321,40 @@ function changeItemsPerPage(newItemsPerPage) {
 }
 
 /**
- * สร้างตัวเลือกจำนวนรายการต่อหน้า
+ * [TAG: Netflix-style Items Per Page Button Handler]
+ * อัปเดตปุ่มจำนวนรายการต่อหน้าแบบ Netflix
  */
-function renderItemsPerPageSelector(totalItems) {
-    // ลบ selector เก่าถ้ามี
-    const existingSelector = document.getElementById('items-per-page-selector');
-    if (existingSelector) {
-        existingSelector.remove();
-    }
+function updateItemsPerPageButtons(currentItemsPerPage) {
+    const buttons = document.querySelectorAll('.items-per-page-btn');
     
-    const selectorHtml = `
-        <div id="items-per-page-selector" class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-2">
-            <div class="flex items-center">
-                <label class="text-sm text-gray-400 mr-2">แสดง:</label>
-                <select id="items-per-page" onchange="changeItemsPerPage(parseInt(this.value))" 
-                        class="bg-gray-800 border border-gray-700 text-white px-3 py-1 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-600">
-                    ${ITEMS_PER_PAGE_OPTIONS.map(count => 
-                        `<option value="${count}" ${count === ITEMS_PER_PAGE ? 'selected' : ''}>${count} รายการ</option>`
-                    ).join('')}
-                </select>
-            </div>
-            <div class="text-xs sm:text-sm text-gray-500">
-                รวม ${totalItems} รายการ
-            </div>
-        </div>
-    `;
-    
-    // แทรก selector ก่อน pagination container
-    const paginationContainer = document.getElementById('pagination-container');
-    paginationContainer.insertAdjacentHTML('beforebegin', selectorHtml);
+    buttons.forEach(button => {
+        const items = parseInt(button.dataset.items);
+        
+        if (items === currentItemsPerPage) {
+            // Active state - Netflix blue style
+            button.className = 'items-per-page-btn px-3 py-1 text-sm rounded-lg border border-blue-500 bg-blue-500/20 text-blue-400';
+        } else {
+            // Inactive state
+            button.className = 'items-per-page-btn px-3 py-1 text-sm rounded-lg border border-gray-700 text-gray-400 hover:border-blue-500 hover:text-blue-400 transition';
+        }
+    });
 }
 
 /**
+ * [TAG: Update Total Items Display]
+ * อัปเดตจำนวนรายการทั้งหมด
+ */
+function updateTotalItemsDisplay(totalItems) {
+    const totalItemsElement = document.getElementById('total-items');
+    if (totalItemsElement) {
+        totalItemsElement.textContent = `ทั้งหมด: ${totalItems} รายการ`;
+    }
+}
+
+/**
+ * [TAG: ฟังก์ชันเปลี่ยนหน้าพร้อม Scroll to Top]
  * ฟังก์ชันเปลี่ยนหน้า (Next/Previous/หมายเลข)
- * อัปเดต: รองรับโหมดค้นหาและโหมดปกติ
+ * อัปเดต: รองรับโหมดค้นหาและโหมดปกติ พร้อมเลื่อนขึ้นบนอัตโนมัติ
  */
 function changePage(newPage) {
     let totalPages;
@@ -345,7 +377,7 @@ function changePage(newPage) {
             displayMovies(allMovies, CATEGORIES_FULL_NAME[currentCategory]);
         }
         
-        // เลื่อนไปด้านบนของหน้าเมื่อเปลี่ยนหน้า
+        // [TAG: เลื่อนไปด้านบนของหน้าเมื่อเปลี่ยนหน้า]
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 }
@@ -382,20 +414,23 @@ async function loadCategory(categoryKey) {
         const isLoggedIn = userType === 'guest' || userType === 'vip';
         
         console.log(`Category check: ${categoryKey}, Logged in: ${isLoggedIn}, VIP: ${isVip}`);
+        console.log('User type:', userType);
+        console.log('VIP data:', vipData);
         
         if (!isLoggedIn || !isVip) {
+            console.log('❌ VIP access denied - showing login prompt');
             document.getElementById('category-title').textContent = 'VIP';
             listContainer.innerHTML = `
                 <div class="col-span-full text-center py-20">
-                    <div class="bg-yellow-500/20 border border-yellow-500/50 rounded-lg p-8 max-w-md mx-auto">
-                        <div class="w-16 h-16 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <div class="bg-gray-800/20 border border-gray-600/50 rounded-lg p-8 max-w-md mx-auto">
+                        <div class="w-16 h-16 bg-gradient-to-br from-gray-600 to-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
                             <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
                                 <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
                             </svg>
                         </div>
-                        <h3 class="text-xl font-bold text-yellow-500 mb-2">VIP Access Required</h3>
+                        <h3 class="text-xl font-bold text-gray-400 mb-2">VIP Access Required</h3>
                         <p class="text-gray-300 mb-4">กรุณา Login และใส่รหัส VIP เพื่อดูหนังในหมวดนี้</p>
-                        <button onclick="window.location.href='../login.html'" class="px-6 py-3 bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 text-white rounded-lg transition font-medium">
+                        <button onclick="window.location.href='../login.html'" class="px-6 py-3 bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white rounded-lg transition font-medium">
                             Login & Get VIP Access
                         </button>
                     </div>
@@ -404,6 +439,8 @@ async function loadCategory(categoryKey) {
             return;
         }
     }
+    
+    console.log('✅ VIP access granted - loading movies');
     
     // 1. ดึงข้อมูล
     let movies = [];
@@ -581,4 +618,13 @@ document.addEventListener('DOMContentLoaded', () => {
         // หากไม่มีพารามิเตอร์ ให้โหลดหมวดหมู่แรกเป็นค่าเริ่มต้น (Thai)
         loadCategory('thai');
     }
+    
+    // [TAG: Netflix-style Items Per Page Button Event Listeners]
+    const itemsPerPageButtons = document.querySelectorAll('.items-per-page-btn');
+    itemsPerPageButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const newItemsPerPage = parseInt(this.dataset.items);
+            changeItemsPerPage(newItemsPerPage);
+        });
+    });
 });

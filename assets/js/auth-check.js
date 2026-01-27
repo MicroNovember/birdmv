@@ -33,7 +33,7 @@ class AuthCheck {
     
     showExpiredMessage() {
         const message = document.createElement('div');
-        message.className = 'fixed top-4 right-4 bg-yellow-500 text-white px-6 py-3 rounded-lg shadow-lg z-[80] transition-all duration-500';
+        message.className = 'fixed top-4 right-4 bg-blue-500 text-white px-6 py-3 rounded-lg shadow-lg z-[80] transition-all duration-500';
         message.innerHTML = '⏰ VIP Access Expired! Now using Guest access.';
         document.body.appendChild(message);
         

@@ -1,0 +1,624 @@
+/* Movie Card & Grid System - Netflix Standard */
+
+:root {
+    --card-aspect-ratio: 2/3;
+    --card-border-radius: 0.5rem;
+    --card-bg: #1f2937;
+    --card-hover-scale: 1.05;
+    --card-image-hover-scale: 1.1;
+    --card-transition: all 0.3s ease;
+    --card-gap-mobile: 0.75rem;
+    --card-gap-tablet: 1rem;
+    --card-gap-desktop: 1.25rem;
+}
+
+/* Movie Card Base Styles - Netflix Professional Standard */
+.movie-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 0.5rem;
+    background: #1f2937; /* สีพื้นหลังระหว่างรอรูป */
+    transition: transform 0.3s ease;
+    cursor: pointer;
+    /* Netflix Professional: ใช้ขนาดคงที่ตามมาตรฐาน */
+    flex: 0 0 auto; /* ป้องกันการโดนบีบในแถว flex */
+    width: 150px; /* กำหนดความกว้างคงที่ */
+    aspect-ratio: 2/3; /* บังคับสัดส่วนแนวตั้งมาตรฐาน */
+    min-width: 120px; /* ขนาดต่ำสุด */
+    max-width: 150px; /* ขนาดสูงสุด */
+}
+
+.movie-card:hover {
+    transform: scale(1.05); /* scale-105 ตาม .md */
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); /* shadow-2xl */
+}
+
+.movie-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* ครอปรูปให้เต็มพื้นที่โดยไม่เสียสัดส่วน */
+    transition: transform 0.5s ease;
+    display: block; /* บังคับให้แสดงเป็น block */
+}
+
+.movie-card:hover img {
+    transform: scale(1.1); /* ซูมเข้าไปในภาพเล็กน้อยเมื่อ Hover */
+}
+
+/* Card Info - Professional Netflix Style */
+.movie-card-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(180deg, transparent 0%, rgba(15, 23, 42, 0.95) 100%);
+    padding: 0.75rem;
+    min-height: 3.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.movie-card-title {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    font-weight: 600;
+    font-size: 0.75rem;
+    color: white;
+    margin: 0;
+    line-height: 1.2;
+    word-break: break-word;
+}
+
+.movie-card-year {
+    font-size: 0.65rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin: 0.25rem 0 0 0;
+}
+
+/* Card Badges - Netflix Professional Standard */
+.movie-card-badge {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.625rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+    z-index: 5;
+}
+
+.movie-card-badge.vip {
+    background: linear-gradient(135deg, #6b7280, #9ca3af);
+    color: white;
+}
+
+.movie-card-badge.hd {
+    background: #3B82F6; /* สีแดงตาม .md */
+    color: white;
+    font-size: 0.625rem; /* [10px] ตาม .md */
+    padding: 0.125rem 0.5rem; /* px-2 py-0.5 ตาม .md */
+    border-radius: 0.125rem; /* rounded ตาม .md */
+}
+
+.movie-card-badge.new {
+    background: rgba(34, 197, 94, 0.9);
+    color: white;
+}
+
+/* Skeleton Loading */
+.movie-card-skeleton {
+    aspect-ratio: var(--card-aspect-ratio);
+    background: linear-gradient(90deg, #374151 0%, #4b5563 50%, #374151 100%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s ease-in-out infinite;
+    border-radius: var(--card-border-radius);
+}
+
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+
+/* [TAG: จัดการชื่อไทยที่ยาวเกินไป] */
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis; /* เติม ... เมื่อชื่อยาวเกิน */
+}
+
+/* ปรับระยะบรรทัดให้กระชับพอดีกับความสูงที่ล็อกไว้ */
+.movie-title {
+    line-height: 1.2 !important;
+    display: block;
+    width: 100%;
+}
+
+/* ซ่อน Scrollbar สำหรับ Chrome, Safari และ Opera */
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+
+/* ซ่อน Scrollbar สำหรับ IE, Edge และ Firefox */
+.scrollbar-hide {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+/* CSS สำหรับจัดระเบียบหัวข้อและปก */
+.netflix-row {
+    display: block !important; /* บังคับให้หัวข้อกับรูปอยู่คนละบรรทัด */
+}
+
+/* ปรับขนาดตัวอักษร "ดูทั้งหมด" ในรูปให้เล็กลงและไม่ซ้อนหัวข้อ */
+.netflix-row h2 {
+    display: inline-block;
+    white-space: nowrap;
+}
+
+/* Index Page - Horizontal Slide */
+.netflix-row-header {
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    margin-bottom: 1rem; /* เพิ่มระยะห่างจากแถวปกหนัง */
+    border-radius: 0.5rem;
+    padding: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* แถวที่ 2: ปกหนัง - แยกส่วนชัดๆ */
+.netflix-row-content {
+    position: relative;
+    background: rgba(15, 23, 42, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.5rem;
+    padding: 1rem 0;
+    margin-top: 0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.netflix-row-container {
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 0 1rem;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+}
+
+.netflix-row-container::-webkit-scrollbar {
+    display: none;
+}
+
+.netflix-row-container .movie-card {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+    /* แก้ไข: ให้ขนาดคงที่ไม่ใช่ width ตายตัว */
+    width: 150px; /* ขนาดคงที่ 150px */
+    min-width: 150px; /* ไม่ให้ย่อเกิน 150px */
+    max-width: 150px; /* ไม่ให้ใหญ่เกิน 150px */
+    aspect-ratio: 2/3; /* บังคับสัดส่วน 2:3 */
+}
+
+/* Responsive sizes ที่ชัดเจน */
+@media (min-width: 640px) {
+    .netflix-row-container .movie-card {
+        width: 160px;
+        min-width: 160px;
+        max-width: 160px;
+    }
+}
+
+@media (min-width: 768px) {
+    .netflix-row-container .movie-card {
+        width: 170px;
+        min-width: 170px;
+        max-width: 170px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .netflix-row-container .movie-card {
+        width: 180px;
+        min-width: 180px;
+        max-width: 180px;
+    }
+}
+
+@media (min-width: 1280px) {
+    .netflix-row-container .movie-card {
+        width: 200px;
+        min-width: 200px;
+        max-width: 200px;
+    }
+}
+
+/* Navigation Arrows */
+.netflix-row-arrows {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 0.5rem;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 10;
+}
+
+.netflix-row-content:hover .netflix-row-arrows {
+    opacity: 1;
+}
+
+.netflix-row-arrow {
+    width: 2.5rem;
+    height: 2.5rem;
+    background: rgba(0, 0, 0, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    pointer-events: all;
+    transition: all 0.3s ease;
+    color: white;
+}
+
+.netflix-row-arrow:hover {
+    background: rgba(0, 0, 0, 0.9);
+    border-color: rgba(255, 255, 255, 0.4);
+    transform: scale(1.1);
+}
+
+.netflix-row-arrow:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.netflix-row-arrow:disabled:hover {
+    transform: none;
+}
+
+/* Category Page - Grid System */
+.movie-grid {
+    display: grid;
+    gap: 1rem; /* gap-4 ตาม .md */
+    padding: 1rem; /* px-4 ตาม .md */
+}
+
+/* Responsive Grid ตาม .md พร้อมขนาดคงที่ */
+.movie-grid .movie-card {
+    width: 120px; /* ขนาดคงที่สำหรับ grid */
+    min-width: 120px;
+    max-width: 120px;
+    aspect-ratio: 2/3;
+    justify-self: center; /* จัดให้อยู่ตรงกลาง column */
+}
+
+@media (min-width: 640px) {
+    .movie-grid {
+        grid-template-columns: repeat(3, 1fr); /* sm:grid-cols-3 ตาม .md */
+    }
+    .movie-grid .movie-card {
+        width: 130px;
+        min-width: 130px;
+        max-width: 130px;
+    }
+}
+
+@media (min-width: 768px) {
+    .movie-grid {
+        grid-template-columns: repeat(4, 1fr); /* md:grid-cols-4 ตาม .md */
+        gap: 1.5rem; /* md:gap-6 ตาม .md */
+    }
+    .movie-grid .movie-card {
+        width: 140px;
+        min-width: 140px;
+        max-width: 140px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .movie-grid {
+        grid-template-columns: repeat(6, 1fr); /* lg:grid-cols-6 ตาม .md */
+    }
+    .movie-grid .movie-card {
+        width: 150px;
+        min-width: 150px;
+        max-width: 150px;
+    }
+}
+
+@media (min-width: 1280px) {
+    .movie-grid {
+        grid-template-columns: repeat(8, 1fr); /* xl:grid-cols-8 ตาม .md */
+    }
+    .movie-grid .movie-card {
+        width: 160px;
+        min-width: 160px;
+        max-width: 160px;
+    }
+}
+
+/* Smart TV Special Cases */
+.smart-tv .movie-grid {
+    grid-template-columns: repeat(8, 1fr);
+    gap: 1.5rem;
+}
+
+.smart-tv .movie-card {
+    transform: scale(1.1);
+}
+
+.smart-tv .movie-card:focus {
+    outline: 3px solid var(--primary-color, #3B82F6);
+    outline-offset: 2px;
+    transform: scale(1.15);
+    box-shadow: 0 0 25px rgba(59, 130, 246, 0.8);
+}
+
+.smart-tv .netflix-row-container .movie-card {
+    width: 180px; /* ใช้ขนาดเดียวกับ desktop */
+}
+
+.smart-tv .movie-card-title {
+    font-size: 1rem;
+}
+
+/* Pagination Controls */
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 2rem 1rem;
+    flex-wrap: wrap;
+}
+
+.pagination-btn {
+    min-width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 0.5rem;
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.pagination-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.4);
+    transform: translateY(-1px);
+}
+
+.pagination-btn.active {
+    background: var(--primary-color, #3B82F6);
+    border-color: var(--primary-color, #3B82F6);
+}
+
+.pagination-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.pagination-btn:disabled:hover {
+    transform: none;
+}
+
+.pagination-info {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.875rem;
+    padding: 0 1rem;
+}
+
+/* Items Per Page Selector */
+.items-per-page-container {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.items-per-page-label {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.items-per-page-select {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 0.375rem;
+    color: white;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    transition: all 0.3s ease;
+}
+
+.items-per-page-select:focus {
+    outline: none;
+    border-color: var(--primary-color, #3B82F6);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+.items-per-page-select option {
+    background: #1f2937;
+    color: white;
+}
+
+/* Loading States */
+.loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1rem;
+    text-align: center;
+}
+
+.loading-spinner {
+    width: 3rem;
+    height: 3rem;
+    border: 3px solid rgba(255, 255, 255, 0.1);
+    border-top: 3px solid var(--primary-color, #3B82F6);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1rem;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-text {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.875rem;
+    font-weight: 500;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* Error States */
+.error-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1rem;
+    text-align: center;
+}
+
+.error-icon {
+    width: 4rem;
+    height: 4rem;
+    color: #6b7280;
+    margin-bottom: 1rem;
+}
+
+.error-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 0.5rem;
+}
+
+.error-message {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.875rem;
+    margin-bottom: 1.5rem;
+    max-width: 400px;
+}
+
+.error-retry-btn {
+    background: var(--primary-color, #3B82F6);
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.error-retry-btn:hover {
+    background: var(--primary-dark, #2563EB);
+    transform: translateY(-1px);
+}
+
+/* Empty States */
+.empty-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1rem;
+    text-align: center;
+}
+
+.empty-icon {
+    width: 4rem;
+    height: 4rem;
+    color: rgba(255, 255, 255, 0.3);
+    margin-bottom: 1rem;
+}
+
+.empty-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 0.5rem;
+}
+
+.empty-message {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.875rem;
+    max-width: 400px;
+}
+
+/* Utility Classes */
+.line-clamp-1 {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.scrollbar-hide {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+
+/* Focus States for Accessibility */
+.movie-card:focus-visible {
+    outline: 2px solid var(--primary-color, #3B82F6);
+    outline-offset: 2px;
+}
+
+.netflix-row-arrow:focus-visible {
+    outline: 2px solid var(--primary-color, #3B82F6);
+    outline-offset: 2px;
+}
+
+.pagination-btn:focus-visible {
+    outline: 2px solid var(--primary-color, #3B82F6);
+    outline-offset: 2px;
+}

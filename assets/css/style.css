@@ -409,7 +409,7 @@ select:focus,
     transform: translateY(0); /* เลื่อนขึ้นมา */
 }
 
-/* Modern Blue-Navy Theme Colors */
+/* Modern Blue-Navy Theme Colors - Eye-Friendly */
 :root {
     --primary-blue: #3b82f6;      /* blue-500 */
     --primary-blue-light: #60a5fa; /* blue-400 */
@@ -419,9 +419,9 @@ select:focus,
     --text-primary: #f8fafc;       /* slate-50 */
     --text-secondary: #cbd5e1;      /* slate-200 */
     --text-muted: #94a3b8;         /* slate-400 */
-    --bg-primary: #0f172a;         /* slate-950 */
-    --bg-secondary: #1e293b;       /* slate-900 */
-    --bg-tertiary: #334155;        /* slate-800 */
+    --bg-primary: #1e293b;         /* Changed from #0f172a to #1e293b (less harsh) */
+    --bg-secondary: #334155;       /* Changed from #1e293b to #334155 (less harsh) */
+    --bg-tertiary: #475569;        /* Changed from #334155 to #475569 (less harsh) */
     --accent-blue: #0ea5e9;        /* sky-500 */
     --accent-cyan: #06b6d4;        /* cyan-500 */
 }
@@ -500,13 +500,13 @@ aside {
 
 /* VIP Button Styles */
 .vip-button {
-    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-    border: 1px solid rgba(245, 158, 11, 0.3);
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-dark) 100%);
+    border: 1px solid rgba(96, 165, 250, 0.3);
 }
 
 .vip-button:hover {
-    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-    box-shadow: 0 10px 25px rgba(245, 158, 11, 0.25);
+    background: linear-gradient(135deg, var(--primary-blue-light) 0%, var(--primary-blue) 100%);
+    box-shadow: 0 10px 25px rgba(59, 130, 246, 0.25);
 }
 
 /* Loading Spinner */

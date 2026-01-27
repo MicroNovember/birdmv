@@ -43,123 +43,18 @@ function getFilteredCategories() {
     return filtered;
 }
 
-const MOVIES_PER_ROW = 16; 
+const MOVIES_PER_ROW = 10; 
 let moviesDatabase = {}; 
 let originalSectionsHtml = ''; // เก็บ HTML หน้าหลักเดิม
 
 // --- [ COMMON FUNCTIONS ] ---
-
-/**
- * ฟังก์ชันสร้าง Movie Card HTML String (แนวตั้ง 150x225)
- * อัปเดต: รองรับ video-audio1, subtitle1 และการจัดการ error
- */
-function createMovieCard(movie) {
-    // ตรวจสอบว่ามีข้อมูลครบถ้วนหรือไม่
-    if (!movie || typeof movie !== 'object') {
-        console.warn('Invalid movie object:', movie);
-        return '';
-    }
-
-    const movieFile = movie['video-audio1'] || movie.file || movie.url;
-    const movieName = movie.name || '';
-    const movieSubtitle = movie.subtitle1 || movie.subtitle;
-    const movieLogo = movie.logo || movie.image;
-    const movieInfo = movie.info || '';
-
-    // ตรวจสอบว่ามีข้อมูลครบถ้วนหรือไม่
-    if (!movieFile || !movieName || movieName.trim() === '') {
-        console.warn('Missing required movie data:', {
-            movie: movie,
-            movieFile: !!movieFile,
-            movieName: !!movieName,
-            movieNameTrimmed: movieName && movieName.trim() !== ''
-        });
-        return '';
-    }
-
-    // สร้าง URL สำหรับดูหนัง
-    let watchUrl = `pages/watch.html?video1=${encodeURIComponent(movieFile)}&name=${encodeURIComponent(movieName)}`;
-    
-    // เพิ่ม subtitle ถ้ามี
-    if (movieSubtitle && movieSubtitle.trim() !== '') {
-        watchUrl += `&subtitle1=${encodeURIComponent(movieSubtitle)}`;
-    }
-    
-    // เพิ่ม audio2 ถ้ามี
-    if (movie['video-audio2'] && movie['video-audio2'].trim() !== '') {
-        watchUrl += `&video2=${encodeURIComponent(movie['video-audio2'])}`;
-    }
-    
-    // เพิ่ม subtitle2 ถ้ามี
-    if (movie['subtitle2'] && movie['subtitle2'].trim() !== '') {
-        watchUrl += `&subtitle2=${encodeURIComponent(movie['subtitle2'])}`;
-    }
-    
-    // เพิ่มข้อมูลหนังอื่นๆ สำหรับการ์ดข้อมูล
-    if (movieLogo && movieLogo.trim() !== '') {
-        watchUrl += `&poster=${encodeURIComponent(movieLogo)}`;
-    }
-    
-    if (movie.description && movie.description.trim() !== '') {
-        watchUrl += `&description=${encodeURIComponent(movie.description)}`;
-    }
-    
-    if (movie.category && movie.category.trim() !== '') {
-        watchUrl += `&category=${encodeURIComponent(movie.category)}`;
-    }
-    
-    if (movie.release_year && movie.release_year.trim() !== '') {
-        watchUrl += `&year=${encodeURIComponent(movie.release_year)}`;
-    }
-    
-    if (movie.info && movie.info.trim() !== '') {
-        watchUrl += `&info=${encodeURIComponent(movie.info)}`;
-    }
-    
-    // เพิ่มข้อมูลเพิ่มเติม (ถ้ามี)
-    if (movie.duration && movie.duration.trim() !== '') {
-        watchUrl += `&duration=${encodeURIComponent(movie.duration)}`;
-    }
-    
-    if (movie.actors && movie.actors.trim() !== '') {
-        watchUrl += `&actors=${encodeURIComponent(movie.actors)}`;
-    }
-    
-    if (movie.director && movie.director.trim() !== '') {
-        watchUrl += `&director=${encodeURIComponent(movie.director)}`;
-    }
-    
-    if (movie.quality && movie.quality.trim() !== '') {
-        watchUrl += `&quality=${encodeURIComponent(movie.quality)}`;
-    }
-
-    // Extract year from movie name if available
-    const movieYear = movie.year || (movie.name.match(/\((\d{4})\)/) ? movie.name.match(/\((\d{4})\)/)[1] : '');
-    
-    return `
-        <div class="mx-auto flex-shrink-0 w-[150px] bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-blue-500/30 transition duration-300 poster-card group cursor-pointer">
-            <div class="relative">
-                <a href="${watchUrl}">
-                    <img src="${movieLogo}"
-                         onerror="this.onerror=null;this.src='https://via.placeholder.com/150x225?text=No+Image';"
-                         alt="${movieName}"
-                         class="w-full h-[225px] object-cover transition duration-500">
-                    ${movieYear ? `<div class="absolute top-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded">${movieYear}</div>` : ''}
-                    ${movieInfo ? `<div class="absolute bottom-2 right-2 bg-transparent text-white text-xs px-2 py-1 rounded font-medium" style="background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);">${movieInfo}</div>` : ''}
-                </a>
-            </div>
-            <div class="p-2">
-                <p class="text-sm font-semibold truncate" title="${movieName}">${movieName}</p>
-            </div>
-        </div>
-    `;
-}
+// ใช้ createMovieCard จาก movie-cards.js แทน
 
 // --- [ INDEX.HTML LOGIC ] ---
 
 /**
  * ฟังก์ชันสร้าง Section รายการหนังแบบเลื่อนได้ (Netflix Style)
- * ปรับปรุง: เพิ่มลิงก์ที่หัวข้อ h3 ไปยัง category.html
+ * ปรับปรุง: ใช้ createMovieRow จาก movie-cards.js
  */
 function createMovieSection(title, movies, categoryKey, isSearch = false) {
     console.log(`Creating section: ${title} (${categoryKey}) with ${movies.length} movies`);
@@ -184,24 +79,8 @@ function createMovieSection(title, movies, categoryKey, isSearch = false) {
     
     console.log(`Section ${categoryKey}: ${limitedMovies.length} valid movies to display`);
     
-    const cardsHtml = limitedMovies.map(createMovieCard).join(''); 
-    
-    const categoryUrl = categoryKey === 'temp' ? 'pages/category.html?cat=temp' : `pages/category.html?cat=${categoryKey}`;
-    
-    return `
-        <section class="mb-10">
-            <a href="${categoryUrl}" class="group block mb-6">
-                <h3 class="text-3xl font-bold border-l-4 border-blue-600 pl-3 transition duration-300 group-hover:text-blue-500">
-                    ${title} 
-                    <span class="text-blue-600 text-xl ml-2 group-hover:ml-3 transition-all duration-300">›</span>
-                </h3>
-            </a>
-            
-            <div class="horizontal-scroll-container flex space-x-2 overflow-x-auto pb-4 -mx-4 px-4 sm:mx-0 sm:px-0">
-                ${cardsHtml}
-            </div>
-        </section>
-    `;
+    // ใช้ createMovieRow จาก movie-cards.js แทน
+    return createMovieRow(title, limitedMovies, categoryKey);
 }
 
 /**
