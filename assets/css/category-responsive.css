@@ -19,6 +19,127 @@
     --category-text-muted: #94a3b8;
 }
 
+/* Netflix-style Scrollbar for Category Page */
+#movie-list-grid::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+#movie-list-grid::-webkit-scrollbar-track {
+    background: rgba(30, 58, 138, 0.1);
+    border-radius: 12px;
+    margin: 10px;
+}
+
+#movie-list-grid::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, 
+        rgba(59, 130, 246, 0.8) 0%, 
+        rgba(96, 165, 250, 0.9) 50%, 
+        rgba(59, 130, 246, 0.8) 100%);
+    border-radius: 12px;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    min-height: 30px;
+    box-shadow: 
+        0 0 15px rgba(59, 130, 246, 0.4),
+        inset 0 0 8px rgba(255, 255, 255, 0.15);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#movie-list-grid::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, 
+        rgba(96, 165, 250, 1) 0%, 
+        rgba(147, 197, 253, 1) 50%, 
+        rgba(96, 165, 250, 1) 100%);
+    box-shadow: 
+        0 0 25px rgba(59, 130, 246, 0.6),
+        inset 0 0 12px rgba(255, 255, 255, 0.25);
+    transform: translateY(-2px) scale(1.1);
+}
+
+#movie-list-grid::-webkit-scrollbar-thumb:active {
+    background: linear-gradient(135deg, 
+        rgba(37, 99, 235, 0.9) 0%, 
+        rgba(59, 130, 246, 0.9) 50%, 
+        rgba(37, 99, 235, 0.9) 100%);
+    transform: translateY(0) scale(0.95);
+}
+
+/* Special scrollbar for horizontal movie lists */
+.movie-row-container::-webkit-scrollbar {
+    height: 6px;
+    background: transparent;
+}
+
+.movie-row-container::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    margin: 0 15px;
+}
+
+.movie-row-container::-webkit-scrollbar-thumb {
+    background: linear-gradient(90deg, 
+        rgba(59, 130, 246, 0.7) 0%, 
+        rgba(96, 165, 250, 0.8) 50%, 
+        rgba(59, 130, 246, 0.7) 100%);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 2px 10px rgba(59, 130, 246, 0.3);
+    transition: all 0.3s ease;
+}
+
+.movie-row-container::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(90deg, 
+        rgba(96, 165, 250, 0.9) 0%, 
+        rgba(147, 197, 253, 1) 50%, 
+        rgba(96, 165, 250, 0.9) 100%);
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.5);
+    transform: translateY(-1px);
+}
+
+/* Smooth scrolling behavior */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Enhanced scrollbar for main content */
+main::-webkit-scrollbar {
+    width: 10px;
+}
+
+main::-webkit-scrollbar-track {
+    background: linear-gradient(180deg, 
+        rgba(15, 23, 42, 0.8) 0%, 
+        rgba(30, 58, 138, 0.3) 50%, 
+        rgba(15, 23, 42, 0.8) 100%);
+    border-radius: 15px;
+    border: 1px solid rgba(96, 165, 250, 0.1);
+}
+
+main::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, 
+        #60a5fa 0%, 
+        #3b82f6 50%, 
+        #1e40af 100%);
+    border-radius: 15px;
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 
+        0 0 20px rgba(59, 130, 246, 0.4),
+        inset 0 0 10px rgba(255, 255, 255, 0.2);
+    min-height: 40px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+main::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, 
+        #93c5fd 0%, 
+        #60a5fa 50%, 
+        #3b82f6 100%);
+    box-shadow: 
+        0 0 30px rgba(59, 130, 246, 0.6),
+        inset 0 0 15px rgba(255, 255, 255, 0.3);
+    transform: translateY(-3px) scale(1.05);
+}
+
 /* Base responsive adjustments for fixed-width cards */
 @media (max-width: 320px) {
     /* Extra small phones */

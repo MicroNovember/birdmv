@@ -16,6 +16,8 @@ let ITEMS_PER_PAGE = 48; // ค่าเริ่มต้น จำกัดร
 let allMovies = [];      // เก็บรายการหนังทั้งหมดของหมวดหมู่ปัจจุบัน
 let currentPage = 1;      // หน้าปัจจุบันที่กำลังแสดง
 let currentCategory = '';  // หมวดหมู่ที่กำลังแสดง
+let searchResults = [];   // เก็บผลการค้นหาแยกจาก allMovies
+let isSearchMode = false; // ตรวจสอบว่าอยู่ในโหมดค้นหาหรือไม่
 
 // --- [ COMMON FUNCTIONS ] ---
 
@@ -166,11 +168,13 @@ function renderPagination(totalItems, totalPages) {
 
 /**
  * ฟังก์ชันแสดงผลรายการหนังบนหน้าจอ (เฉพาะหน้าปัจจุบัน)
+ * อัปเดต: รองรับโหมดค้นหาและโหมดปกติแยกกัน
  */
 function displayMovies(moviesToDisplay, title) {
     console.log(`=== displayMovies Debug ===`);
     console.log(`Movies to display: ${moviesToDisplay.length}`);
     console.log(`Title: ${title}`);
+    console.log(`Search mode: ${isSearchMode}`);
     
     const listContainer = document.getElementById('movie-list-grid');
     const titleElement = document.getElementById('category-title');
@@ -240,11 +244,20 @@ function displayMovies(moviesToDisplay, title) {
         listContainer.innerHTML = cardsHtml;
         console.log('Set container innerHTML');
         
-        titleElement.textContent = `${title} (หน้า ${currentPage}/${totalPages} | รวม ${totalItems} รายการ)`;
+        // แสดง title ตามโหมด
+        if (isSearchMode) {
+            titleElement.textContent = `${title} (หน้า ${currentPage}/${totalPages} | รวม ${totalItems} รายการ)`;
+        } else {
+            titleElement.textContent = `${title} (หน้า ${currentPage}/${totalPages} | รวม ${totalItems} รายการ)`;
+        }
         console.log('Set title');
     } else {
         console.log('No movies to display, showing empty message');
-        listContainer.innerHTML = `<p class="text-blue-500 col-span-full">ไม่พบรายการหนัง!</p>`;
+        if (isSearchMode) {
+            listContainer.innerHTML = `<p class="text-blue-500 col-span-full">ไม่พบรายการที่ตรงกับการค้นหา!</p>`;
+        } else {
+            listContainer.innerHTML = `<p class="text-blue-500 col-span-full">ไม่พบรายการหนัง!</p>`;
+        }
         titleElement.textContent = `${title} (0 รายการ)`;
     }
 
@@ -266,7 +279,13 @@ function displayMovies(moviesToDisplay, title) {
 function changeItemsPerPage(newItemsPerPage) {
     ITEMS_PER_PAGE = newItemsPerPage;
     currentPage = 1; // รีเซ็ตไปหน้าแรกเสมอเมื่อเปลี่ยนจำนวนรายการ
-    displayMovies(allMovies, CATEGORIES_FULL_NAME[currentCategory]);
+    
+    // แสดงผลตามโหมดปัจจุบัน
+    if (isSearchMode) {
+        displayMovies(searchResults, `ผลการค้นหา "${document.getElementById('search-input').value}" ใน ${CATEGORIES_FULL_NAME[currentCategory]}`);
+    } else {
+        displayMovies(allMovies, CATEGORIES_FULL_NAME[currentCategory]);
+    }
 }
 
 /**
@@ -303,14 +322,29 @@ function renderItemsPerPageSelector(totalItems) {
 
 /**
  * ฟังก์ชันเปลี่ยนหน้า (Next/Previous/หมายเลข)
+ * อัปเดต: รองรับโหมดค้นหาและโหมดปกติ
  */
 function changePage(newPage) {
-    const totalPages = Math.ceil(allMovies.length / ITEMS_PER_PAGE);
+    let totalPages;
+    
+    if (isSearchMode) {
+        totalPages = Math.ceil(searchResults.length / ITEMS_PER_PAGE);
+    } else {
+        totalPages = Math.ceil(allMovies.length / ITEMS_PER_PAGE);
+    }
     
     if (newPage >= 1 && newPage <= totalPages) {
         currentPage = newPage;
-        document.getElementById('search-input').value = '';
-        displayMovies(allMovies, CATEGORIES_FULL_NAME[currentCategory]);
+        
+        // ไม่ล้างค่าค้นหาเมื่อเปลี่ยนหน้าในโหมดค้นหา
+        if (isSearchMode) {
+            const query = document.getElementById('search-input').value;
+            displayMovies(searchResults, `ผลการค้นหา "${query}" ใน ${CATEGORIES_FULL_NAME[currentCategory]}`);
+        } else {
+            document.getElementById('search-input').value = '';
+            displayMovies(allMovies, CATEGORIES_FULL_NAME[currentCategory]);
+        }
+        
         // เลื่อนไปด้านบนของหน้าเมื่อเปลี่ยนหน้า
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -322,6 +356,9 @@ function changePage(newPage) {
 async function loadCategory(categoryKey) {
     currentCategory = categoryKey;
     currentPage = 1; 
+    isSearchMode = false; // รีเซ็ตโหมดค้นหา
+    searchResults = []; // ล้างผลการค้นหา
+    
     const listContainer = document.getElementById('movie-list-grid');
     listContainer.innerHTML = '<p class="text-gray-400 col-span-full">กำลังโหลดรายการ...</p>';
     document.getElementById('pagination-container').innerHTML = '';
@@ -447,7 +484,7 @@ async function loadCategory(categoryKey) {
 
 /**
  * ฟังก์ชันค้นหารายการหนังในหมวดหมู่ที่กำลังแสดง
- * อัปเดต: ปรับปรุงการค้นหาและการแสดงผล
+ * อัปเดต: ค้นหาเฉพาะในหมวดหมู่ปัจจุบัน และแยกผลการค้นหา
  */
 function searchMovies() {
     const query = document.getElementById('search-input').value.toLowerCase().trim();
@@ -455,11 +492,13 @@ function searchMovies() {
     if (!query) {
         // ถ้าช่องค้นหาว่าง ให้กลับไปแสดงรายการทั้งหมด
         currentPage = 1;
+        isSearchMode = false;
+        searchResults = [];
         displayMovies(allMovies, CATEGORIES_FULL_NAME[currentCategory]);
         return;
     }
     
-    // กรองรายการหนัง
+    // กรองรายการหนังเฉพาะในหมวดหมู่ปัจจุบัน
     const filteredMovies = allMovies.filter(movie => {
         const name = (movie.name || '').toLowerCase();
         const info = (movie.info || '').toLowerCase();
@@ -467,9 +506,70 @@ function searchMovies() {
         return name.includes(query) || info.includes(query) || category.includes(query);
     });
     
-    // เมื่อค้นหา ให้เริ่มแสดงที่หน้า 1 ของผลลัพธ์การค้นหา
-    currentPage = 1; 
-    displayMovies(filteredMovies, `ผลการค้นหา "${query}" ใน ${CATEGORIES_FULL_NAME[currentCategory]}`);
+    // เก็บผลการค้นหาและเข้าโหมดค้นหา
+    searchResults = filteredMovies;
+    isSearchMode = true;
+    currentPage = 1; // เริ่มแสดงที่หน้า 1 ของผลการค้นหา
+    
+    console.log(`Search in category ${currentCategory}: Found ${filteredMovies.length} results for "${query}"`);
+    
+    // แสดงผลการค้นหา
+    displayMovies(searchResults, `ผลการค้นหา "${query}" ใน ${CATEGORIES_FULL_NAME[currentCategory]}`);
+}
+
+/**
+ * ฟังก์ชันค้นหาจาก temp และแสดงผลแทนหมวดหมู่ปัจจุบัน
+ * ใช้สำหรับแสดงผลการค้นหาจากทุกหมวดหมู่ในหน้า category
+ */
+function searchFromTemp(query) {
+    if (!query) {
+        // ถ้าช่องค้นหาว่าง ให้กลับไปแสดงรายการทั้งหมด
+        currentPage = 1;
+        isSearchMode = false;
+        searchResults = [];
+        displayMovies(allMovies, CATEGORIES_FULL_NAME[currentCategory]);
+        return;
+    }
+    
+    // โหลดข้อมูลจาก temp (ทุกหมวดหมู่)
+    let tempMovies = [];
+    try {
+        if (typeof window.getTEMP === 'function') {
+            tempMovies = window.getTEMP();
+            console.log(`Loaded ${tempMovies.length} movies from temp for search`);
+        }
+    } catch (error) {
+        console.error('Error loading temp movies for search:', error);
+        return;
+    }
+    
+    // กรองเฉพาะหนังที่มีข้อมูลครบถ้วน
+    const validTempMovies = tempMovies.filter(movie => {
+        if (!movie || typeof movie !== 'object') return false;
+        
+        const movieFile = movie['video-audio1'] || movie.file || movie.url;
+        const movieName = movie.name || '';
+        
+        return movieFile && movieName && movieName.trim() !== '';
+    });
+    
+    // ค้นหาในข้อมูล temp
+    const filteredTempMovies = validTempMovies.filter(movie => {
+        const name = (movie.name || '').toLowerCase();
+        const info = (movie.info || '').toLowerCase();
+        const category = (movie.category || '').toLowerCase();
+        return name.includes(query.toLowerCase()) || info.includes(query.toLowerCase()) || category.includes(query.toLowerCase());
+    });
+    
+    // เก็บผลการค้นหาและเข้าโหมดค้นหา
+    searchResults = filteredTempMovies;
+    isSearchMode = true;
+    currentPage = 1;
+    
+    console.log(`Temp search: Found ${filteredTempMovies.length} results for "${query}" from ${validTempMovies.length} temp movies`);
+    
+    // แสดงผลการค้นหาจาก temp
+    displayMovies(searchResults, `ผลการค้นหา "${query}" จากทุกหมวดหมู่`);
 }
 
 // โหลดรายการตามพารามิเตอร์เมื่อหน้าเว็บโหลดเสร็จ

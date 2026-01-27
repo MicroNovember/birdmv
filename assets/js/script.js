@@ -209,12 +209,11 @@ function createMovieSection(title, movies, categoryKey, isSearch = false) {
  */
 async function loadAllMovies() {
     const container = document.getElementById('movie-sections-container');
-    const searchResultContainer = document.getElementById('search-result-container');
     
-    // ซ่อนผลลัพธ์การค้นหา
-    searchResultContainer.innerHTML = '';
-    searchResultContainer.style.display = 'none'; 
+    // แสดง container หลักอย่างชัดเจน
     container.style.display = 'block';
+    container.style.visibility = 'visible';
+    container.style.opacity = '1';
 
     container.innerHTML = '<p class="text-gray-400">กำลังโหลดรายการหนังทั้งหมด...</p>';
     let allSectionsHtml = '';
@@ -259,7 +258,7 @@ async function loadAllMovies() {
                     if (movieFile && movieName && movieName.trim() !== '') {
                         const nameKey = movieName.toLowerCase();
                         if (!moviesDatabase[nameKey]) {
-                            // เก็บข้อมูลหนังสำหรับใช้ในการค้นหา
+                            // เก็บข้อมูลหนังสำหรับใช้ในการค้นหา (ถ้าต้องการในอนาคต)
                             moviesDatabase[nameKey] = movie; 
                         }
                     }
@@ -278,120 +277,28 @@ async function loadAllMovies() {
 }
 
 /**
- * ฟังก์ชันค้นหารายการหนังทั้งหมด
- * อัปเดต: ปรับปรุงการค้นหาและการแสดงผล
- */
-function searchMovies() {
-    const query = document.getElementById('search-input').value.toLowerCase().trim();
-    const container = document.getElementById('movie-sections-container');
-    const searchResultContainer = document.getElementById('search-result-container');
-
-    if (!query || query.length < 2) {
-        // ถ้าช่องค้นหาว่าง ให้กลับไปแสดงรายการทั้งหมด
-        searchResultContainer.innerHTML = '';
-        searchResultContainer.style.display = 'none';
-        container.style.display = 'block';
-        if (originalSectionsHtml) {
-             container.innerHTML = originalSectionsHtml;
-        } else {
-             loadAllMovies(); // โหลดใหม่ถ้าไม่มี Original HTML
-        }
-        return;
-    }
-    
-    // ซ่อนหน้าหลัก
-    container.style.display = 'none';
-    searchResultContainer.style.display = 'block';
-    
-    const allMoviesArray = Object.values(moviesDatabase);
-    
-    // ค้นหาในชื่อและข้อมูลหนัง
-    const filteredMovies = allMoviesArray.filter(movie => {
-        const name = (movie.name || '').toLowerCase();
-        const info = (movie.info || '').toLowerCase();
-        const category = (movie.category || '').toLowerCase();
-        return name.includes(query) || info.includes(query) || category.includes(query);
-    });
-
-    // สร้าง Section ใหม่สำหรับผลลัพธ์การค้นหา
-    if (filteredMovies.length > 0) {
-        const searchTitle = `🔍 ผลการค้นหา "${document.getElementById('search-input').value}" (${filteredMovies.length} รายการ)`;
-        const searchSection = createMovieSection(searchTitle, filteredMovies, 'search', true);
-        searchResultContainer.innerHTML = searchSection;
-    } else {
-        searchResultContainer.innerHTML = `
-            <div class="text-center py-10">
-                <p class="text-blue-500 text-2xl mb-4">ไม่พบรายการหนังที่ตรงกับ "${document.getElementById('search-input').value}"</p>
-                <button onclick="document.getElementById('search-input').value=''; searchMovies();" class="px-4 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition duration-300">
-                    ล้างการค้นหา
-                </button>
-            </div>
-        `;
-    }
-}
-
-/**
  * ฟังก์ชันสำหรับ Mobile Search Overlay
  */
 function toggleSearch() {
-    const overlay = document.getElementById('mobile-search-overlay');
-    const searchInput = document.getElementById('mobile-search-input');
-    
-    if (overlay.classList.contains('hidden')) {
-        overlay.classList.remove('hidden');
-        searchInput.focus();
-    } else {
-        overlay.classList.add('hidden');
-        searchInput.value = '';
-        document.getElementById('mobile-search-result').innerHTML = '';
-    }
+    // Search functionality removed from index page
+    console.log('Search functionality removed from index page');
 }
 
 /**
  * ฟังก์ชันค้นหาสำหรับ Mobile
+ * อัปเดต: ใช้ displaySearchResultPage สำหรับผลลัพธ์เต็ม
  */
 function mobileSearchMovies() {
-    const query = document.getElementById('mobile-search-input').value.toLowerCase().trim();
-    const resultContainer = document.getElementById('mobile-search-result');
-    
-    if (!query || query.length < 2) {
-        resultContainer.innerHTML = '';
-        return;
-    }
-    
-    const allMoviesArray = Object.values(moviesDatabase);
-    
-    // ค้นหาในชื่อและข้อมูลหนัง
-    const filteredMovies = allMoviesArray.filter(movie => {
-        const name = (movie.name || '').toLowerCase();
-        const info = (movie.info || '').toLowerCase();
-        const category = (movie.category || '').toLowerCase();
-        return name.includes(query) || info.includes(query) || category.includes(query);
-    });
+    // Search functionality removed from index page
+    console.log('Mobile search functionality removed from index page');
+}
 
-    // แสดงผลลัพธ์สำหรับ Mobile
-    if (filteredMovies.length > 0) {
-        const mobileResults = filteredMovies.slice(0, 10).map(movie => createMovieCard(movie)).join('');
-        resultContainer.innerHTML = `
-            <div class="mb-4">
-                <p class="text-sm text-gray-400 mb-3">พบ ${filteredMovies.length} รายการ</p>
-                <div class="grid grid-cols-3 gap-2">
-                    ${mobileResults}
-                </div>
-                ${filteredMovies.length > 10 ? `
-                    <button onclick="window.location.href='index.html?search=${encodeURIComponent(query)}'" class="w-full mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300">
-                        ดูทั้งหมด (${filteredMovies.length} รายการ)
-                    </button>
-                ` : ''}
-            </div>
-        `;
-    } else {
-        resultContainer.innerHTML = `
-            <div class="text-center py-6">
-                <p class="text-gray-400">ไม่พบรายการที่ตรงกับ "${query}"</p>
-            </div>
-        `;
-    }
+/**
+ * ฟังก์ชันแสดงผลการค้นหาเต็มจาก Mobile
+ */
+function showFullSearchResults(encodedQuery) {
+    // Search functionality removed from index page
+    console.log('Full search results functionality removed from index page');
 }
 
 /**
