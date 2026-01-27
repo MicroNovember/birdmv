@@ -33,6 +33,67 @@
         };
     </script>
     
+    <!-- Anti Developer Tools Protection -->
+    <script>
+        // ป้องกัน right click
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            return false;
+        });
+
+        // ป้องกันการดู source
+        document.addEventListener('keydown', function(e) {
+            // ป้องกัน Ctrl+U (View Source)
+            if (e.ctrlKey && e.key === 'u') {
+                e.preventDefault();
+                return false;
+            }
+            // ป้องกัน F12
+            if (e.key === 'F12') {
+                e.preventDefault();
+                return false;
+            }
+            // ป้องกัน Ctrl+Shift+I (DevTools)
+            if (e.ctrlKey && e.shiftKey && e.key === 'I') {
+                e.preventDefault();
+                return false;
+            }
+            // ป้องกัน Ctrl+Shift+J (Console)
+            if (e.ctrlKey && e.shiftKey && e.key === 'J') {
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        // ป้องกันการดาวน์โหลดไฟล์ .js
+        document.addEventListener('dragstart', function(e) {
+            e.preventDefault();
+            return false;
+        });
+
+        // ซ่อนไฟล์ข้อมูลจาก network tab (เฉพาะเมื่อสงสัยว่ามีการพยายามเข้าถึง)
+        let devToolsOpen = false;
+        const originalFetch = window.fetch;
+        window.fetch = function(...args) {
+            const url = args[0];
+            if (typeof url === 'string' && url.includes('assets/data/') && devToolsOpen) {
+                console.log('Blocked access to:', url);
+                return Promise.reject(new Error('Access denied'));
+            }
+            return originalFetch.apply(this, args);
+        };
+
+        // ตรวจจับ DevTools แบบพื้นฐาน
+        setInterval(() => {
+            const before = new Date();
+            debugger;
+            const after = new Date();
+            if (after - before > 100) {
+                devToolsOpen = true;
+            }
+        }, 1000);
+    </script>
+    
     <!-- Load Encrypted Data Files -->
     <script src="assets/data/thai.js"></script>
     <script src="assets/data/korea.js"></script>

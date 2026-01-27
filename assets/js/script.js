@@ -334,6 +334,12 @@ function setActiveMobileNav() {
     }
 }
 
+// ป้องกัน right click
+document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+    return false;
+});
+
 // เริ่มต้นโหลดรายการทั้งหมดเมื่อหน้าเว็บโหลดเสร็จ
 document.addEventListener('DOMContentLoaded', () => {
     // โหลดเฉพาะใน index.html เท่านั้น (ป้องกันการโหลดซ้ำถ้าใช้ category.js ในหน้าอื่น)
