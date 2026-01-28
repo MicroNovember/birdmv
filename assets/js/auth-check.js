@@ -13,20 +13,19 @@ class AuthCheck {
         const userType = localStorage.getItem('user_type');
         const vipData = localStorage.getItem('vip_access');
         
-        // If no user type, redirect to login page
+        // Auto-login as guest if no user type
         if (!userType) {
-            window.location.href = 'login.html';
-            return;
+            localStorage.setItem('user_type', 'guest');
         }
         
         // If VIP user, check if VIP is still valid
         if (userType === 'vip' && vipData) {
             const vip = JSON.parse(vipData);
             if (vip.expires && new Date(vip.expires) <= new Date()) {
-                // VIP expired, remove VIP access and redirect to login
+                // VIP expired, remove VIP access and switch to guest
                 localStorage.removeItem('vip_access');
-                localStorage.removeItem('user_type');
-                window.location.href = 'login.html';
+                localStorage.setItem('user_type', 'guest');
+                this.showExpiredMessage();
             }
         }
     }
@@ -64,7 +63,9 @@ class AuthCheck {
     logout() {
         localStorage.removeItem('user_type');
         localStorage.removeItem('vip_access');
-        window.location.href = 'login.html';
+        // Auto-login as guest instead of redirecting to login
+        localStorage.setItem('user_type', 'guest');
+        window.location.reload();
     }
     
     // Switch between Guest and VIP

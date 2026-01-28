@@ -1,6 +1,7 @@
 /* Netflix Master Blueprint - Responsive Design System */
 
 :root {
+    /* Primary Colors */
     --primary-color: #3B82F6;
     --primary-dark: #2563EB;
     --primary-light: #60A5FA;
@@ -15,6 +16,17 @@
     --accent-hover: #0891B2;
     --vip-gold: #6b7280;
     --vip-orange: #9ca3af;
+    
+    /* Movie Card Variables */
+    --card-aspect-ratio: 2/3;
+    --card-border-radius: 0.75rem;
+    --card-bg: #1f2937;
+    --card-hover-scale: 1.05;
+    --card-image-hover-scale: 1.1;
+    --card-transition: all 0.3s ease;
+    --card-gap-mobile: 0.75rem;
+    --card-gap-tablet: 1rem;
+    --card-gap-desktop: 1.25rem;
 }
 
 /* Universal Container */
@@ -158,26 +170,38 @@ body {
     font-weight: 600;
 }
 
-/* Netflix Movie Grid System */
+/* Netflix Movie Grid System - Primary Source */
 .movie-grid {
     display: grid;
-    gap: 0.75rem; /* ระยะห่างที่พอดีสำหรับมือถือ */
+    gap: var(--card-gap-mobile);
     padding: 1rem;
+    /* Mobile: 2 columns */
+    grid-template-columns: repeat(2, 1fr);
+    /* Ensure grid items are properly aligned */
+    align-items: start;
+    justify-items: center;
 }
 
+/* Movie Card Base Styles - Netflix Professional Standard */
 .movie-card {
-    aspect-ratio: 2/3; /* Netflix Ratio ต้องใช้ 2:3 เสมอ */
-    border-radius: 0.75rem;
-    overflow: hidden;
     position: relative;
+    overflow: hidden;
+    border-radius: var(--card-border-radius);
+    background: var(--card-bg);
+    transition: var(--card-transition);
     cursor: pointer;
-    transition: all 0.3s;
-    background: var(--bg-secondary);
+    aspect-ratio: var(--card-aspect-ratio);
     border: 1px solid var(--border-color);
+    width: 100%; /* Full width of grid cell */
+    min-width: auto;
+    max-width: none;
+    /* Ensure proper centering in grid cells */
+    display: block;
+    margin: 0 auto;
 }
 
 .movie-card:hover {
-    transform: scale(1.05);
+    transform: scale(var(--card-hover-scale));
     box-shadow: 0 8px 32px rgba(59, 130, 246, 0.3);
     z-index: 10;
     border-color: var(--primary-color);
@@ -187,20 +211,42 @@ body {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center;
+    display: block;
+    transition: transform 0.5s ease;
+    /* Ensure image is centered within the card */
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 
+.movie-card:hover img {
+    transform: scale(var(--card-image-hover-scale));
+}
+
+/* Card Info - Professional Netflix Style */
 .movie-card-info {
     position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
-    background: linear-gradient(180deg, transparent 0%, rgba(15,23,42,0.95) 100%);
     padding: 1rem;
+    background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 100%);
+    color: white;
+    opacity: 0;
+    transition: var(--card-transition);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
 }
 
-.movie-title {
+.movie-card:hover .movie-card-info {
+    opacity: 1;
+}
+
+.movie-card-title {
     display: -webkit-box;
-    -webkit-line-clamp: 2; /* ล็อกชื่อหนังไว้ที่ 2 บรรทัด */
+    -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
     font-weight: 600;
@@ -297,19 +343,14 @@ body {
     /* Tablet: grid-cols-4 */
     .movie-grid {
         grid-template-columns: repeat(4, 1fr);
-        gap: 1.5rem;
+        gap: var(--card-gap-desktop);
         padding: 2rem;
     }
     .movie-card {
-        width: 140px;
-        min-width: 140px;
-        max-width: 140px;
-    }
-    .movie-title {
         font-size: 0.9rem;
     }
-    .netflix-section-title {
-        font-size: 1.4rem;
+    .movie-card-title {
+        font-size: 0.9rem;
     }
 }
 
@@ -319,15 +360,10 @@ body {
         grid-template-columns: repeat(6, 1fr);
     }
     .movie-card {
-        width: 150px;
-        min-width: 150px;
-        max-width: 150px;
-    }
-    .movie-title {
         font-size: 0.95rem;
     }
-    .netflix-section-title {
-        font-size: 1.45rem;
+    .movie-card-title {
+        font-size: 0.95rem;
     }
 }
 
@@ -335,14 +371,20 @@ body {
     /* Large Desktop: grid-cols-8 */
     .movie-grid {
         grid-template-columns: repeat(8, 1fr);
-        gap: 1.5rem;
+        gap: var(--card-gap-desktop);
+    }
+    .movie-card {
+        font-size: 1rem;
+    }
+    .movie-card-title {
+        font-size: 1rem;
     }
 }
 
 /* Smart TV Special Cases */
 .smart-tv .movie-grid {
     grid-template-columns: repeat(8, 1fr);
-    gap: 1.5rem;
+    gap: var(--card-gap-desktop);
 }
 
 .smart-tv .movie-card {
@@ -356,138 +398,45 @@ body {
     box-shadow: 0 0 25px rgba(59, 130, 246, 0.8);
 }
 
-.smart-tv .mobile-nav {
-    bottom: 2rem;
-    left: 50%;
-    right: auto;
-    transform: translateX(-50%);
-    width: auto;
-    border-radius: 2rem;
-    padding: 1rem 2rem;
-}
-
-.smart-tv .movie-title {
-    font-size: 1rem;
-}
+/* Focus States for Remote Control */
+@media (hover: none) {
+    .movie-card:hover {
+        transform: none;
+        box-shadow: none;
+    }
+    
+    .movie-card:focus {
+        outline: 2px solid var(--primary-color);
+        outline-offset: 2px;
+        transform: scale(var(--card-hover-scale));
+    }
 
 .smart-tv .netflix-section-title {
     font-size: 1.75rem;
 }
 
-/* Mobile Categories Overlay */
-.categories-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.8);
-    backdrop-filter: blur(8px);
-    z-index: 60;
-    display: none;
-    opacity: 0;
-    transition: opacity 0.3s;
+/* Movie Grid Scrollbar Styles */
+.movie-grid::-webkit-scrollbar-track {
+    background: rgba(30, 58, 138, 0.2);
+    border-radius: 12px;
+    margin: 10px;
 }
 
-.categories-overlay.show {
-    display: block;
-    opacity: 1;
+.movie-grid::-webkit-scrollbar-thumb {
+    background: linear-gradient(90deg, 
+        rgba(59, 130, 246, 0.8) 0%, 
+        rgba(96, 165, 250, 0.9) 50%, 
+        rgba(59, 130, 246, 0.8) 100%);
+    border-radius: 12px;
+    border: 2px solid rgba(15, 23, 42, 0.3);
+    box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.1);
 }
 
-.categories-panel {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: var(--bg-primary);
-    border-radius: 2rem 2rem 0 0;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 1.5rem;
-    transform: translateY(100%);
-    transition: transform 0.3s;
-}
-
-.categories-overlay.show .categories-panel {
-    transform: translateY(0);
-}
-
-.categories-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
-}
-
-.categories-header h3 {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--text-primary);
-}
-
-.close-categories {
-    width: 2.5rem;
-    height: 2.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--bg-secondary);
-    border-radius: 50%;
-    color: var(--text-muted);
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s;
-}
-
-.close-categories:hover {
-    color: var(--text-primary);
-}
-
-.categories-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1rem;
-    padding-bottom: 2rem;
-}
-
-.category-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-    text-decoration: none;
-}
-
-.category-icon {
-    width: 100%;
-    aspect-ratio: 1;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s;
-}
-
-.category-item:hover .category-icon {
-    background: rgba(59, 130, 246, 0.2);
-    border-color: rgba(59, 130, 246, 0.5);
-    transform: scale(0.95);
-}
-
-.category-icon span {
-    font-size: 1.5rem;
-}
-
-.category-name {
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--text-muted);
-    text-align: center;
-}
-
-.category-item:hover .category-name {
-    color: var(--text-primary);
+.movie-grid::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(90deg, 
+        rgba(96, 165, 250, 0.9) 0%, 
+        rgba(147, 197, 253, 1) 50%, 
+        rgba(96, 165, 250, 0.9) 100%);
 }
 
 /* VIP Modal */
@@ -500,14 +449,18 @@ body {
     background: rgba(0, 0, 0, 0.8);
     backdrop-filter: blur(8px);
     z-index: 70;
-    display: none;
+    display: none !important;
     align-items: center;
     justify-content: center;
     padding: 1rem;
 }
 
 .vip-modal.show {
-    display: flex;
+    display: flex !important;
+}
+
+.vip-modal.hidden {
+    display: none !important;
 }
 
 .vip-modal-content {
@@ -578,6 +531,10 @@ body {
     outline: none;
     border-color: var(--vip-gold);
     box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
+    /* Additional focus styles from style.css */
+    outline: 2px solid var(--primary-color) !important;
+    outline-offset: 2px !important;
+    transform: scale(1.02) !important;
 }
 
 .vip-error {
@@ -671,4 +628,5 @@ body {
         transform: scale(1.05);
         box-shadow: 0 8px 32px rgba(59, 130, 246, 0.3);
     }
+}
 }

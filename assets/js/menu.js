@@ -4,13 +4,24 @@
 function toggleSearch() {
     const overlay = document.getElementById('mobile-search-overlay');
     if (overlay) {
-        overlay.classList.toggle('hidden');
-        if (!overlay.classList.contains('hidden')) {
+        // Use proper class toggle for show/hide
+        if (overlay.classList.contains('hidden')) {
+            overlay.classList.remove('hidden');
+            // Add animation class
+            setTimeout(() => {
+                overlay.style.opacity = '1';
+            }, 10);
             // Focus search input when opened
             const searchInput = document.getElementById('mobile-search-input');
             if (searchInput) {
                 setTimeout(() => searchInput.focus(), 100);
             }
+        } else {
+            overlay.style.opacity = '0';
+            // Hide after transition
+            setTimeout(() => {
+                overlay.classList.add('hidden');
+            }, 300);
         }
     }
 }
@@ -19,7 +30,22 @@ function toggleSearch() {
 function toggleMobileCategories() {
     const overlay = document.getElementById('mobile-categories-overlay');
     if (overlay) {
-        overlay.classList.toggle('hidden');
+        // Use proper class toggle for show/hide
+        if (overlay.classList.contains('hidden')) {
+            overlay.classList.remove('hidden');
+            overlay.classList.add('show');
+            // Add animation class
+            setTimeout(() => {
+                overlay.style.opacity = '1';
+            }, 10);
+        } else {
+            overlay.classList.remove('show');
+            overlay.style.opacity = '0';
+            // Hide after transition
+            setTimeout(() => {
+                overlay.classList.add('hidden');
+            }, 300);
+        }
     }
 }
 
@@ -99,13 +125,20 @@ document.addEventListener('DOMContentLoaded', function() {
         // Close search overlay
         if (searchOverlay && !searchOverlay.classList.contains('hidden') && 
             !searchButton && !searchOverlayElement) {
-            searchOverlay.classList.add('hidden');
+            searchOverlay.style.opacity = '0';
+            setTimeout(() => {
+                searchOverlay.classList.add('hidden');
+            }, 300);
         }
         
         // Close categories overlay
         if (categoriesOverlay && !categoriesOverlay.classList.contains('hidden') && 
             !categoriesButton && !categoriesOverlayElement) {
-            categoriesOverlay.classList.add('hidden');
+            categoriesOverlay.classList.remove('show');
+            categoriesOverlay.style.opacity = '0';
+            setTimeout(() => {
+                categoriesOverlay.classList.add('hidden');
+            }, 300);
         }
     });
     
@@ -116,11 +149,18 @@ document.addEventListener('DOMContentLoaded', function() {
             const categoriesOverlay = document.getElementById('mobile-categories-overlay');
             
             if (searchOverlay && !searchOverlay.classList.contains('hidden')) {
-                searchOverlay.classList.add('hidden');
+                searchOverlay.style.opacity = '0';
+                setTimeout(() => {
+                    searchOverlay.classList.add('hidden');
+                }, 300);
             }
             
             if (categoriesOverlay && !categoriesOverlay.classList.contains('hidden')) {
-                categoriesOverlay.classList.add('hidden');
+                categoriesOverlay.classList.remove('show');
+                categoriesOverlay.style.opacity = '0';
+                setTimeout(() => {
+                    categoriesOverlay.classList.add('hidden');
+                }, 300);
             }
         }
     });

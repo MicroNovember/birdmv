@@ -53,36 +53,19 @@ function createMovieCard(movie, options = {}) {
     // ใช้ absolute path เพื่อป้องกันปัญหา pages/pages/
     const watchUrl = `pages/watch-simple.html?video1=${encodeURIComponent(movieFile)}&name=${encodeURIComponent(movieName)}&year=${movieYear}&description=${encodeURIComponent(movieDescription)}&category=${encodeURIComponent(movieCategory)}&t=${Date.now()}`;
     
-    // Debug URL และตรวจสอบ
-    console.log('🔗 Generated watch URL:', watchUrl);
-    console.log('🔍 Current location:', window.location.href);
-    console.log('🔍 Base path:', window.location.pathname);
-    
     // บังคับให้แน่ใจว่าไม่มี pages/ ซ้ำ - ตรวจสอบและแก้ไขทุกกรณี
     let finalUrl = watchUrl;
     if (finalUrl.includes('pages/pages/')) {
         console.error('❌ DOUBLE PATH DETECTED! Fixing URL...');
         finalUrl = finalUrl.replace(/pages\/pages\//g, 'pages/');
-        console.log('✅ Fixed URL:', finalUrl);
     }
     
     // ตรวจสอบว่าอยู่ในหน้า index หรือไม่
-    console.log('🔍 Path detection check:');
-    console.log('  - window.location.pathname:', window.location.pathname);
-    console.log('  - includes index.html:', window.location.pathname.includes('index.html'));
-    console.log('  - is root path:', window.location.pathname === '/');
-    
-    // ใช้ absolute path เสมอเพื่อความสม่ำเสมอ
     if (window.location.pathname.includes('index.html') || window.location.pathname === '/') {
         // ถ้าอยู่ในหน้า index ให้ใช้ relative path แต่ยังคง pages/
-        console.log('🏠 In index page, using relative path with pages/:', finalUrl);
     } else if (window.location.pathname.includes('pages/')) {
         // ถ้าอยู่ในหน้า pages อยู่แล้ว ให้ใช้ relative path ภายใน pages
         finalUrl = finalUrl.replace(/^pages\//, '');
-        console.log('📂 In pages directory, using relative path:', finalUrl);
-    } else {
-        // ถ้าอยู่ในหน้าอื่น ให้ใช้ absolute path
-        console.log('📂 Not in index or pages, keeping absolute path:', finalUrl);
     }
     
     // Force cache busting
@@ -90,8 +73,7 @@ function createMovieCard(movie, options = {}) {
     
     // ตรวจสอบครั้งสุดท้ายว่า URL ถูกต้องหรือไม่
     if (!finalUrl.includes('watch-simple.html')) {
-        console.error('❌ URL does not contain watch-simple.html! Final URL:', finalUrl);
-        // บังคับให้ถูกต้อง
+        // บังคับให้แน่ใจว่าไม่มี pages/ ซ้ำ - ตรวจสอบและแก้ไขทุกกรณี
         if (window.location.pathname.includes('index.html') || window.location.pathname === '/') {
             finalUrl = 'pages/watch-simple.html?' + finalUrl.split('?')[1];
         } else if (window.location.pathname.includes('pages/')) {
@@ -99,7 +81,6 @@ function createMovieCard(movie, options = {}) {
         } else {
             finalUrl = 'pages/watch-simple.html?' + finalUrl.split('?')[1];
         }
-        console.log('🔧 Forced correction - Final URL:', finalUrl);
     }
     
     console.log('🎯 Final URL to use:', finalUrl);
@@ -125,27 +106,24 @@ function createMovieCard(movie, options = {}) {
     const loadingAttr = lazyLoad ? 'loading="lazy"' : '';
     
     return `
-        <div class="movie-card group flex flex-col focus:outline-none" tabindex="0">
-            <div class="relative w-full h-full overflow-hidden rounded-lg bg-gray-800 shadow-lg">
-                <a href="${finalUrl}" class="block w-full h-full">
-                    <img src="${movieLogo}" 
-                         alt="${movieName}"
-                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                         loading="lazy"
-                         onerror="this.src='https://via.placeholder.com/200x280?text=No+Image';">
-                    
-                    <div class="absolute top-2 right-2 flex gap-1">
-                        ${movieYear ? `<span class="bg-black/70 text-white text-xs px-2 py-1 rounded font-medium">${movieYear}</span>` : ''}
-                        ${movieInfo ? `<span class="bg-transparent text-white text-xs px-2 py-1 rounded font-medium" style="background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);">${movieInfo}</span>` : ''}
-                    </div>
-                </a>
-            </div>
+        <div class="movie-card group relative overflow-hidden rounded-lg bg-gray-900 shadow-lg" onclick="window.location.href='${finalUrl}'">
+            <img src="${movieLogo}" 
+                 alt="${movieName}"
+                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                 loading="lazy"
+                 onerror="this.src='https://via.placeholder.com/200x280?text=No+Image';">
+            
+            <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-transparent flex flex-col justify-end px-3 pb-3">
+                
+                <div class="h-[40px] flex items-center mb-1"> 
+                    <h3 class="text-white text-[12px] md:text-sm font-bold leading-tight line-clamp-2 w-full" title="${movieName}">
+                        ${movieName}
+                    </h3>
+                </div>
 
-            <div class="mt-2 h-[38px] md:h-[44px] flex items-center">
-                <h3 class="movie-title text-[10px] md:text-sm font-medium leading-tight line-clamp-2 group-hover:text-blue-400 transition" 
-                    title="${movieName}">
-                    ${movieName}
-                </h3>
+                <p class="text-gray-400 text-[10px] md:text-xs truncate opacity-80">
+                    ${movieInfo || movieYear ? `${movieInfo || ''} ${movieYear || ''}`.trim() : 'HD | ซับไทย'}
+                </p>
             </div>
         </div>
     `;

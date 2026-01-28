@@ -40,10 +40,10 @@
       ]
     },
     {
-      "name": "Login",
-      "short_name": "Login",
-      "description": "เข้าสู่ระบบ",
-      "url": "login.html",
+      "name": "Home",
+      "short_name": "Home",
+      "description": "หน้าหลัก",
+      "url": "index.html",
       "icons": [
         {
           "src": "../assets/icons/icon-192.png",

@@ -407,18 +407,10 @@ class VipAuth {
                 
                 // Determine correct path based on current page location
                 const currentPath = window.location.pathname;
-                let categoryPath;
-                
-                if (currentPath.includes('/pages/')) {
-                    // We're already in pages directory, use relative path
-                    categoryPath = 'category.html?cat=temp';
-                } else {
-                    // We're in root directory, use pages/ prefix
+                let categoryPath = 'category.html?cat=temp';
+                if (currentPath.includes('index.html') || currentPath === '/') {
                     categoryPath = 'pages/category.html?cat=temp';
                 }
-                
-                console.log('🔍 Current path:', currentPath);
-                console.log('🔍 Using category path:', categoryPath);
                 
                 // Add only ONE VIP category (pointing to temp.js for VIP movies)
                 const vipLink = document.createElement('a');
@@ -458,9 +450,6 @@ class VipAuth {
                     // We're in root directory, use pages/ prefix
                     categoryPath = 'pages/category.html?cat=temp';
                 }
-                
-                console.log('🔍 Mobile current path:', currentPath);
-                console.log('🔍 Mobile using category path:', categoryPath);
                 
                 // Add only ONE VIP mobile category (blue/silver theme)
                 const vipMobile = document.createElement('a');
@@ -769,9 +758,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Add test function for debugging
     window.testVipMode = function() {
         console.log('🧪 Testing VIP Mode...');
-        console.log('Firebase Available:', window.vipAuth.isFirebaseAvailable);
-        console.log('Current VIP Data:', localStorage.getItem('vip_access'));
-        console.log('User Type:', localStorage.getItem('user_type'));
         
         // Test VIP categories
         console.log('📱 Testing VIP categories...');

@@ -186,33 +186,32 @@
     </header>
 
     <!-- Main Content -->
-    <main class="pt-20">
+    <main class="pt-1">
         <!-- Category Header -->
-        <div class="px-4 py-6">
-            <div class="flex items-center justify-between mb-6">
-                <div>
-                    <h1 id="category-title" class="text-2xl md:text-3xl font-bold text-white mb-2">หมวดหมู่</h1>
-                    <p id="category-description" class="text-gray-400">กำลังโหลด...</p>
-                </div>
-                
-                <!-- Search Form -->
-                <form id="search-form" class="hidden md:flex items-center gap-2 bg-gray-800 rounded-lg px-4 py-2">
-                    <input 
-                        type="text" 
-                        id="search-input" 
-                        placeholder="ค้นหาหนัง..." 
-                        class="bg-transparent border-none outline-none text-white placeholder-gray-400 w-64"
-                    >
-                    <button type="submit" class="text-gray-400 hover:text-white">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="w-5 h-5">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                        </svg>
-                    </button>
-                </form>
+        <div class="px-4 py-1">
+            <!-- Category Title -->
+            <div class="mb-4">
+                <h1 id="category-title" class="text-2xl md:text-3xl font-bold text-white mb-2">หมวดหมู่</h1>
+ 
             </div>
+            
+            <!-- Search Form - Full width on mobile, right aligned on desktop -->
+            <form id="search-form" class="w-full md:w-auto md:ml-auto flex items-center gap-2 bg-gray-800 rounded-lg px-4 py-2 mb-6" onsubmit="handleSearchSubmit(event)">
+                <input 
+                    type="text" 
+                    id="search-input" 
+                    placeholder="ค้นหาหนัง..." 
+                    class="bg-transparent border-none outline-none text-white placeholder-gray-400 flex-1 md:w-64"
+                >
+                <button type="submit" class="text-gray-400 hover:text-white">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="w-5 h-5">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </button>
+            </form>
 
             <!-- Netflix-style Items Per Page Controls -->
-            <div class="flex items-center justify-between mb-6">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
                 <div class="flex items-center gap-3">
                     <span class="text-gray-400 text-sm">จำนวนรายการ:</span>
                     <div class="flex gap-1" id="items-per-page-buttons">
@@ -251,11 +250,18 @@
                 <span>หน้าหลัก</span>
             </a>
 
-            <button onclick="toggleMobileCategories()" class="mobile-nav-item active">
+            <button onclick="toggleMobileCategories()" class="mobile-nav-item">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
                 </svg>
                 <span>หมวดหมู่</span>
+            </button>
+
+            <button onclick="history.back()" class="mobile-nav-item">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                </svg>
+                <span>ย้อนกลับ</span>
             </button>
             
             <button onclick="showVipModal()" id="mobile-vip-login-btn" class="mobile-nav-item">
@@ -282,7 +288,7 @@
     </nav>
 
     <!-- Mobile Categories Overlay -->
-    <div id="mobile-categories-overlay" class="categories-overlay">
+    <div id="mobile-categories-overlay" class="categories-overlay hidden">
         <div class="categories-panel">
             <div class="categories-header">
                 <h3>สำรวจหมวดหมู่</h3>
@@ -356,7 +362,7 @@
     </div>
 
     <!-- VIP Login Modal -->
-    <div id="vip-modal" class="vip-modal">
+    <div id="vip-modal" class="vip-modal hidden">
         <div class="vip-modal-content">
             <div class="vip-modal-header">
                 <div class="vip-icon">
@@ -388,10 +394,10 @@
 
     <!-- Load JavaScript Files -->
     <script src="../assets/js/movie-cards.js"></script>
-    <script src="../assets/js/auth-check.js"></script>
-    <script src="../assets/js/menu.js"></script>
-    <script src="../assets/js/alert2.js"></script>
     <script src="../assets/js/category.js"></script>
+    <script src="../assets/js/auth-check.js"></script>
+    <script src="../assets/js/playlist-decoy.js"></script>
+    <script src="../assets/js/alert2.js"></script>
     <script src="../assets/js/vip-auth-fallback.js"></script>
     <script src="../assets/js/firebase-setup.js"></script>
     <script src="../assets/js/tv-detection.js"></script>
@@ -474,10 +480,190 @@
             }
         }
 
-        // Initialize VIP status check
+        // Initialize page - Load category data
         document.addEventListener('DOMContentLoaded', function() {
             checkVipExpiry();
+            
+            // Load category data
+            const urlParams = new URLSearchParams(window.location.search);
+            const cat = urlParams.get('cat') || 'thai';
+            
+            // Retry mechanism for loadCategory function
+            let retryCount = 0;
+            const maxRetries = 10;
+            
+            function tryLoadCategory() {
+                if (typeof loadCategory === 'function') {
+                    console.log('📂 Loading category:', cat);
+                    loadCategory(cat);
+                } else {
+                    retryCount++;
+                    console.log(`⏳ Waiting for loadCategory function... (${retryCount}/${maxRetries})`);
+                    
+                    if (retryCount < maxRetries) {
+                        setTimeout(tryLoadCategory, 200);
+                    } else {
+                        console.error('❌ loadCategory function not found after retries');
+                        // Fallback: show error message
+                        const movieGrid = document.getElementById('movie-list-grid');
+                        if (movieGrid) {
+                            movieGrid.innerHTML = `
+                                <div class="col-span-full py-20 text-center">
+                                    <div class="text-red-500 text-lg mb-4">ไม่สามารถโหลดข้อมูลหนังได้</div>
+                                    <div class="text-gray-500 mb-6">กรุณารีเฟรชหน้าเว็บ</div>
+                                    <button onclick="location.reload()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                                        รีเฟรชหน้า
+                                    </button>
+                                </div>
+                            `;
+                        }
+                    }
+                }
+            }
+            
+            // Start trying to load category
+            setTimeout(tryLoadCategory, 100);
         });
+
+        // Handle search form submission
+        function handleSearchSubmit(event) {
+            event.preventDefault(); // Prevent page reload
+            const query = document.getElementById('search-input').value.trim();
+            
+            if (query.length < 2) {
+                // Show message for short queries
+                const movieGrid = document.getElementById('movie-list-grid');
+                movieGrid.innerHTML = `
+                    <div class="col-span-full py-20 text-center">
+                        <div class="text-gray-400 text-lg mb-4">กรุณาพิมพ์อย่างน้อย 2 ตัวอักษร</div>
+                        <button onclick="clearSearch()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                            กลับไปหมวดหมู่
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Call the search function from category.js
+            if (typeof searchMovies === 'function') {
+                searchMovies();
+            } else {
+                // Fallback: create temporary search results
+                performTemporarySearch(query);
+            }
+        }
+
+        // Clear search and return to category
+        function clearSearch() {
+            document.getElementById('search-input').value = '';
+            if (typeof loadCategory === 'function') {
+                // Reload current category
+                const urlParams = new URLSearchParams(window.location.search);
+                const cat = urlParams.get('cat') || 'thai';
+                loadCategory(cat);
+            }
+        }
+
+        // Temporary search function as fallback
+        function performTemporarySearch(query) {
+            const movieGrid = document.getElementById('movie-list-grid');
+            const categoryTitle = document.getElementById('category-title');
+            const categoryDescription = document.getElementById('category-description');
+            
+            // Update UI to show searching
+            categoryTitle.textContent = `กำลังค้นหา "${query}"`;
+            categoryDescription.textContent = 'กำลังค้นหาจากทุกหมวดหมู่...';
+            
+            movieGrid.innerHTML = `
+                <div class="col-span-full py-20 text-center">
+                    <div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500 mb-4"></div>
+                    <p class="text-gray-500 animate-pulse uppercase tracking-widest text-xs font-bold">กำลังค้นหา...</p>
+                </div>
+            `;
+            
+            // Load all categories and search
+            let allMovies = [];
+            const categories = ['thai', 'korea', 'china', 'inter', 'cartoon', 'india', 'asia', 'temp'];
+            let loadedCategories = 0;
+            
+            categories.forEach(cat => {
+                try {
+                    const movies = window[cat] || [];
+                    if (Array.isArray(movies)) {
+                        allMovies = allMovies.concat(movies);
+                    }
+                    loadedCategories++;
+                    
+                    if (loadedCategories === categories.length) {
+                        // All categories loaded, perform search
+                        const results = allMovies.filter(movie => {
+                            const name = (movie.name || '').toLowerCase();
+                            const info = (movie.info || '').toLowerCase();
+                            const category = (movie.category || '').toLowerCase();
+                            return name.includes(query.toLowerCase()) || 
+                                   info.includes(query.toLowerCase()) || 
+                                   category.includes(query.toLowerCase());
+                        });
+                        
+                        // Display results
+                        displaySearchResults(results, query);
+                    }
+                } catch (error) {
+                    console.error(`Error loading category ${cat}:`, error);
+                    loadedCategories++;
+                    
+                    if (loadedCategories === categories.length) {
+                        displaySearchResults([], query);
+                    }
+                }
+            });
+        }
+
+        // Display search results
+        function displaySearchResults(results, query) {
+            const movieGrid = document.getElementById('movie-list-grid');
+            const categoryTitle = document.getElementById('category-title');
+            const categoryDescription = document.getElementById('category-description');
+            
+            categoryTitle.textContent = `ผลการค้นหา "${query}"`;
+            categoryDescription.textContent = `พบ ${results.length} รายการ`;
+            
+            if (results.length === 0) {
+                movieGrid.innerHTML = `
+                    <div class="col-span-full py-20 text-center">
+                        <div class="text-gray-400 text-lg mb-4">ไม่พบรายการที่ค้นหา</div>
+                        <div class="text-gray-500 mb-6">ลองค้นหาด้วยคำอื่นหรือตรวจสอบการสะกด</div>
+                        <button onclick="clearSearch()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                            กลับไปหมวดหมู่
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Display results using existing movie card structure
+            movieGrid.innerHTML = results.map(movie => `
+                <div class="movie-card group relative overflow-hidden rounded-lg bg-gray-900 shadow-lg" onclick="window.location.href='watch.html?id=${movie.id}'">
+                    <img src="${movie.poster || 'assets/images/default-poster.jpg'}" 
+                         alt="${movie.name}" 
+                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                         onerror="this.src='assets/images/default-poster.jpg'">
+                    
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-transparent flex flex-col justify-end px-3 pb-3">
+                        
+                        <div class="h-[40px] flex items-center mb-1"> 
+                            <h3 class="text-white text-[12px] md:text-sm font-bold leading-tight line-clamp-2 w-full" title="${movie.name}">
+                                ${movie.name}
+                            </h3>
+                        </div>
+
+                        <p class="text-gray-400 text-[10px] md:text-xs truncate opacity-80">
+                            ${movie.info || 'HD | ซับไทย'}
+                        </p>
+                    </div>
+                </div>
+            `).join('');
+        }
     </script>
 </body>
 </html>

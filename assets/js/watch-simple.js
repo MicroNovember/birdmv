@@ -2,21 +2,11 @@
 document.addEventListener('DOMContentLoaded', function() {
     const params = new URLSearchParams(window.location.search);
     
-    // Debug: แสดง URL parameters ทั้งหมด
-    console.log('🔍 URL Parameters:', window.location.search);
-    console.log('📋 All params:', Object.fromEntries(params.entries()));
-    
     // 1. ดึงข้อมูลจาก URL Parameters
     const videoUrl = params.get('video1') || params.get('video');
     const movieName = params.get('name') || 'ไม่ระบุชื่อเรื่อง';
     const movieInfo = params.get('description') || params.get('info') || 'ไม่มีข้อมูลเรื่องย่อสำหรับภาพยนตร์เรื่องนี้';
     const movieYear = params.get('year') || '2026';
-
-    // Debug: แสดงค่าที่ดึงได้
-    console.log('🎬 Video URL:', videoUrl);
-    console.log('📝 Movie Name:', movieName);
-    console.log('📅 Movie Year:', movieYear);
-    console.log('📄 Movie Info:', movieInfo);
 
     // 2. แสดงข้อมูลบนหน้าจอ
     document.getElementById('movie-title').textContent = decodeURIComponent(movieName);
@@ -25,7 +15,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 3. ตั้งค่า Video.js Player
     if (videoUrl) {
-        console.log('✅ มี Video URL จะเริ่มเล่นวิดีโอ');
         const player = videojs('movie-player');
         
         // ตรวจสอบประเภทไฟล์
@@ -35,8 +24,6 @@ document.addEventListener('DOMContentLoaded', function() {
         } else if (videoUrl.includes('.mpd')) {
             videoType = 'application/dash+xml';
         }
-        
-        console.log('🎥 Video Type:', videoType);
         
         player.src({
             src: decodeURIComponent(videoUrl),

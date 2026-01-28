@@ -54,30 +54,35 @@ function createMovieCard(movie) {
     // สร้าง URL สำหรับดูหนัง
     let watchUrl = `pages/watch-simple.html?video1=${encodeURIComponent(movieFile)}&name=${encodeURIComponent(movieName)}&description=${encodeURIComponent(movieDescription)}&year=${movieYear}&t=${Date.now()}`;
     
-    // Debug URL และตรวจสอบ
-    console.log('🔗 Generated watch URL (category):', watchUrl);
-    console.log('🔍 Current location (category):', window.location.href);
-    console.log('🔍 Base path (category):', window.location.pathname);
-    
     // บังคับให้แน่ใจว่าไม่มี pages/ ซ้ำ - ตรวจสอบและแก้ไขทุกกรณี
     let finalUrl = watchUrl;
     if (finalUrl.includes('pages/pages/')) {
         console.error('❌ DOUBLE PATH DETECTED! Fixing URL...');
         finalUrl = finalUrl.replace(/pages\/pages\//g, 'pages/');
-        console.log('✅ Fixed URL (category):', finalUrl);
     }
     
-    // ตรวจสอบว่าอยู่ในหน้า category หรือไม่
-    if (window.location.pathname.includes('category.html')) {
-        // ถ้าอยู่ในหน้า category ให้ใช้ relative path
+    // ตรวจสอบว่าอยู่ในหน้า index หรือไม่
+    if (window.location.pathname.includes('index.html') || window.location.pathname === '/') {
+        // ถ้าอยู่ในหน้า index ให้ใช้ relative path แต่ยังคง pages/
+    } else if (window.location.pathname.includes('pages/')) {
+        // ถ้าอยู่ในหน้า pages อยู่แล้ว ให้ใช้ relative path ภายใน pages
         finalUrl = finalUrl.replace(/^pages\//, '');
-        console.log('📂 In category page, using relative path:', finalUrl);
     }
     
     // Force cache busting
     finalUrl += `&cb=${Date.now()}`;
     
-    console.log('🎯 Final URL to use (category):', finalUrl);
+    // ตรวจสอบครั้งสุดท้ายว่า URL ถูกต้องหรือไม่
+    if (!finalUrl.includes('watch-simple.html')) {
+        // บังคับให้แน่ใจว่าไม่มี pages/ ซ้ำ - ตรวจสอบและแก้ไขทุกกรณี
+        if (window.location.pathname.includes('index.html') || window.location.pathname === '/') {
+            finalUrl = 'pages/watch-simple.html?' + finalUrl.split('?')[1];
+        } else if (window.location.pathname.includes('pages/')) {
+            finalUrl = 'watch-simple.html?' + finalUrl.split('?')[1];
+        } else {
+            finalUrl = 'pages/watch-simple.html?' + finalUrl.split('?')[1];
+        }
+    }
     
     // เพิ่ม subtitle ถ้ามี
     if (movieSubtitle && movieSubtitle.trim() !== '') {
@@ -95,26 +100,24 @@ function createMovieCard(movie) {
     }
 
     return `
-    <div class="movie-card group flex flex-col focus:outline-none" tabindex="0">
-        <div class="relative aspect-[2/3] w-full overflow-hidden rounded-lg bg-gray-800 shadow-lg">
-            <a href="${finalUrl}" class="block w-full h-full">
-                <img src="${movieLogo}" 
-                     alt="${movieName}"
-                     class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
-                     loading="lazy"
-                     onerror="this.src='https://via.placeholder.com/200x280?text=No+Image';">
-                
-                <div class="absolute top-2 right-2 flex gap-1">
-                    ${movieYear ? `<span class="bg-black/70 text-white text-xs px-2 py-1 rounded font-medium">${movieYear}</span>` : ''}
-                    ${movieInfo ? `<span class="bg-transparent text-white text-xs px-2 py-1 rounded font-medium" style="background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);">${movieInfo}</span>` : ''}
-                </div>
-            </a>
-        </div>
+    <div class="movie-card group relative overflow-hidden rounded-lg bg-gray-900 shadow-lg" onclick="window.location.href='${finalUrl}'">
+        <img src="${movieLogo}" 
+             alt="${movieName}"
+             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+             loading="lazy"
+             onerror="this.src='https://via.placeholder.com/200x280?text=No+Image';">
+        
+        <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-transparent flex flex-col justify-end px-3 pb-3">
+            
+            <div class="h-[40px] flex items-center mb-1"> 
+                <h3 class="text-white text-[12px] md:text-sm font-bold leading-tight line-clamp-2 w-full" title="${movieName}">
+                    ${movieName}
+                </h3>
+            </div>
 
-        <div class="mt-2 h-[38px] md:h-[44px] overflow-hidden">
-            <h3 class="movie-title text-[12px] md:text-sm font-medium leading-tight group-hover:text-blue-400 transition" title="${movieName}">
-                ${movieName}
-            </h3>
+            <p class="text-gray-400 text-[10px] md:text-xs truncate opacity-80">
+                ${movieInfo || movieYear ? `${movieInfo || ''} ${movieYear || ''}`.trim() : 'HD | ซับไทย'}
+            </p>
         </div>
     </div>`;
 }
@@ -430,8 +433,8 @@ async function loadCategory(categoryKey) {
                         </div>
                         <h3 class="text-xl font-bold text-gray-400 mb-2">VIP Access Required</h3>
                         <p class="text-gray-300 mb-4">กรุณา Login และใส่รหัส VIP เพื่อดูหนังในหมวดนี้</p>
-                        <button onclick="window.location.href='../login.html'" class="px-6 py-3 bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white rounded-lg transition font-medium">
-                            Login & Get VIP Access
+                        <button onclick="window.location.reload()" class="px-6 py-3 bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white rounded-lg transition font-medium">
+                            Refresh Page
                         </button>
                     </div>
                 </div>
