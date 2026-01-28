@@ -323,7 +323,7 @@ class VipAuth {
             // Show success message with expiration date using alert2
             await Alert2.success(
                 '🎉 VIP Access Granted!',
-                `ยินดีต้อนอน VIP สำเร็จจแล้ว\n\nหมดอายุ: ${formattedDate}\nรหัส: ${code}`
+                `เข้าถึงระบบ VIP สำเร็จ \n\nหมดอายุ: ${formattedDate}\nรหัส: ${code}`
             );
             
         } catch (error) {
