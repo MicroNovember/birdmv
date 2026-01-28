@@ -3,7 +3,6 @@
 :root {
     /* Primary Colors */
     --primary-color: #3B82F6;
-    --primary-dark: #2563EB;
     --primary-light: #60A5FA;
     --bg-primary: #0F172A;
     --bg-secondary: #1E293B;
@@ -12,8 +11,6 @@
     --text-secondary: #CBD5E1;
     --text-muted: #94A3B8;
     --border-color: #334155;
-    --accent-color: #06B6D4;
-    --accent-hover: #0891B2;
     --vip-gold: #6b7280;
     --vip-orange: #9ca3af;
     
@@ -27,6 +24,18 @@
     --card-gap-mobile: 0.75rem;
     --card-gap-tablet: 1rem;
     --card-gap-desktop: 1.25rem;
+    
+    /* Movie Card Responsive Sizes */
+    --card-width-mobile: 100px;
+    --card-width-tablet: 130px;
+    --card-width-desktop: 150px;
+    --card-width-large: 160px;
+    --card-width-xlarge: 180px;
+    
+    /* Movie Card Additional Variables */
+    --card-info-bg: linear-gradient(180deg, transparent 0%, rgba(15, 23, 42, 0.95) 100%);
+    --card-title-color: #FFFFFF;
+    --card-year-color: rgba(255, 255, 255, 0.7);
 }
 
 /* Universal Container */
@@ -230,18 +239,12 @@ body {
     bottom: 0;
     left: 0;
     right: 0;
-    padding: 1rem;
-    background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 100%);
-    color: white;
-    opacity: 0;
-    transition: var(--card-transition);
+    background: var(--card-info-bg);
+    padding: 0.75rem;
+    min-height: 3.5rem;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-}
-
-.movie-card:hover .movie-card-info {
-    opacity: 1;
 }
 
 .movie-card-title {
@@ -251,13 +254,13 @@ body {
     overflow: hidden;
     font-weight: 600;
     font-size: 0.8rem; /* สำหรับมือถือ */
-    color: var(--text-primary);
+    color: var(--card-title-color);
     margin: 0;
 }
 
 .movie-year {
     font-size: 0.7rem;
-    color: var(--text-muted);
+    color: var(--card-year-color);
     margin: 0.25rem 0 0 0;
 }
 
@@ -272,6 +275,9 @@ body {
     margin-bottom: 1rem;
     padding: 0 1rem;
     color: var(--text-primary);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .netflix-section-title a {
@@ -286,23 +292,164 @@ body {
 
 .netflix-row {
     display: flex;
-    gap: 0.5rem;
-    padding: 0 1rem;
+    gap: var(--card-gap-mobile);
+    padding: 0 1rem 0 2rem;
     overflow-x: auto;
     overflow-y: hidden;
-    scrollbar-width: none;
+    scrollbar-width: thin;
     -webkit-overflow-scrolling: touch;
     scroll-behavior: smooth;
     scroll-snap-type: x mandatory;
 }
 
+@media (min-width: 640px) {
+    .netflix-row {
+        gap: var(--card-gap-tablet);
+        padding: 0 1rem 0 2rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .netflix-row {
+        gap: var(--card-gap-desktop);
+        padding: 0 1rem 0 2rem;
+    }
+}
+
 .netflix-row::-webkit-scrollbar {
-    display: none;
+    height: 6px;
+}
+
+.netflix-row::-webkit-scrollbar-track {
+    background: rgba(30, 58, 138, 0.2);
+    border-radius: 12px;
+    margin: 10px;
+}
+
+.netflix-row::-webkit-scrollbar-thumb {
+    background: linear-gradient(90deg, 
+        rgba(59, 130, 246, 0.8) 0%, 
+        rgba(96, 165, 250, 0.9) 50%, 
+        rgba(59, 130, 246, 0.8) 100%);
+    border-radius: 12px;
+    border: 2px solid rgba(15, 23, 42, 0.3);
+}
+
+.netflix-row::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(90deg, 
+        rgba(96, 165, 250, 0.9) 0%, 
+        rgba(147, 197, 253, 1) 50%, 
+        rgba(96, 165, 250, 0.9) 100%);
 }
 
 .netflix-row .movie-card {
     flex: 0 0 auto;
     scroll-snap-align: start;
+    /* ใช้ขนาดตามตัวแปร */
+    width: var(--card-width-mobile);
+    min-width: var(--card-width-mobile);
+    max-width: var(--card-width-mobile);
+}
+
+/* กำหนดขนาดตามตัวแปร responsive */
+@media (min-width: 640px) {
+    .netflix-row .movie-card {
+        width: var(--card-width-tablet);
+        min-width: var(--card-width-tablet);
+        max-width: var(--card-width-tablet);
+    }
+}
+
+@media (min-width: 768px) {
+    .netflix-row .movie-card {
+        width: var(--card-width-desktop);
+        min-width: var(--card-width-desktop);
+        max-width: var(--card-width-desktop);
+    }
+}
+
+@media (min-width: 1024px) {
+    .netflix-row .movie-card {
+        width: var(--card-width-large);
+        min-width: var(--card-width-large);
+        max-width: var(--card-width-large);
+    }
+}
+
+@media (min-width: 1280px) {
+    .netflix-row .movie-card {
+        width: var(--card-width-xlarge);
+        min-width: var(--card-width-xlarge);
+        max-width: var(--card-width-xlarge);
+    }
+}
+
+/* Netflix Row Wrapper for Scroll Buttons */
+.netflix-row-wrapper {
+    position: relative;
+    margin: 0 -1rem;
+    padding: 0 1rem;
+}
+
+.netflix-row-wrapper .netflix-row {
+    margin: 0;
+}
+
+/* Scroll Buttons Positioning */
+.netflix-row-arrow-left {
+    left: 1rem;
+    background: linear-gradient(90deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.6) 100%);
+}
+
+.netflix-row-arrow-right {
+    right: 1rem;
+    background: linear-gradient(270deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.6) 100%);
+}
+
+/* Hide left arrow when at start */
+.netflix-row-wrapper[data-scroll-start="true"] .netflix-row-arrow-left {
+    opacity: 0 !important;
+    pointer-events: none;
+}
+
+/* Hide right arrow when at end */
+.netflix-row-wrapper[data-scroll-end="true"] .netflix-row-arrow-right {
+    opacity: 0 !important;
+    pointer-events: none;
+}
+
+/* Scroll Buttons Styling */
+.netflix-row-arrow {
+    transition: all 0.3s ease;
+    font-size: 1.5rem;
+    font-weight: bold;
+    user-select: none;
+    pointer-events: auto;
+}
+
+.netflix-row-arrow:hover {
+    background: rgba(0, 0, 0, 0.8) !important;
+    opacity: 1 !important;
+    transform: scale(1.1);
+}
+
+.netflix-row-arrow:active {
+    transform: scale(0.95);
+}
+
+.netflix-row-arrow:disabled {
+    opacity: 0.3 !important;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.netflix-row-arrow:focus-visible {
+    outline: 2px solid var(--primary-color, #3B82F6);
+    outline-offset: 2px;
+}
+
+.netflix-row .group:hover .netflix-row-arrow {
+    opacity: 1;
 }
 
 /* Responsive Grid - The Netflix Ratio */
@@ -629,4 +776,200 @@ body {
         box-shadow: 0 8px 32px rgba(59, 130, 246, 0.3);
     }
 }
+
+/* ========================================
+   CATEGORY PAGE RESPONSIVE DESIGN
+   ======================================== */
+
+/* Netflix Category Page - Responsive Grid System */
+#movie-list-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+    padding: 16px !important;
+    width: 100% !important;
+    max-width: 1600px;
+    margin: 0 auto;
 }
+
+@media (min-width: 640px) { 
+    #movie-list-grid { 
+        grid-template-columns: repeat(3, 1fr) !important; 
+        gap: 16px !important;
+    } 
+}
+@media (min-width: 768px) { 
+    #movie-list-grid { 
+        grid-template-columns: repeat(4, 1fr) !important; 
+        gap: 20px !important; 
+    } 
+}
+@media (min-width: 1024px) { 
+    #movie-list-grid { 
+        grid-template-columns: repeat(6, 1fr) !important; 
+        gap: 24px !important;
+    } 
+}
+@media (min-width: 1440px) { 
+    #movie-list-grid { 
+        grid-template-columns: repeat(8, 1fr) !important; 
+        gap: 28px !important;
+    } 
+}
+
+/* Category Page Scrollbar */
+#movie-list-grid::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+#movie-list-grid::-webkit-scrollbar-track {
+    background: rgba(30, 58, 138, 0.1);
+    border-radius: 12px;
+    margin: 10px;
+}
+
+#movie-list-grid::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, 
+        rgba(59, 130, 246, 0.8) 0%, 
+        rgba(96, 165, 250, 0.9) 50%, 
+        rgba(59, 130, 246, 0.8) 100%);
+    border-radius: 12px;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    min-height: 30px;
+    box-shadow: 
+        0 0 15px rgba(59, 130, 246, 0.4),
+        inset 0 0 8px rgba(255, 255, 255, 0.15);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#movie-list-grid::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, 
+        rgba(96, 165, 250, 1) 0%, 
+        rgba(147, 197, 253, 1) 50%, 
+        rgba(96, 165, 250, 1) 100%);
+    box-shadow: 
+        0 0 25px rgba(59, 130, 246, 0.6),
+        inset 0 0 12px rgba(255, 255, 255, 0.25);
+    transform: translateY(-2px) scale(1.1);
+}
+
+/* Category Page Movie Cards */
+.movie-card {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    background: #1e293b !important;
+    border-radius: 0.75rem !important;
+    overflow: hidden !important;
+    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+.movie-card:hover {
+    transform: translateY(-4px) !important;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4) !important;
+}
+
+.movie-card img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    transition: transform 0.5s ease !important;
+}
+
+.movie-card:hover img {
+    transform: scale(1.05) !important;
+}
+
+.movie-card:focus {
+    outline: 4px solid #3B82F6 !important;
+    transform: scale(1.1);
+    z-index: 10;
+}
+
+/* Category Page Text Styles */
+.movie-title {
+    color: white !important;
+    font-weight: bold !important;
+    margin-bottom: 0.25rem !important;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: 2.4em;
+    line-height: 1.2em;
+}
+
+.movie-info {
+    color: #60a5fa !important;
+    font-weight: 500 !important;
+}
+
+/* Category Page Pagination */
+#pagination-container {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+#pagination-container nav {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    justify-content: center !important;
+    align-items: center !important;
+    flex-wrap: wrap !important;
+    gap: 0.5rem !important;
+}
+
+#pagination-container nav button {
+    display: inline-flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    min-width: 44px !important;
+    min-height: 44px !important;
+    justify-content: center !important;
+    align-items: center !important;
+    border: none !important;
+    border-radius: 0.5rem !important;
+    font-weight: 500 !important;
+    transition: all 0.2s ease !important;
+    cursor: pointer !important;
+}
+
+#pagination-container nav button:hover:not(:disabled) {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3) !important;
+}
+
+#pagination-container nav button:disabled {
+    cursor: not-allowed !important;
+    opacity: 0.5 !important;
+}
+
+/* Category Page Title */
+#category-title {
+    font-size: clamp(1.5rem, 4vw, 2.25rem);
+    line-height: 1.2;
+}
+
+/* Category Page Search Form */
+@media (max-width: 768px) {
+    #search-form {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    #search-form input {
+        width: 100%;
+    }
+    
+    #search-form button {
+        width: 100%;
+        justify-content: center;
+    }
+}
+    

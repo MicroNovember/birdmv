@@ -157,23 +157,25 @@ function createMovieRow({ title, movies, categoryKey, options = {} }) {
     const categoryId = `row-${categoryKey || Date.now()}`;
     
     return `
-    <section class="netflix-row mb-8 px-4" id="${categoryId}">
-        <div class="flex items-center justify-between mb-4">
-            <h2 class="text-lg md:text-xl font-bold text-white border-l-4 border-blue-600 pl-3">
+    <section class="netflix-section" id="${categoryId}">
+        <div class="netflix-section-title">
+            ${categoryKey ? `<a href="pages/category.html?cat=${categoryKey}" class="text-lg md:text-xl font-bold text-white hover:text-blue-400 transition cursor-pointer">
                 ${title}
-            </h2>
-            ${categoryKey ? `<a href="pages/category.html?cat=${categoryKey}" class="text-gray-400 hover:text-white text-sm transition">
+            </a>` : `<h2 class="text-lg md:text-xl font-bold text-white">
+                ${title}
+            </h2>`}
+            ${categoryKey ? `<a href="pages/category.html?cat=${categoryKey}" class="text-gray-400 hover:text-white text-sm transition float-right">
                 ดูทั้งหมด ›
             </a>` : ''}
         </div>
 
-        <div class="relative group">
-            <div class="flex space-x-3 overflow-x-auto pb-4 scrollbar-hide scroll-smooth" id="${categoryId}-container">
+        <div class="netflix-row-wrapper relative group">
+            <div class="netflix-row" id="${categoryId}-container">
                 ${cardsHtml}
             </div>
             
-            <button onclick="scrollRow('${categoryId}-container', 'left')" class="absolute left-0 top-0 bottom-4 w-10 bg-black/60 opacity-0 group-hover:opacity-100 transition z-10 flex items-center justify-center text-white">‹</button>
-            <button onclick="scrollRow('${categoryId}-container', 'right')" class="absolute right-0 top-0 bottom-4 w-10 bg-black/60 opacity-0 group-hover:opacity-100 transition z-10 flex items-center justify-center text-white">›</button>
+            <button onclick="scrollRow('${categoryId}-container', 'left')" class="netflix-row-arrow netflix-row-arrow-left absolute left-0 top-0 bottom-0 w-10 bg-black/60 opacity-0 group-hover:opacity-100 transition z-10 flex items-center justify-center text-white rounded-r-lg">‹</button>
+            <button onclick="scrollRow('${categoryId}-container', 'right')" class="netflix-row-arrow netflix-row-arrow-right absolute right-0 top-0 bottom-0 w-10 bg-black/60 opacity-0 group-hover:opacity-100 transition z-10 flex items-center justify-center text-white rounded-l-lg">›</button>
         </div>
     </section>
     `;
@@ -184,7 +186,10 @@ function scrollRow(containerId, direction) {
     const container = document.getElementById(containerId);
     if (!container) return;
     
-    const scrollAmount = 250; // Adjust based on card width + gap
+    const wrapper = container.closest('.netflix-row-wrapper');
+    if (!wrapper) return;
+    
+    const scrollAmount = 300; // Increased for better scrolling
     const currentScroll = container.scrollLeft;
     
     if (direction === 'left') {
@@ -199,23 +204,38 @@ function scrollRow(containerId, direction) {
         });
     }
     
-    // Update arrow states
-    updateRowArrows(containerId);
+    // Update arrow states after scroll
+    setTimeout(() => updateRowArrows(containerId), 100);
 }
 
 // Update row arrow states
 function updateRowArrows(containerId) {
     const container = document.getElementById(containerId);
-    const row = container.closest('.netflix-row');
-    const leftArrow = row.querySelector('.netflix-row-arrow:first-child');
-    const rightArrow = row.querySelector('.netflix-row-arrow:last-child');
+    if (!container) return;
     
-    // Disable left arrow if at start
-    leftArrow.disabled = container.scrollLeft <= 0;
+    const wrapper = container.closest('.netflix-row-wrapper');
+    if (!wrapper) return;
     
-    // Disable right arrow if at end
-    const isAtEnd = container.scrollLeft + container.clientWidth >= container.scrollWidth - 1;
-    rightArrow.disabled = isAtEnd;
+    // Check if at start
+    const atStart = container.scrollLeft <= 0;
+    // Check if at end
+    const atEnd = container.scrollLeft + container.clientWidth >= container.scrollWidth - 1;
+    
+    // Update wrapper attributes
+    wrapper.setAttribute('data-scroll-start', atStart);
+    wrapper.setAttribute('data-scroll-end', atEnd);
+    
+    // Update button states
+    const leftArrow = wrapper.querySelector('.netflix-row-arrow-left');
+    const rightArrow = wrapper.querySelector('.netflix-row-arrow-right');
+    
+    if (leftArrow) {
+        leftArrow.disabled = atStart;
+    }
+    
+    if (rightArrow) {
+        rightArrow.disabled = atEnd;
+    }
 }
 
 // Create Movie Grid (Category Page)
@@ -373,7 +393,7 @@ function createEmptyState(message = 'ไม่พบหนังที่ค้�
 // Initialize movie cards functionality
 function initializeMovieCards() {
     // Add scroll event listeners for horizontal rows
-    document.querySelectorAll('.netflix-row-container').forEach(container => {
+    document.querySelectorAll('.netflix-row').forEach(container => {
         container.addEventListener('scroll', () => {
             updateRowArrows(container.id);
         });
@@ -388,6 +408,13 @@ function initializeMovieCards() {
             handleCardKeyboardNavigation(e);
         }
     });
+}
+
+// Auto-initialize when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeMovieCards);
+} else {
+    initializeMovieCards();
 }
 
 // Handle keyboard navigation for movie cards
@@ -549,6 +576,7 @@ function loadMovieRows(categories) {
         const movieRow = createMovieRow({
             title: title,
             movies: movies,
+            categoryKey: category, // เพิ่ม categoryKey เพื่อให้ลิงก์ทำงานได้
             options: {
                 showBadge: true,
                 showInfo: false,

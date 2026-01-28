@@ -23,7 +23,6 @@
     
     <!-- CSS Files -->
     <link rel="stylesheet" href="assets/css/netflix-style.css">
-    <link rel="stylesheet" href="assets/css/movie-cards.css">
     <link rel="stylesheet" href="assets/css/style.css"> 
     <link rel="stylesheet" href="assets/css/menu.css">
     
@@ -371,6 +370,7 @@
     <!-- Load JavaScript Files -->
     <script src="assets/js/movie-cards.js"></script>
     <script src="assets/js/auth-check.js"></script>
+    <script src="assets/js/menu.js"></script>
     <script src="assets/js/playlist-decoy.js"></script>
     <script src="assets/js/alert2.js"></script>
     <script src="assets/js/vip-auth-fallback.js"></script>
@@ -397,32 +397,30 @@
                 return movieCount;
             }
             
-            // รอให้ข้อมูลหนังโหลดเสร็จก่อน (เพิ่มเวลา)
-            setTimeout(() => {
-                const movieData = checkMovieData();
-                
-                try {
-                    // โหลดหนังแนะนำ
-                    if (typeof loadFeaturedMovies === 'function') {
-                        loadFeaturedMovies();
-                    }
-                    
-                    // โหลดหมวดหมู่ต่างๆ
-                    if (typeof loadMovieRows === 'function') {
-                        loadMovieRows([
-                            { category: 'thai', title: 'หนังไทย', limit: 8 },
-                            { category: 'korea', title: 'หนังเกาหลี', limit: 8 },
-                            { category: 'china', title: 'หนังจีน', limit: 8 },
-                            { category: 'inter', title: 'หนังสากล', limit: 8 },
-                            { category: 'cartoon', title: 'การ์ตูน', limit: 8 }
-                        ]);
-                    }
-                    
-                    console.log('✅ Movie sections loaded successfully');
-                } catch (error) {
-                    console.error('❌ Error loading movie sections:', error);
+            // โหลดหนังทันทีหลังจากตรวจสอบข้อมูล
+            const movieData = checkMovieData();
+            
+            try {
+                // โหลดหนังแนะนำ
+                if (typeof loadFeaturedMovies === 'function') {
+                    loadFeaturedMovies();
                 }
-            }, 2000); // เพิ่มเป็น 2 วินาที
+                
+                // โหลดหมวดหมู่ต่างๆ
+                if (typeof loadMovieRows === 'function') {
+                    loadMovieRows([
+                        { category: 'thai', title: 'หนังไทย', limit: 8 },
+                        { category: 'korea', title: 'หนังเกาหลี', limit: 8 },
+                        { category: 'china', title: 'หนังจีน', limit: 8 },
+                        { category: 'inter', title: 'หนังสากล', limit: 8 },
+                        { category: 'cartoon', title: 'การ์ตูน', limit: 8 }
+                    ]);
+                }
+                
+                console.log('✅ Movie sections loaded successfully');
+            } catch (error) {
+                console.error('❌ Error loading movie sections:', error);
+            }
             
             // Check VIP expiry
             checkVipExpiry();
