@@ -28,6 +28,13 @@ class VipAuth {
         this.checkVipStatus();
         this.setupVipLinks();
         this.checkVipButtons();
+        
+        // Start periodic sync with Firebase (every 5 minutes)
+        if (this.isFirebaseAvailable) {
+            setInterval(() => {
+                this.syncVipStatusWithFirebase();
+            }, 5 * 60 * 1000); // 5 minutes
+        }
     }
 
     // Setup VIP input fields
@@ -80,6 +87,89 @@ class VipAuth {
         });
     }
 
+    // Sync VIP status with Firebase (periodic check)
+    async syncVipStatusWithFirebase() {
+        const vipData = localStorage.getItem('vip_access');
+        
+        if (!vipData || !this.isFirebaseAvailable) {
+            return;
+        }
+        
+        try {
+            const data = JSON.parse(vipData);
+            
+            if (!data.code) {
+                return;
+            }
+            
+            // Get latest data from Firebase
+            const vipDoc = await this.db.collection('vip_codes').doc(data.code).get();
+            
+            if (vipDoc.exists) {
+                const firebaseData = vipDoc.data();
+                
+                // Check if code was deactivated
+                if (firebaseData.is_active === false) {
+                    console.log('❌ VIP code deactivated by admin');
+                    localStorage.removeItem('vip_access');
+                    localStorage.removeItem('user_type');
+                    this.disableVipMode();
+                    
+                    // Notify user
+                    Alert2.warning('VIP Access Revoked', 'รหัส VIP ของคุณถูกระงับโดยผู้ดูแลระบบ');
+                    return;
+                }
+                
+                // Check if expiration was updated
+                if (firebaseData.expires) {
+                    let firebaseExpires;
+                    if (firebaseData.expires.toDate) {
+                        firebaseExpires = firebaseData.expires.toDate();
+                    } else {
+                        firebaseExpires = new Date(firebaseData.expires);
+                    }
+                    
+                    const localExpires = new Date(data.expires);
+                    
+                    // Update if Firebase expiration is different by more than 1 second
+                    if (Math.abs(localExpires.getTime() - firebaseExpires.getTime()) > 1000) {
+                        console.log('🔄 VIP expiration updated from Firebase');
+                        data.expires = firebaseExpires.toISOString();
+                        data.lastSync = new Date().toISOString();
+                        localStorage.setItem('vip_access', JSON.stringify(data));
+                        
+                        // Update UI if needed
+                        this.updateVipButtonWithExpiration(true);
+                    }
+                }
+                
+                // Check if session still exists
+                if (data.sessionId && firebaseData.sessions && !firebaseData.sessions[data.sessionId]) {
+                    console.log('❌ VIP session removed from Firebase');
+                    localStorage.removeItem('vip_access');
+                    localStorage.removeItem('user_type');
+                    this.disableVipMode();
+                    
+                    // Notify user
+                    Alert2.warning('Session Expired', 'เซสชัน VIP ของคุณหมดอายุ กรุณาเข้าสู่ระบบใหม่');
+                    return;
+                }
+                
+                console.log('✅ VIP status synced with Firebase');
+            } else {
+                console.log('❌ VIP code not found in Firebase');
+                localStorage.removeItem('vip_access');
+                localStorage.removeItem('user_type');
+                this.disableVipMode();
+                
+                // Notify user
+                Alert2.warning('VIP Code Invalid', 'รหัส VIP ของคุณไม่พบในระบบ กรุณาเข้าสู่ระบบใหม่');
+            }
+        } catch (error) {
+            console.warn('⚠️ Periodic Firebase sync failed:', error);
+        }
+    }
+
     // Check VIP status
     async checkVipStatus() {
         const vipData = localStorage.getItem('vip_access');
@@ -87,13 +177,73 @@ class VipAuth {
         if (vipData) {
             const data = JSON.parse(vipData);
             
-            // Check if VIP is still valid
+            // Check if VIP is still valid locally
             if (data.expires && new Date(data.expires) > new Date()) {
+                // VIP is valid locally, now sync with Firebase
+                if (this.isFirebaseAvailable && data.code) {
+                    try {
+                        // Verify with Firebase to get latest data
+                        const vipDoc = await this.db.collection('vip_codes').doc(data.code).get();
+                        
+                        if (vipDoc.exists) {
+                            const firebaseData = vipDoc.data();
+                            
+                            // Check if code is still active in Firebase
+                            if (firebaseData.is_active === false) {
+                                console.log('❌ Code deactivated in Firebase');
+                                localStorage.removeItem('vip_access');
+                                localStorage.removeItem('user_type');
+                                this.disableVipMode();
+                                return;
+                            }
+                            
+                            // Check if Firebase expiration is different
+                            let firebaseExpires;
+                            if (firebaseData.expires) {
+                                if (firebaseData.expires.toDate) {
+                                    firebaseExpires = firebaseData.expires.toDate();
+                                } else {
+                                    firebaseExpires = new Date(firebaseData.expires);
+                                }
+                                
+                                // Update localStorage if Firebase expiration is different
+                                if (Math.abs(new Date(data.expires).getTime() - firebaseExpires.getTime()) > 1000) {
+                                    console.log('🔄 Updating local expiration from Firebase');
+                                    data.expires = firebaseExpires.toISOString();
+                                    data.lastSync = new Date().toISOString();
+                                    localStorage.setItem('vip_access', JSON.stringify(data));
+                                }
+                            }
+                            
+                            // Check if current session is still valid
+                            if (data.sessionId && firebaseData.sessions && !firebaseData.sessions[data.sessionId]) {
+                                console.log('❌ Session not found in Firebase');
+                                localStorage.removeItem('vip_access');
+                                localStorage.removeItem('user_type');
+                                this.disableVipMode();
+                                return;
+                            }
+                            
+                            console.log('✅ VIP status verified with Firebase');
+                        } else {
+                            console.log('❌ Code not found in Firebase');
+                            localStorage.removeItem('vip_access');
+                            localStorage.removeItem('user_type');
+                            this.disableVipMode();
+                            return;
+                        }
+                    } catch (error) {
+                        console.warn('⚠️ Firebase sync failed, using local data:', error);
+                        // Continue with local data if Firebase fails
+                    }
+                }
+                
                 // VIP is valid
                 this.enableVipMode();
             } else {
                 // VIP expired
                 localStorage.removeItem('vip_access');
+                localStorage.removeItem('user_type');
                 this.disableVipMode();
             }
         } else {
@@ -299,6 +449,35 @@ class VipAuth {
             // Create session ID
             const sessionId = this.generateSessionId();
             
+            // Update Firebase with usage count and session info
+            try {
+                const vipDocRef = this.db.collection('vip_codes').doc(code);
+                const currentUsage = vipData.usage_count || 0;
+                
+                // Prepare session data
+                const sessionData = {
+                    ip: userIP,
+                    sessionId: sessionId,
+                    deviceName: this.getDeviceName(),
+                    loginTime: new Date().toISOString(),
+                    expires: expires.toISOString()
+                };
+                
+                // Update Firebase document
+                await vipDocRef.update({
+                    usage_count: currentUsage + 1,
+                    last_used: new Date(),
+                    last_ip: userIP,
+                    [`sessions.${sessionId}`]: sessionData
+                });
+                
+                console.log('✅ Firebase updated successfully');
+                
+            } catch (firebaseError) {
+                console.warn('⚠️ Failed to update Firebase:', firebaseError);
+                // Continue with localStorage even if Firebase update fails
+            }
+            
             // Save to localStorage
             const vipAccess = {
                 code: code,
@@ -307,7 +486,8 @@ class VipAuth {
                 ip: userIP,
                 sessionId: sessionId,
                 deviceName: this.getDeviceName(),
-                mode: 'firebase'
+                mode: 'firebase',
+                lastSync: new Date().toISOString()
             };
             localStorage.setItem('vip_access', JSON.stringify(vipAccess));
             
@@ -700,6 +880,19 @@ class VipAuth {
                 );
                 
                 if (result.isConfirmed) {
+                    // Clean up session in Firebase
+                    if (this.isFirebaseAvailable && data.code && data.sessionId) {
+                        try {
+                            const vipDocRef = this.db.collection('vip_codes').doc(data.code);
+                            await vipDocRef.update({
+                                [`sessions.${data.sessionId}`]: firebase.firestore.FieldValue.delete()
+                            });
+                            console.log('✅ Session removed from Firebase');
+                        } catch (error) {
+                            console.warn('⚠️ Failed to remove session from Firebase:', error);
+                        }
+                    }
+                    
                     // Remove VIP access
                     localStorage.removeItem('vip_access');
                     localStorage.removeItem('user_type');
@@ -707,7 +900,7 @@ class VipAuth {
                     
                     // Show success message
                     await Alert2.success(
-                        'Logout VIP สำเร็จจ',
+                        'Logout VIP สำเร็จ',
                         'คุณได้ logout จากระบบ VIP เรียบร้อยแล้ว'
                     );
                     
