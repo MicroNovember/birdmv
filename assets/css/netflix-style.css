@@ -14,6 +14,14 @@
     --vip-gold: #6b7280;
     --vip-orange: #9ca3af;
     
+    /* Search Variables */
+    --search-bg: #1f2937;
+    --search-border: #374151;
+    --search-focus-border: #3B82F6;
+    --search-text: #ffffff;
+    --search-placeholder: #9ca3af;
+    --search-icon: #6b7280;
+    
     /* Movie Card Variables */
     --card-aspect-ratio: 2/3;
     --card-border-radius: 0.75rem;
@@ -46,6 +54,15 @@ body {
     overflow-x: hidden;
     margin: 0;
     padding: 0;
+}
+
+/* Utility Classes */
+.hidden {
+    display: none !important;
+}
+
+.invisible {
+    visibility: hidden;
 }
 
 /* Desktop Header - Glassmorphism */
@@ -970,6 +987,281 @@ body {
     #search-form button {
         width: 100%;
         justify-content: center;
+    }
+}
+
+/* ===================================
+   NETFLIX-STYLE SEARCH COMPONENTS
+   =================================== */
+
+/* Desktop Search Container */
+.netflix-search-container {
+    position: relative;
+    margin-left: 1rem;
+    z-index: 50;
+}
+
+.netflix-search-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: var(--search-bg);
+    border: 1px solid var(--search-border);
+    border-radius: 2rem;
+    transition: all 0.3s ease;
+    min-width: 280px;
+}
+
+.netflix-search-wrapper:focus-within {
+    border-color: var(--search-focus-border);
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.netflix-search-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--search-text);
+    font-size: 0.875rem;
+    padding: 0.5rem 1rem;
+    padding-right: 0.5rem;
+}
+
+.netflix-search-input::placeholder {
+    color: var(--search-placeholder);
+}
+
+.netflix-search-input:focus::placeholder {
+    color: var(--text-muted);
+}
+
+.netflix-search-button {
+    background: transparent;
+    border: none;
+    color: var(--search-icon);
+    padding: 0.5rem;
+    margin-right: 0.25rem;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.netflix-search-button:hover {
+    color: var(--primary-color);
+    background: rgba(59, 130, 246, 0.1);
+}
+
+/* Search Suggestions Dropdown */
+.search-suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--search-bg);
+    border: 1px solid var(--search-border);
+    border-top: none;
+    border-radius: 0 0 1rem 1rem;
+    max-height: 400px;
+    overflow-y: auto;
+    z-index: 100;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.search-suggestions.hidden {
+    display: none;
+}
+
+.suggestion-item {
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.suggestion-item:last-child {
+    border-bottom: none;
+}
+
+.suggestion-item:hover {
+    background: var(--bg-secondary);
+}
+
+.suggestion-item.active {
+    background: var(--primary-color);
+    color: white;
+}
+
+.suggestion-item.active .suggestion-text {
+    color: white;
+}
+
+.suggestion-item.active .suggestion-type {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+.suggestion-icon {
+    color: var(--text-muted);
+    flex-shrink: 0;
+}
+
+.suggestion-text {
+    flex: 1;
+    color: var(--text-primary);
+    font-size: 0.875rem;
+}
+
+.suggestion-type {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    background: var(--bg-tertiary);
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+}
+
+/* Mobile Search Overlay */
+.search-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.search-overlay:not(.hidden) {
+    opacity: 1;
+    visibility: visible;
+}
+
+.search-overlay-content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.search-overlay-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.search-close-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    padding: 0.5rem;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-close-btn:hover {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.mobile-search-wrapper {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    background: var(--search-bg);
+    border: 1px solid var(--search-border);
+    border-radius: 2rem;
+    transition: all 0.3s ease;
+}
+
+.mobile-search-wrapper:focus-within {
+    border-color: var(--search-focus-border);
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.mobile-search-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--search-text);
+    font-size: 1rem;
+    padding: 0.75rem 1rem;
+    padding-right: 0.5rem;
+}
+
+.mobile-search-input::placeholder {
+    color: var(--search-placeholder);
+}
+
+.mobile-search-button {
+    background: transparent;
+    border: none;
+    color: var(--search-icon);
+    padding: 0.75rem;
+    margin-right: 0.25rem;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mobile-search-button:hover {
+    color: var(--primary-color);
+    background: rgba(59, 130, 246, 0.1);
+}
+
+.mobile-search-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem;
+}
+
+.mobile-search-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Responsive Search */
+@media (max-width: 768px) {
+    .netflix-search-container {
+        display: none;
+    }
+}
+
+@media (min-width: 769px) {
+    .mobile-nav-item[onclick*="toggleSearch"] {
+        display: none;
+    }
+}
+
+@media (max-width: 1024px) {
+    .netflix-search-wrapper {
+        min-width: 220px;
+    }
+    
+    .netflix-search-input {
+        font-size: 0.8rem;
+        padding: 0.4rem 0.8rem;
     }
 }
     
