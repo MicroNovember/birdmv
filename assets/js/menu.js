@@ -164,6 +164,39 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
+    
+    // Initialize mobile search listeners
+    const mobileSearchInput = document.getElementById('mobile-search-input');
+    if (mobileSearchInput) {
+        let searchTimeout;
+        
+        mobileSearchInput.addEventListener('input', function(e) {
+            clearTimeout(searchTimeout);
+            const query = e.target.value.trim();
+            
+            if (query.length >= 2) {
+                searchTimeout = setTimeout(() => {
+                    mobileSearchMovies();
+                }, 300);
+            } else if (query.length === 0) {
+                const searchResult = document.getElementById('mobile-search-result-grid');
+                if (searchResult) {
+                    searchResult.innerHTML = '<p class="text-gray-400 text-center col-span-full">กรุณาพิมพ์เพื่อค้นหาหนัง</p>';
+                }
+            }
+        });
+        
+        mobileSearchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                mobileSearchMovies();
+            }
+        });
+    }
+    
+    // Initialize search system if available
+    if (typeof initializeSearchSystem === 'function') {
+        initializeSearchSystem();
+    }
 });
 
 // Mobile search functionality
@@ -180,7 +213,26 @@ function mobileSearchMovies() {
         return;
     }
     
-    // Use the same search function as desktop
+    // Use global search system if available
+    if (typeof searchGlobalIndex === 'function') {
+        const results = searchGlobalIndex(query, { limit: 12 });
+        
+        if (results.length > 0) {
+            const cardsHtml = results.map(createMovieCard).join('');
+            searchResult.innerHTML = cardsHtml;
+            
+            // Add result count
+            const resultCount = document.createElement('div');
+            resultCount.className = 'col-span-full text-center text-gray-400 text-sm mb-4';
+            resultCount.textContent = `พบ ${results.length} รายการสำหรับ "${query}"`;
+            searchResult.insertBefore(resultCount, searchResult.firstChild);
+        } else {
+            searchResult.innerHTML = '<p class="text-gray-400 text-center col-span-full">ไม่พบรายการที่ตรงกับการค้นหา</p>';
+        }
+        return;
+    }
+    
+    // Fallback to desktop search
     if (typeof searchMovies === 'function') {
         // Temporarily set the desktop search input value
         const desktopInput = document.getElementById('search-input');

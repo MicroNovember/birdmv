@@ -111,7 +111,7 @@ function createMovieCard(movie, options = {}) {
                  alt="${movieName}"
                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                  loading="lazy"
-                 onerror="this.src='https://via.placeholder.com/200x280?text=No+Image';">
+                 onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjI4MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjI4MCIgZmlsbD0iIzM3NDE1MSIvPgogIDx0ZXh0IHg9IjEwMCIgeT0iMTQwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTYiIGZpbGw9IiM5ZWEzZjciIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj7guKrguLLguKXguK3guJkg4Lia4LmN4Lil4Li44LmA4Lil4Lia4Liy4Lil4LmLPC90ZXh0Pgo8L3N2Zz4=';">
             
             <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-transparent flex flex-col justify-end px-3 pb-3">
                 

@@ -21,6 +21,11 @@ let isSearchMode = false; // ตรวจสอบว่าอยู่ในโ
 
 // --- [ COMMON FUNCTIONS ] ---
 
+// Global search state variables
+let globalSearchResults = [];
+let globalSearchQuery = '';
+let isGlobalSearchMode = false;
+
 /**
  * [TAG: โครงสร้าง Card ที่สมบูรณ์แบบที่สุดสำหรับ Category Page]
  * ฟังก์ชันสร้าง Movie Card HTML String (Netflix Style)
@@ -99,8 +104,15 @@ function createMovieCard(movie) {
         finalUrl += `&subtitle2=${encodeURIComponent(movie['subtitle2'])}`;
     }
 
+    // Add category badge for search results
+    const categoryBadge = (movie.searchCategory && (isSearchMode || window.isSearchMode)) ? 
+        `<span class="absolute top-2 right-2 bg-blue-600/80 text-white text-xs px-2 py-1 rounded backdrop-blur-sm z-10">
+            ${movie.searchCategoryTitle || movie.searchCategory}
+        </span>` : '';
+
     return `
     <div class="movie-card group relative overflow-hidden rounded-lg bg-gray-900 shadow-lg" onclick="window.location.href='${finalUrl}'">
+        ${categoryBadge}
         <img src="${movieLogo}" 
              alt="${movieName}"
              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
@@ -316,9 +328,16 @@ function changeItemsPerPage(newItemsPerPage) {
     currentPage = 1; // รีเซ็ตไปหน้าแรกเสมอเมื่อเปลี่ยนจำนวนรายการ
     
     // แสดงผลตามโหมดปัจจุบัน
-    if (isSearchMode) {
-        displayMovies(searchResults, `ผลการค้นหา "${document.getElementById('search-input').value}" ใน ${CATEGORIES_FULL_NAME[currentCategory]}`);
+    if (isGlobalSearchMode && globalSearchResults.length > 0) {
+        // Global search results - show all categories
+        const query = globalSearchQuery || document.getElementById('search-input').value || '';
+        displayMovies(globalSearchResults, `ผลการค้นหา "${query}" จากทุกหมวดหมู่ (${globalSearchResults.length} รายการ)`);
+    } else if (isSearchMode && searchResults.length > 0) {
+        // Category search results
+        const query = document.getElementById('search-input').value || globalSearchQuery || '';
+        displayMovies(searchResults, `ผลการค้นหา "${query}" ใน ${CATEGORIES_FULL_NAME[currentCategory]}`);
     } else {
+        // Normal category view
         displayMovies(allMovies, CATEGORIES_FULL_NAME[currentCategory]);
     }
 }
@@ -361,21 +380,37 @@ function updateTotalItemsDisplay(totalItems) {
  */
 function changePage(newPage) {
     let totalPages;
+    let moviesToUse;
     
-    if (isSearchMode) {
+    // Determine which movie set to use and calculate total pages
+    if (isGlobalSearchMode && globalSearchResults.length > 0) {
+        // Use global search results
+        moviesToUse = globalSearchResults;
+        totalPages = Math.ceil(globalSearchResults.length / ITEMS_PER_PAGE);
+    } else if (isSearchMode && searchResults.length > 0) {
+        // Use category search results
+        moviesToUse = searchResults;
         totalPages = Math.ceil(searchResults.length / ITEMS_PER_PAGE);
     } else {
+        // Use normal category results
+        moviesToUse = allMovies;
         totalPages = Math.ceil(allMovies.length / ITEMS_PER_PAGE);
     }
     
     if (newPage >= 1 && newPage <= totalPages) {
         currentPage = newPage;
         
-        // ไม่ล้างค่าค้นหาเมื่อเปลี่ยนหน้าในโหมดค้นหา
-        if (isSearchMode) {
-            const query = document.getElementById('search-input').value;
+        // Display appropriate results based on search mode
+        if (isGlobalSearchMode && globalSearchResults.length > 0) {
+            // Global search results - show all categories
+            const query = globalSearchQuery || document.getElementById('search-input').value || '';
+            displayMovies(globalSearchResults, `ผลการค้นหา "${query}" จากทุกหมวดหมู่ (${globalSearchResults.length} รายการ)`);
+        } else if (isSearchMode && searchResults.length > 0) {
+            // Category search results
+            const query = document.getElementById('search-input').value || globalSearchQuery || '';
             displayMovies(searchResults, `ผลการค้นหา "${query}" ใน ${CATEGORIES_FULL_NAME[currentCategory]}`);
         } else {
+            // Normal category view
             document.getElementById('search-input').value = '';
             displayMovies(allMovies, CATEGORIES_FULL_NAME[currentCategory]);
         }
@@ -392,7 +427,10 @@ async function loadCategory(categoryKey) {
     currentCategory = categoryKey;
     currentPage = 1; 
     isSearchMode = false; // รีเซ็ตโหมดค้นหา
+    isGlobalSearchMode = false; // รีเซ็ตโหมดค้นหาทั่วโลก
     searchResults = []; // ล้างผลการค้นหา
+    globalSearchResults = []; // ล้างผลการค้นหาทั่วโลก
+    globalSearchQuery = ''; // ล้างคำค้นหาทั่วโลก
     
     const listContainer = document.getElementById('movie-list-grid');
     listContainer.innerHTML = '<p class="text-gray-400 col-span-full">กำลังโหลดรายการ...</p>';
@@ -533,8 +571,30 @@ function searchMovies() {
         // ถ้าช่องค้นหาว่าง ให้กลับไปแสดงรายการทั้งหมด
         currentPage = 1;
         isSearchMode = false;
+        isGlobalSearchMode = false;
         searchResults = [];
+        globalSearchResults = [];
+        globalSearchQuery = '';
         displayMovies(allMovies, CATEGORIES_FULL_NAME[currentCategory]);
+        return;
+    }
+    
+    // ใช้ global search system ถ้ามีและต้องการค้นหาจากทุกหมวดหมู่
+    if (typeof searchGlobalIndex === 'function' && !currentCategory) {
+        // Global search mode
+        const globalResults = searchGlobalIndex(query, { limit: 100 });
+        
+        // Set global search state
+        isGlobalSearchMode = true;
+        globalSearchResults = globalResults;
+        globalSearchQuery = query;
+        
+        // Also set local search state for compatibility
+        isSearchMode = true;
+        searchResults = globalResults;
+        currentPage = 1;
+        
+        displayMovies(searchResults, `ผลการค้นหา "${query}" จากทุกหมวดหมู่ (${globalResults.length} รายการ)`);
         return;
     }
     
@@ -549,6 +609,7 @@ function searchMovies() {
     // เก็บผลการค้นหาและเข้าโหมดค้นหา
     searchResults = filteredMovies;
     isSearchMode = true;
+    isGlobalSearchMode = false; // This is category search, not global
     currentPage = 1; // เริ่มแสดงที่หน้า 1 ของผลการค้นหา
     
     console.log(`Search in category ${currentCategory}: Found ${filteredMovies.length} results for "${query}"`);
@@ -571,7 +632,17 @@ function searchFromTemp(query) {
         return;
     }
     
-    // โหลดข้อมูลจาก temp (ทุกหมวดหมู่)
+    // ใช้ global search system ถ้ามี
+    if (typeof searchGlobalIndex === 'function') {
+        const globalResults = searchGlobalIndex(query, { limit: 100 });
+        searchResults = globalResults;
+        isSearchMode = true;
+        currentPage = 1;
+        displayMovies(searchResults, `ผลการค้นหา "${query}" จากทุกหมวดหมู่ (${globalResults.length} รายการ)`);
+        return;
+    }
+    
+    // Fallback to old method
     let tempMovies = [];
     try {
         if (typeof window.getTEMP === 'function') {
@@ -630,4 +701,9 @@ document.addEventListener('DOMContentLoaded', () => {
             changeItemsPerPage(newItemsPerPage);
         });
     });
+    
+    // Initialize search system if available
+    if (typeof initializeSearchSystem === 'function') {
+        initializeSearchSystem();
+    }
 });
