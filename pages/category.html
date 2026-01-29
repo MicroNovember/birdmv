@@ -131,6 +131,9 @@
     <script src="../assets/data/asia.js"></script>
     <script src="../assets/data/temp.js"></script>
     
+    <!-- Global Search System -->
+    <script src="../assets/js/search-index.js"></script>
+    
     <!-- Smart TV Detection and Keyboard Navigation -->
     <script>
         // ตรวจจับ Smart TV
@@ -484,103 +487,213 @@
         document.addEventListener('DOMContentLoaded', function() {
             checkVipExpiry();
             
-            // Load category data
+            // Check for search parameter first
             const urlParams = new URLSearchParams(window.location.search);
+            const searchQuery = urlParams.get('search');
             const cat = urlParams.get('cat') || 'thai';
             
-            // Retry mechanism for loadCategory function
-            let retryCount = 0;
-            const maxRetries = 10;
-            
-            function tryLoadCategory() {
-                if (typeof loadCategory === 'function') {
-                    console.log('📂 Loading category:', cat);
-                    loadCategory(cat);
-                } else {
-                    retryCount++;
-                    console.log(`⏳ Waiting for loadCategory function... (${retryCount}/${maxRetries})`);
-                    
-                    if (retryCount < maxRetries) {
-                        setTimeout(tryLoadCategory, 200);
+            if (searchQuery && searchQuery.trim().length >= 2) {
+                // Perform search instead of loading category
+                console.log('🔍 Performing search from URL parameter:', searchQuery);
+                
+                // Set search input value
+                const searchInput = document.getElementById('search-input');
+                if (searchInput) {
+                    searchInput.value = searchQuery;
+                }
+                
+                // Wait for search system to be ready, then perform search
+                let retryCount = 0;
+                const maxRetries = 10;
+                
+                function tryPerformSearch() {
+                    if (typeof performGlobalSearch === 'function') {
+                        console.log('🔍 Executing global search:', searchQuery);
+                        performGlobalSearch(searchQuery);
+                    } else if (retryCount < maxRetries) {
+                        retryCount++;
+                        console.log(`⏳ Waiting for search system... (${retryCount}/${maxRetries})`);
+                        setTimeout(tryPerformSearch, 500);
                     } else {
-                        console.error('❌ loadCategory function not found after retries');
-                        // Fallback: show error message
-                        const movieGrid = document.getElementById('movie-list-grid');
-                        if (movieGrid) {
-                            movieGrid.innerHTML = `
-                                <div class="col-span-full py-20 text-center">
-                                    <div class="text-red-500 text-lg mb-4">ไม่สามารถโหลดข้อมูลหนังได้</div>
-                                    <div class="text-gray-500 mb-6">กรุณารีเฟรชหน้าเว็บ</div>
-                                    <button onclick="location.reload()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-                                        รีเฟรชหน้า
-                                    </button>
-                                </div>
-                            `;
+                        console.error('❌ Search system not available after retries');
+                        // Fallback to loading category
+                        if (typeof loadCategory === 'function') {
+                            loadCategory(cat);
                         }
                     }
                 }
+                
+                tryPerformSearch();
+            } else {
+                // Load category data normally
+                console.log('📂 Loading category:', cat);
+                
+                // Retry mechanism for loadCategory function
+                let retryCount = 0;
+                const maxRetries = 10;
+                
+                function tryLoadCategory() {
+                    if (typeof loadCategory === 'function') {
+                        console.log('📂 Loading category:', cat);
+                        loadCategory(cat);
+                    } else {
+                        retryCount++;
+                        console.log(`⏳ Waiting for loadCategory function... (${retryCount}/${maxRetries})`);
+                        if (retryCount < maxRetries) {
+                            setTimeout(tryLoadCategory, 500);
+                        } else {
+                            console.error('❌ loadCategory function not available after retries');
+                        }
+                    }
+                }
+                
+                tryLoadCategory();
+            }
+
+            // Handle search form submission
+            function handleSearchSubmit(event) {
+                event.preventDefault(); // Prevent page reload
+                const query = document.getElementById('search-input').value.trim();
+                
+                if (query.length < 2) {
+                    // Show message for short queries
+                    const movieGrid = document.getElementById('movie-list-grid');
+                    movieGrid.innerHTML = `
+                        <div class="col-span-full py-20 text-center">
+                            <div class="text-gray-400 text-lg mb-4">กรุณาพิมพ์อย่างน้อย 2 ตัวอักษร</div>
+                            <button onclick="clearSearch()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                                กลับไปหมวดหมู่
+                            </button>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Call the search function from category.js
+                if (typeof searchMovies === 'function') {
+                    searchMovies();
+                } else {
+                    // Fallback: create temporary search results
+                    performTemporarySearch(query);
+                }
             }
             
-            // Start trying to load category
-            setTimeout(tryLoadCategory, 100);
-        });
+            // Make functions global
+            window.handleSearchSubmit = handleSearchSubmit;
+            window.clearSearch = clearSearch;
 
-        // Handle search form submission
-        function handleSearchSubmit(event) {
-            event.preventDefault(); // Prevent page reload
-            const query = document.getElementById('search-input').value.trim();
-            
-            if (query.length < 2) {
-                // Show message for short queries
+            // Clear search and return to category
+            function clearSearch() {
+                document.getElementById('search-input').value = '';
+                if (typeof loadCategory === 'function') {
+                    // Reload current category
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const cat = urlParams.get('cat') || 'thai';
+                    loadCategory(cat);
+                }
+            }
+
+            // Temporary search function as fallback
+            function performTemporarySearch(query) {
                 const movieGrid = document.getElementById('movie-list-grid');
+                const categoryTitle = document.getElementById('category-title');
+                const categoryDescription = document.getElementById('category-description');
+                
+                // Update UI to show searching
+                categoryTitle.textContent = `กำลังค้นหา "${query}"`;
+                categoryDescription.textContent = 'กำลังค้นหาจากทุกหมวดหมู่...';
+                
                 movieGrid.innerHTML = `
                     <div class="col-span-full py-20 text-center">
-                        <div class="text-gray-400 text-lg mb-4">กรุณาพิมพ์อย่างน้อย 2 ตัวอักษร</div>
-                        <button onclick="clearSearch()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-                            กลับไปหมวดหมู่
-                        </button>
+                        <div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500 mb-4"></div>
+                        <p class="text-gray-500 animate-pulse uppercase tracking-widest text-xs font-bold">กำลังค้นหา...</p>
                     </div>
                 `;
-                return;
+                
+                // Load all categories and search
+                let allMovies = [];
+                const categories = ['thai', 'korea', 'china', 'inter', 'cartoon', 'india', 'asia', 'temp'];
+                let loadedCategories = 0;
+                
+                categories.forEach(cat => {
+                    try {
+                        const movies = window[cat] || [];
+                        if (Array.isArray(movies)) {
+                            allMovies = allMovies.concat(movies);
+                        }
+                        loadedCategories++;
+                        
+                        if (loadedCategories === categories.length) {
+                            // All categories loaded, perform search
+                            const results = allMovies.filter(movie => {
+                                const name = (movie.name || '').toLowerCase();
+                                const info = (movie.info || '').toLowerCase();
+                                const category = (movie.category || '').toLowerCase();
+                                return name.includes(query.toLowerCase()) || 
+                                       info.includes(query.toLowerCase()) || 
+                                       category.includes(query.toLowerCase());
+                            });
+                            
+                            // Display results
+                            displaySearchResults(results, query);
+                        }
+                    } catch (error) {
+                        console.error(`Error loading category ${cat}:`, error);
+                        loadedCategories++;
+                        
+                        if (loadedCategories === categories.length) {
+                            displaySearchResults([], query);
+                        }
+                    }
+                });
             }
-            
-            // Call the search function from category.js
-            if (typeof searchMovies === 'function') {
-                searchMovies();
-            } else {
-                // Fallback: create temporary search results
-                performTemporarySearch(query);
-            }
-        }
 
-        // Clear search and return to category
-        function clearSearch() {
-            document.getElementById('search-input').value = '';
-            if (typeof loadCategory === 'function') {
-                // Reload current category
-                const urlParams = new URLSearchParams(window.location.search);
-                const cat = urlParams.get('cat') || 'thai';
-                loadCategory(cat);
-            }
-        }
+            // Display search results
+            function displaySearchResults(results, query) {
+                const movieGrid = document.getElementById('movie-list-grid');
+                const categoryTitle = document.getElementById('category-title');
+                const categoryDescription = document.getElementById('category-description');
+                
+                categoryTitle.textContent = `ผลการค้นหา "${query}"`;
+                categoryDescription.textContent = `พบ ${results.length} รายการ`;
+                
+                if (results.length === 0) {
+                    movieGrid.innerHTML = `
+                        <div class="col-span-full py-20 text-center">
+                            <div class="text-gray-400 text-lg mb-4">ไม่พบรายการที่ค้นหา</div>
+                            <div class="text-gray-500 mb-6">ลองค้นหาด้วยคำอื่นหรือตรวจสอบการสะกด</div>
+                            <button onclick="clearSearch()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                                กลับไปหมวดหมู่
+                            </button>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Display results using existing movie card structure
+                movieGrid.innerHTML = results.map(movie => `
+                    <div class="movie-card group relative overflow-hidden rounded-lg bg-gray-900 shadow-lg" onclick="window.location.href='watch.html?id=${movie.id}'">
+                        <img src="${movie.poster || 'assets/images/default-poster.jpg'}" 
+                             alt="${movie.name}" 
+                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                             onerror="this.src='assets/images/default-poster.jpg'">
+                        
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-transparent flex flex-col justify-end px-3 pb-3">
+                            
+                            <div class="h-[40px] flex items-center mb-1"> 
+                                <h3 class="text-white text-[12px] md:text-sm font-bold leading-tight line-clamp-2 w-full" title="${movie.name}">
+                                    ${movie.name}
+                                </h3>
+                            </div>
 
-        // Temporary search function as fallback
-        function performTemporarySearch(query) {
-            const movieGrid = document.getElementById('movie-list-grid');
-            const categoryTitle = document.getElementById('category-title');
-            const categoryDescription = document.getElementById('category-description');
-            
-            // Update UI to show searching
-            categoryTitle.textContent = `กำลังค้นหา "${query}"`;
-            categoryDescription.textContent = 'กำลังค้นหาจากทุกหมวดหมู่...';
-            
-            movieGrid.innerHTML = `
-                <div class="col-span-full py-20 text-center">
-                    <div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500 mb-4"></div>
-                    <p class="text-gray-500 animate-pulse uppercase tracking-widest text-xs font-bold">กำลังค้นหา...</p>
-                </div>
-            `;
-            
+                            <p class="text-gray-400 text-[10px] md:text-xs truncate opacity-80">
+                                ${movie.info || 'HD | ซับไทย'}
+                            </p>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        });
             // Load all categories and search
             let allMovies = [];
             const categories = ['thai', 'korea', 'china', 'inter', 'cartoon', 'india', 'asia', 'temp'];
