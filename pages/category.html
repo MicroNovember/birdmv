@@ -172,17 +172,49 @@
     <!-- Desktop Header - Glassmorphism -->
     <header class="desktop-header">
         <nav class="desktop-nav">
-            <a href="../index.html" class="netflix-logo">SAMORN MOVIE</a>
-            <div class="nav-links">
-                <a href="category.html?cat=thai">ไทย</a>
-                <a href="category.html?cat=korea">เกาหลี</a>
-                <a href="category.html?cat=china">จีน</a>
-                <a href="category.html?cat=inter">สากล</a>
-                <a href="category.html?cat=cartoon">การ์ตูน</a>
-                <a href="category.html?cat=india">อินเดีย</a>
-                <a href="category.html?cat=asia">เอเซีย</a>
-                <button onclick="showVipModal()" class="vip-button">VIP</button>
-                <button onclick="logoutVip()" id="desktop-vip-logout-btn" class="vip-button hidden" style="background: linear-gradient(135deg, #3b82f6, #94a3b8);">Logout VIP</button>
+            <!-- First Row: Logo, Site Name, VIP, Search -->
+            <div class="desktop-nav-row desktop-nav-top">
+                <div class="nav-brand">
+                    <a href="../index.html" class="netflix-logo">SAMORN MOVIE</a>
+                    <span class="site-tagline">ดูฟรี ไม่มี โฆษณา 100%</span>
+                </div>
+                
+                <div class="nav-actions">
+                    <button onclick="showVipModal()" class="vip-button">VIP</button>
+                    <button onclick="logoutVip()" id="desktop-vip-logout-btn" class="vip-button hidden" style="background: linear-gradient(135deg, #3b82f6, #94a3b8);">Logout VIP</button>
+                    
+                    <!-- Netflix-style Search -->
+                    <div class="netflix-search-container">
+                        <div class="netflix-search-wrapper">
+                            <input 
+                                type="text" 
+                                id="desktop-search-input" 
+                                placeholder="ค้นหาหนัง, ซีรีส์, นักแสดง..."
+                                class="netflix-search-input"
+                                autocomplete="off"
+                            >
+                            <button type="button" onclick="performDesktopSearch()" class="netflix-search-button">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                    <path d="m21 21-4.35-4.35"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Second Row: Movie Categories -->
+            <div class="desktop-nav-row desktop-nav-categories">
+                <div class="nav-links">
+                    <a href="category.html?cat=thai">ไทย</a>
+                    <a href="category.html?cat=korea">เกาหลี</a>
+                    <a href="category.html?cat=china">จีน</a>
+                    <a href="category.html?cat=inter">สากล</a>
+                    <a href="category.html?cat=cartoon">การ์ตูน</a>
+                    <a href="category.html?cat=india">อินเดีย</a>
+                    <a href="category.html?cat=asia">เอเซีย</a>
+                </div>
             </div>
         </nav>
     </header>
@@ -731,6 +763,35 @@
                 }
             });
         }
+
+        // Desktop search function
+        function performDesktopSearch() {
+            const searchInput = document.getElementById('desktop-search-input');
+            const query = searchInput.value.trim();
+            
+            if (query.length >= 2) {
+                console.log(`🔍 Performing desktop search for: "${query}"`);
+                // Sync with main search form
+                const mainSearchInput = document.getElementById('search-input');
+                if (mainSearchInput) {
+                    mainSearchInput.value = query;
+                }
+                performGlobalSearch(query);
+            }
+        }
+
+        // Setup desktop search listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            const desktopSearchInput = document.getElementById('desktop-search-input');
+            if (desktopSearchInput) {
+                // Simple search without suggestions
+                desktopSearchInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        performDesktopSearch();
+                    }
+                });
+            }
+        });
 
         // Display search results
         function displaySearchResults(results, query) {

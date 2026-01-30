@@ -537,6 +537,16 @@ function performGlobalSearch(query) {
         // Display results using existing displayMovies function
         if (typeof displayMovies === 'function') {
             displayMovies(results, `ผลการค้นหา "${query}" จากทุกหมวดหมู่ (${results.length} รายการ)`);
+        } else {
+            // Fallback for index.html - set global variables and trigger display
+            window.searchResults = results;
+            window.currentSearchQuery = query;
+            window.isSearchMode = true;
+            
+            // Try to call displayMovies on window (index.html)
+            if (typeof window.displayMovies === 'function') {
+                window.displayMovies(results, `ผลการค้นหา "${query}" จากทุกหมวดหมู่ (${results.length} รายการ)`);
+            }
         }
     }
     
