@@ -1,943 +1,199 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-    <title>SAMORN Movie | หน้าหลัก</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moving to New Home - Samorn Movies เร็วๆ นี้ </title>
+    <meta http-equiv="refresh" content="6;url=https:// /">
     
-    <!-- PWA Meta Tags -->
-    <meta name="theme-color" content="#3B82F6">
-    <meta name="description" content="SAMORN Movie - ดูฟรี ไม่มี โฆษณา 100%">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="SAMORN Movie - ดูฟรี ไม่มี โฆษณา 100%">
-    <meta name="application-name" content="SAMORN Movie - ดูฟรี ไม่มี โฆษณา 100%">
-    <meta name="msapplication-TileColor" content="#3B82F6">
-    <meta name="msapplication-config" content="pwa/browserconfig.xml">
-    
-    <!-- PWA Manifest -->
-    <link rel="manifest" href="pwa/manifest.json">
-    <link rel="apple-touch-icon" href="assets/icons/icon-192.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="assets/icons/favicon-16.png">
-    
-    <!-- CSS Files -->
-    <link rel="stylesheet" href="assets/css/netflix-style.css">
-    <link rel="stylesheet" href="assets/css/style.css"> 
-    <link rel="stylesheet" href="assets/css/menu.css">
-    
-    <!-- JavaScript Files -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    
-    <!-- Firebase Configuration -->
-    <script>
-        // Your web app's Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyBt8BVo655fDa1YZJrLFdfiJ2eID40ei9A",
-            authDomain: "samorn-mv.firebaseapp.com",
-            projectId: "samorn-mv",
-            storageBucket: "samorn-mv.firebasestorage.app",
-            messagingSenderId: "812347002959",
-            appId: "1:812347002959:web:69e39d2827308dfb571a3a",
-            measurementId: "G-3DG3NS8VLF"
-        };
-
-        // Initialize Firebase (check if already initialized)
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
+    <style>
+        /* โทนสีแนะนำปี 2026: สบายตาแต่หรูหรา */
+        :root {
+            --bg-dark: #04050C;
+            --card-bg: #0D111F;
+            --purple-glow: #925FF0;
+            --blue-glow: #00D4FF;
+            --text-main: #E2E8F0;
         }
-        const db = firebase.firestore();
-        const auth = firebase.auth();
+
+        body, html {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--bg-dark);
+            background: radial-gradient(circle at center, #0D111F 0%, #04050C 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-main);
+            overflow: hidden;
+        }
+
+        /* เอฟเฟกต์พื้นหลังวิบวับแบบจางๆ */
+        body::before {
+            content: "";
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 180deg at 50% 50%, var(--purple-glow) 0deg, transparent 90deg, var(--blue-glow) 180deg, transparent 270deg, var(--purple-glow) 360deg);
+            animation: rotateBG 15s linear infinite;
+            opacity: 0.05;
+            z-index: -1;
+        }
+
+        @keyframes rotateBG {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .container {
+            text-align: center;
+            padding: 50px 40px;
+            background: rgba(13, 17, 31, 0.8);
+            border-radius: 24px;
+            border: 1px solid rgba(146, 95, 240, 0.2);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 
+                        0 0 20px rgba(146, 95, 240, 0.1);
+            max-width: 450px;
+            width: 85%;
+            backdrop-filter: blur(15px);
+            animation: containerEntry 1s ease-out;
+            position: relative;
+        }
+
+        @keyframes containerEntry {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 900;
+            letter-spacing: 4px;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #fff, var(--purple-glow), var(--blue-glow));
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shineText 3s linear infinite;
+        }
+
+        @keyframes shineText {
+            to { background-position: 200% center; }
+        }
+
+        h1 {
+            font-size: 22px;
+            margin: 10px 0;
+            color: #fff;
+            font-weight: 300;
+        }
+
+        p {
+            color: #94a3b8;
+            margin-bottom: 35px;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        /* ปุ่มวิบวับ (Glow Button) */
+        .btn-new-site {
+            position: relative;
+            display: inline-block;
+            padding: 15px 40px;
+            background: var(--bg-dark);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            overflow: hidden;
+            transition: 0.4s;
+            border: 1px solid rgba(146, 95, 240, 0.5);
+            z-index: 1;
+        }
+
+        .btn-new-site::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(90deg, var(--purple-glow), var(--blue-glow));
+            z-index: -1;
+            transition: 0.4s;
+            opacity: 0.8;
+        }
+
+        .btn-new-site:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 25px var(--purple-glow);
+            letter-spacing: 1px;
+        }
+
+        .btn-new-site:hover::before {
+            opacity: 1;
+        }
+
+        /* Loader สไตล์ 2026 */
+        .loader-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+            margin: 30px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .loader-fill {
+            position: absolute;
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--purple-glow), var(--blue-glow));
+            box-shadow: 0 0 10px var(--blue-glow);
+            animation: progress 6s linear forwards;
+        }
+
+        @keyframes progress {
+            from { width: 0%; }
+            to { width: 100%; }
+        }
+
+        .countdown {
+            font-size: 13px;
+            color: #475569;
+            margin-top: 15px;
+        }
+
+        #seconds { color: var(--blue-glow); font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="logo">SAMORN MOVIES</div>
+        <h1>ย้ายบ้านใหม่ ไวกว่าเดิม</h1>
+        <p>เพื่อประสบการณ์การรับชมที่ลื่นไหลที่สุด <br>เรากำลังพาท่านไปที่ระบบใหม่</p>
         
-        // Make Firebase available globally
-        window.db = db;
-        window.auth = auth;
-    </script>
-    
-    <!-- Anti Developer Tools Protection -->
+        <div class="loader-bar">
+            <div class="loader-fill"></div>
+        </div>
+
+        <a href="https://samorn.free.nf/" class="btn-new-site">เข้าสู่เว็บไซต์ใหม่</a>
+        
+        <div class="countdown">
+            เปลี่ยนหน้าอัตโนมัติใน <span id="seconds">6</span> วินาที
+        </div>
+    </div>
+
     <script>
-        // ป้องกัน right click
-        document.addEventListener('contextmenu', function(e) {
-            e.preventDefault();
-            return false;
-        });
-
-        // ป้องกันการดู source
-        document.addEventListener('keydown', function(e) {
-            // ป้องกัน Ctrl+U (View Source)
-            if (e.ctrlKey && e.key === 'u') {
-                e.preventDefault();
-                return false;
-            }
-            // ป้องกัน F12
-            if (e.key === 'F12') {
-                e.preventDefault();
-                return false;
-            }
-            // ป้องกัน Ctrl+Shift+I (DevTools)
-            if (e.ctrlKey && e.shiftKey && e.key === 'I') {
-                e.preventDefault();
-                return false;
-            }
-            // ป้องกัน Ctrl+Shift+J (Console)
-            if (e.ctrlKey && e.shiftKey && e.key === 'J') {
-                e.preventDefault();
-                return false;
-            }
-        });
-
-        // ป้องกันการดาวน์โหลดไฟล์ .js
-        document.addEventListener('dragstart', function(e) {
-            e.preventDefault();
-            return false;
-        });
-
-        // ซ่อนไฟล์ข้อมูลจาก network tab (เฉพาะเมื่อสงสัยว่ามีการพยายามเข้าถึง)
-        let devToolsOpen = false;
-        const originalFetch = window.fetch;
-        window.fetch = function(...args) {
-            const url = args[0];
-            if (typeof url === 'string' && url.includes('assets/data/') && devToolsOpen) {
-                console.log('Blocked access to:', url);
-                return Promise.reject(new Error('Access denied'));
-            }
-            return originalFetch.apply(this, args);
-        };
-
-        // ตรวจจับ DevTools แบบพื้นฐาน
-        setInterval(() => {
-            const before = new Date();
-            debugger;
-            const after = new Date();
-            if (after - before > 100) {
-                devToolsOpen = true;
-            }
+        let timeLeft = 6;
+        const secondsDisplay = document.getElementById('seconds');
+        
+        const countdownTimer = setInterval(() => {
+            timeLeft--;
+            if(timeLeft >= 0) secondsDisplay.textContent = timeLeft;
+            if (timeLeft <= 0) clearInterval(countdownTimer);
         }, 1000);
     </script>
-    
-    <!-- Load Encrypted Data Files -->
-    <script src="assets/data/thai.js"></script>
-    <script src="assets/data/korea.js"></script>
-    <script src="assets/data/china.js"></script>
-    <script src="assets/data/inter.js"></script>
-    <script src="assets/data/cartoon.js"></script>
-    <script src="assets/data/india.js"></script>
-    <script src="assets/data/asia.js"></script>
-    <script src="assets/data/temp.js"></script>
-    
-    <!-- Global Search System -->
-    <script src="assets/js/search-index.js"></script>
-    
-    <!-- Decode Movie Data -->
-    <script>
-        // ถอดรหัสข้อมูลหนัง
-        try {
-            window.thai = window.getTHAI ? window.getTHAI() : [];
-            window.korea = window.getKOREA ? window.getKOREA() : [];
-            window.china = window.getCHINA ? window.getCHINA() : [];
-            window.inter = window.getINTER ? window.getINTER() : [];
-            window.cartoon = window.getCARTOON ? window.getCARTOON() : [];
-            window.india = window.getINDIA ? window.getINDIA() : [];
-            window.asia = window.getASIA ? window.getASIA() : [];
-            window.temp = window.getTEMP ? window.getTEMP() : [];
-            
-            console.log('✅ Movie data decoded successfully');
-            console.log('📊 Thai movies:', window.thai.length);
-            console.log('📊 Korea movies:', window.korea.length);
-            console.log('📊 China movies:', window.china.length);
-        } catch (error) {
-            console.error('❌ Error decoding movie data:', error);
-            // ถอดรหัสล้มเหลว ใช้ข้อมูลว่าง
-            window.thai = [];
-            window.korea = [];
-            window.china = [];
-            window.inter = [];
-            window.cartoon = [];
-            window.india = [];
-            window.asia = [];
-            window.temp = [];
-        }
-    </script>
-    
-    <!-- Smart TV Detection and Keyboard Navigation -->
-    <script>
-        // ตรวจจับ Smart TV
-        const isSmartTV = /tv|smart|tizen|webos|roku|chromecast|apple.tv/i.test(navigator.userAgent) || 
-                         (screen.width >= 1920 && screen.height >= 1080 && !/mobile|tablet/i.test(navigator.userAgent));
-        
-        if (isSmartTV) {
-            document.documentElement.classList.add('smart-tv');
-            console.log('Smart TV mode detected');
-            
-            // เพิ่ม keyboard navigation support
-            document.addEventListener('keydown', function(e) {
-                const focusableElements = document.querySelectorAll('a, button, [tabindex]:not([tabindex="-1"])');
-                const firstElement = focusableElements[0];
-                const lastElement = focusableElements[focusableElements.length - 1];
-                
-                if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
-                    e.preventDefault();
-                    const current = document.activeElement;
-                    const currentIndex = Array.from(focusableElements).indexOf(current);
-                    const nextIndex = (currentIndex + 1) % focusableElements.length;
-                    focusableElements[nextIndex].focus();
-                } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
-                    e.preventDefault();
-                    const current = document.activeElement;
-                    const currentIndex = Array.from(focusableElements).indexOf(current);
-                    const prevIndex = currentIndex === 0 ? focusableElements.length - 1 : currentIndex - 1;
-                    focusableElements[prevIndex].focus();
-                }
-            });
-        }
-    </script>
-</head>
-<body class="bg-gray-900 text-white font-sans overflow-x-hidden">
-    
-    <!-- Desktop Header - Glassmorphism -->
-    <header class="desktop-header">
-        <nav class="desktop-nav">
-            <!-- First Row: Logo, Site Name, VIP, Search -->
-            <div class="desktop-nav-row desktop-nav-top">
-                <div class="nav-brand">
-                    <a href="index.html" class="netflix-logo">SAMORN MOVIE</a>
-                    <span class="site-tagline">ดูฟรี ไม่มี โฆษณา 100%</span>
-                </div>
-                
-                <div class="nav-actions">
-                    <button onclick="showVipModal()" class="vip-button">VIP</button>
-                    <button onclick="logoutVip()" id="desktop-vip-logout-btn" class="vip-button hidden" style="background: linear-gradient(135deg, #3b82f6, #94a3b8);">Logout VIP</button>
-                    
-                    <!-- Netflix-style Search -->
-                    <div class="netflix-search-container">
-                        <div class="netflix-search-wrapper">
-                            <input 
-                                type="text" 
-                                id="desktop-search-input" 
-                                placeholder="ค้นหาหนัง, ซีรีส์, นักแสดง..."
-                                class="netflix-search-input"
-                                autocomplete="off"
-                            >
-                            <button type="button" onclick="performDesktopSearch()" class="netflix-search-button">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <circle cx="11" cy="11" r="8"></circle>
-                                    <path d="m21 21-4.35-4.35"></path>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Second Row: Movie Categories -->
-            <div class="desktop-nav-row desktop-nav-categories">
-                <div class="nav-links">
-                    <a href="pages/category.html?cat=thai">ไทย</a>
-                    <a href="pages/category.html?cat=korea">เกาหลี</a>
-                    <a href="pages/category.html?cat=china">จีน</a>
-                    <a href="pages/category.html?cat=inter">สากล</a>
-                    <a href="pages/category.html?cat=cartoon">การ์ตูน</a>
-                    <a href="pages/category.html?cat=india">อินเดีย</a>
-                    <a href="pages/category.html?cat=asia">เอเซีย</a>
-                </div>
-            </div>
-        </nav>
-    </header>
 
-    <!-- Main Content -->
-    <main class="pt-1">
-        <div id="movie-sections-container">
-            <!-- Netflix-style sections will be loaded here -->
-        </div>
-        
-        <!-- Search Results Container (Hidden by default) -->
-        <div id="search-results-container" class="hidden">
-            <div class="container mx-auto px-4 py-6">
-                <!-- Category Title -->
-                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-                    <div>
-                        <h1 id="category-title" class="text-2xl md:text-3xl font-bold text-white mb-2">ผลการค้นหา</h1>
-                        <p id="category-description" class="text-gray-400">กำลังค้นหา...</p>
-                    </div>
-                </div>
-
-                <!-- Search Form - Full width on mobile, right aligned on desktop -->
-                <form id="search-form" class="w-full md:w-auto md:ml-auto flex items-center gap-2 bg-gray-800 rounded-lg px-4 py-2 mb-6" onsubmit="handleSearchSubmit(event)">
-                    <input 
-                        type="text" 
-                        id="search-input" 
-                        placeholder="ค้นหาหนัง..." 
-                        class="bg-transparent border-none outline-none text-white placeholder-gray-400 flex-1 md:w-64"
-                    >
-                    <button type="submit" class="text-gray-400 hover:text-white">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="w-5 h-5">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                        </svg>
-                    </button>
-                </form>
-
-                <!-- Netflix-style Items Per Page Controls -->
-                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-                    <div class="flex items-center gap-3">
-                        <span class="text-gray-400 text-sm">จำนวนรายการ:</span>
-                        <div class="flex gap-1" id="items-per-page-buttons">
-                            <button data-items="24" class="items-per-page-btn px-3 py-1 text-sm rounded-lg border border-gray-700 text-gray-400 hover:border-blue-500 hover:text-blue-400 transition">24</button>
-                            <button data-items="48" class="items-per-page-btn px-3 py-1 text-sm rounded-lg border border-blue-500 bg-blue-500/20 text-blue-400">48</button>
-                            <button data-items="72" class="items-per-page-btn px-3 py-1 text-sm rounded-lg border border-gray-700 text-gray-400 hover:border-blue-500 hover:text-blue-400 transition">72</button>
-                            <button data-items="96" class="items-per-page-btn px-3 py-1 text-sm rounded-lg border border-gray-700 text-gray-400 hover:border-blue-500 hover:text-blue-400 transition">96</button>
-                        </div>
-                    </div>
-                    <span id="total-items" class="text-gray-400 text-sm">ทั้งหมด: 0 รายการ</span>
-                </div>
-
-                <!-- Movie Grid - Netflix Style -->
-                <div id="movie-list-grid" class="movie-grid">
-                    <!-- Movies will be loaded here -->
-                    <div class="col-span-full py-20 text-center">
-                        <div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500 mb-4"></div>
-                        <p class="text-gray-500 animate-pulse uppercase tracking-widest text-xs font-bold">กำลังค้นหา...</p>
-                    </div>
-                </div>
-                
-                <!-- Pagination -->
-                <div id="pagination-container" class="flex justify-center items-center gap-2 py-8">
-                    <!-- Pagination will be loaded here -->
-                </div>
-                
-                <!-- Back to Home Button -->
-                <div class="text-center mt-8">
-                    <button onclick="clearSearchResults()" class="px-6 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition">
-                        กลับไปหน้าหลัก
-                    </button>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <!-- Mobile Bottom Navigation -->
-    <nav class="mobile-nav">
-        <div class="mobile-nav-content">
-            <a href="index.html" class="mobile-nav-item active">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
-                </svg>
-                <span>หน้าหลัก</span>
-            </a>
-
-            <button onclick="toggleSearch()" class="mobile-nav-item">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                </svg>
-                <span>ค้นหา</span>
-            </button>
-
-            <button onclick="toggleMobileCategories()" class="mobile-nav-item">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
-                </svg>
-                <span>หมวดหมู่</span>
-            </button>
-            
-            <button onclick="showVipModal()" id="mobile-vip-login-btn" class="mobile-nav-item">
-                <svg fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                </svg>
-                <span>VIP</span>
-            </button>
-
-            <button onclick="logoutVip()" id="mobile-vip-logout-btn" class="mobile-nav-item hidden">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
-                </svg>
-                <span>ACTIVE</span>
-            </button>
-
-            <button onclick="logout()" class="mobile-nav-item">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
-                </svg>
-                <span>ออก</span>
-            </button>
-        </div>
-    </nav>
-
-    <!-- Mobile Categories Overlay -->
-    <div id="mobile-categories-overlay" class="categories-overlay hidden">
-        <div class="categories-panel">
-            <div class="categories-header">
-                <h3>สำรวจหมวดหมู่</h3>
-                <button onclick="toggleMobileCategories()" class="close-categories">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                </button>
-            </div>
-
-            <div class="categories-grid">
-                <a href="pages/category.html?cat=thai" class="category-item">
-                    <div class="category-icon">
-                        <span>🇹🇭</span>
-                    </div>
-                    <span class="category-name">ไทย</span>
-                </a>
-
-                <a href="pages/category.html?cat=korea" class="category-item">
-                    <div class="category-icon">
-                        <span>🇰🇷</span>
-                    </div>
-                    <span class="category-name">เกาหลี</span>
-                </a>
-
-                <a href="pages/category.html?cat=china" class="category-item">
-                    <div class="category-icon">
-                        <span>🇨🇳</span>
-                    </div>
-                    <span class="category-name">จีน</span>
-                </a>
-
-                <a href="pages/category.html?cat=inter" class="category-item">
-                    <div class="category-icon">
-                        <span>🌎</span>
-                    </div>
-                    <span class="category-name">สากล</span>
-                </a>
-
-                <a href="pages/category.html?cat=cartoon" class="category-item">
-                    <div class="category-icon">
-                        <span>🎬</span>
-                    </div>
-                    <span class="category-name">การ์ตูน</span>
-                </a>
-
-                <a href="pages/category.html?cat=india" class="category-item">
-                    <div class="category-icon">
-                        <span>🇮🇳</span>
-                    </div>
-                    <span class="category-name">อินเดีย</span>
-                </a>
-
-                <a href="pages/category.html?cat=asia" class="category-item">
-                    <div class="category-icon">
-                        <span>🌏</span>
-                    </div>
-                    <span class="category-name">เอเซีย</span>
-                </a>
-
-                <button onclick="showVipModal()" class="category-item">
-                    <div class="category-icon" style="background: linear-gradient(135deg, #f59e0b, #ef4444);">
-                        <svg fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                        </svg>
-                    </div>
-                    <span class="category-name" style="color: #f59e0b;">VIP</span>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Mobile Search Overlay -->
-    <div id="mobile-search-overlay" class="search-overlay hidden">
-        <div class="search-overlay-content">
-            <div class="search-overlay-header">
-                <button onclick="toggleSearch()" class="search-close-btn">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                </button>
-                <div class="mobile-search-wrapper">
-                    <input 
-                        type="text" 
-                        id="mobile-search-input" 
-                        placeholder="ค้นหาหนัง, ซีรีส์, นักแสดง..."
-                        class="mobile-search-input"
-                        autocomplete="off"
-                    >
-                    <button type="button" onclick="mobileSearchMovies()" class="mobile-search-button">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="11" cy="11" r="8"></circle>
-                            <path d="m21 21-4.35-4.35"></path>
-                        </svg>
-                    </button>
-                </div>
-            </div>
-            
-            <div class="mobile-search-content">
-                <div id="mobile-search-result-grid" class="mobile-search-grid">
-                    <!-- Mobile search results will appear here -->
-                    <div class="text-gray-400 text-center py-8">
-                        <svg class="w-12 h-12 mx-auto mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                        </svg>
-                        <p>กรุณาพิมพ์เพื่อค้นหาหนัง</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- VIP Login Modal -->
-    <div id="vip-modal" class="vip-modal hidden">
-        <div class="vip-modal-content">
-            <div class="vip-modal-header">
-                <div class="vip-icon">
-                    <svg fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"></path>
-                    </svg>
-                </div>
-                <h2>VIP Access</h2>
-                <p>กรุณาใส่รหัส VIP 4 ตัวเพื่อเข้าใช้งาน</p>
-            </div>
-            
-            <div class="vip-inputs">
-                <input type="text" maxlength="1" class="vip-input" data-index="0">
-                <input type="text" maxlength="1" class="vip-input" data-index="1">
-                <input type="text" maxlength="1" class="vip-input" data-index="2">
-                <input type="text" maxlength="1" class="vip-input" data-index="3">
-            </div>
-            
-            <div id="vip-error" class="vip-error hidden">
-                รหัสไม่ถูกต้อง กรุณาลองใหม่
-            </div>
-            
-            <div class="vip-buttons">
-                <button onclick="closeVipModal()" class="vip-btn vip-btn-cancel">ยกเลิก</button>
-                <button onclick="verifyVipCode()" class="vip-btn vip-btn-submit">เข้าสู่ระบบ</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Load JavaScript Files -->
-    <script src="assets/js/movie-cards.js"></script>
-    <script src="assets/js/auth-check.js"></script>
-    <script src="assets/js/menu.js"></script>
-    <script src="assets/js/playlist-decoy.js"></script>
-    <script src="assets/js/alert2.js"></script>
-    <script src="assets/js/vip-auth-fallback.js"></script>
-    <script src="assets/js/firebase-setup.js"></script>
-    <script src="assets/js/tv-detection.js"></script>
-    <script src="assets/js/tv-navigation.js"></script>
-    
-    <!-- Initialize Movie Loading -->
-    <script>
-        // โหลดหนังหลังจากโหลดข้อมูลทั้งหมด
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('🎬 Index page loaded, initializing movie sections...');
-            
-            // Initialize search system
-            if (typeof initializeSearchSystem === 'function') {
-                initializeSearchSystem();
-            }
-            
-            // Initialize search state
-            window.searchResults = [];
-            window.currentPage = 1;
-            window.itemsPerPage = 48;
-            window.currentSearchQuery = '';
-            window.isSearchMode = false;
-            
-            // Setup desktop search listeners
-            const desktopSearchInput = document.getElementById('desktop-search-input');
-            if (desktopSearchInput) {
-                // Simple search without suggestions
-                desktopSearchInput.addEventListener('keypress', function(e) {
-                    if (e.key === 'Enter') {
-                        performDesktopSearch();
-                    }
-                });
-            }
-            
-            // ตรวจสอบว่ามีข้อมูลหนังหรือไม่
-            function checkMovieData() {
-                const categories = ['thai', 'korea', 'china', 'inter', 'cartoon', 'india', 'asia', 'temp'];
-                const movieCount = {};
-                
-                categories.forEach(cat => {
-                    movieCount[cat] = (window[cat] && Array.isArray(window[cat])) ? window[cat].length : 0;
-                });
-                
-                console.log('📊 Movie data status:', movieCount);
-                return movieCount;
-            }
-            
-            // โหลดหนังทันทีหลังจากตรวจสอบข้อมูล
-            const movieData = checkMovieData();
-            
-            try {
-                // โหลดหนังแนะนำ
-                if (typeof loadFeaturedMovies === 'function') {
-                    loadFeaturedMovies();
-                }
-                
-                // โหลดหมวดหมู่ต่างๆ
-                if (typeof loadMovieRows === 'function') {
-                    loadMovieRows([
-                        { category: 'thai', title: 'หนังไทย', limit: 8 },
-                        { category: 'korea', title: 'หนังเกาหลี', limit: 8 },
-                        { category: 'china', title: 'หนังจีน', limit: 8 },
-                        { category: 'inter', title: 'หนังสากล', limit: 8 },
-                        { category: 'cartoon', title: 'การ์ตูน', limit: 8 }
-                    ]);
-                }
-                
-                console.log('✅ Movie sections loaded successfully');
-            } catch (error) {
-                console.error('❌ Error loading movie sections:', error);
-            }
-            
-            // Check VIP expiry
-            checkVipExpiry();
-        });
-        
-        // Desktop search function
-        function performDesktopSearch() {
-            const searchInput = document.getElementById('desktop-search-input');
-            const query = searchInput.value.trim();
-            
-            if (query.length >= 2) {
-                console.log(`🔍 Performing desktop search for: "${query}"`);
-                performGlobalSearch(query);
-            }
-        }
-        
-        // Display movies function for search results (like category.html)
-        function displayMovies(moviesToDisplay, title) {
-            console.log(`=== displayMovies Debug ===`);
-            console.log(`Movies to display: ${moviesToDisplay.length}`);
-            console.log(`Title: ${title}`);
-            
-            // Show search results container and hide movie sections
-            const movieSectionsContainer = document.getElementById('movie-sections-container');
-            const searchResultsContainer = document.getElementById('search-results-container');
-            const movieGrid = document.getElementById('movie-list-grid');
-            const categoryTitle = document.getElementById('category-title');
-            const categoryDescription = document.getElementById('category-description');
-            const totalItemsSpan = document.getElementById('total-items');
-            const searchInput = document.getElementById('search-input');
-            
-            if (movieSectionsContainer) movieSectionsContainer.classList.add('hidden');
-            if (searchResultsContainer) searchResultsContainer.classList.remove('hidden');
-            
-            // Update title and description
-            if (categoryTitle) categoryTitle.textContent = title;
-            if (categoryDescription) categoryDescription.textContent = `พบ ${moviesToDisplay.length} รายการ`;
-            if (totalItemsSpan) totalItemsSpan.textContent = `ทั้งหมด: ${moviesToDisplay.length} รายการ`;
-            
-            // Set search input value
-            if (searchInput && window.currentSearchQuery) {
-                searchInput.value = window.currentSearchQuery;
-            }
-            
-            // Clear and populate grid
-            if (movieGrid) {
-                movieGrid.innerHTML = '';
-                
-                if (moviesToDisplay.length === 0) {
-                    movieGrid.innerHTML = `
-                        <div class="col-span-full py-20 text-center">
-                            <svg class="w-16 h-16 mx-auto mb-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                            </svg>
-                            <p class="text-gray-500 text-lg">ไม่พบรายการที่ตรงกับการค้นหา</p>
-                            <p class="text-gray-600 text-sm mt-2">ลองค้นหาด้วยคำอื่นๆ</p>
-                        </div>
-                    `;
-                } else {
-                    // Store movies globally for pagination
-                    window.searchResults = moviesToDisplay;
-                    window.currentPage = 1;
-                    
-                    // Display first page
-                    displayCurrentPage();
-                }
-            }
-            
-            // Setup items per page controls
-            setupItemsPerPageControls();
-        }
-        
-        // Display current page of movies
-        function displayCurrentPage() {
-            const movies = window.searchResults || [];
-            const currentPage = window.currentPage || 1;
-            const itemsPerPage = window.itemsPerPage || 48;
-            
-            const startIndex = (currentPage - 1) * itemsPerPage;
-            const endIndex = startIndex + itemsPerPage;
-            const currentMovies = movies.slice(startIndex, endIndex);
-            
-            const movieGrid = document.getElementById('movie-list-grid');
-            if (movieGrid) {
-                movieGrid.innerHTML = '';
-                
-                if (currentMovies.length === 0) {
-                    movieGrid.innerHTML = `
-                        <div class="col-span-full py-20 text-center">
-                            <p class="text-gray-500 text-lg">ไม่มีรายการในหน้านี้</p>
-                        </div>
-                    `;
-                } else {
-                    // Create movie cards using existing function
-                    if (typeof createMovieCard === 'function') {
-                        const cardsHtml = currentMovies.map(createMovieCard).join('');
-                        movieGrid.innerHTML = cardsHtml;
-                    } else {
-                        // Fallback movie card creation
-                        movieGrid.innerHTML = currentMovies.map(movie => `
-                            <div class="movie-card" onclick="openMovie('${movie.link}', '${movie.category}')">
-                                <img src="${movie.image}" alt="${movie.name}" loading="lazy">
-                                <div class="movie-card-info">
-                                    <h3 class="movie-card-title">${movie.name}</h3>
-                                    <p class="movie-year">${movie.info}</p>
-                                </div>
-                            </div>
-                        `).join('');
-                    }
-                }
-            }
-            
-            // Update pagination
-            setupPagination(movies.length);
-        }
-        
-        // Setup items per page controls
-        function setupItemsPerPageControls() {
-            const buttons = document.querySelectorAll('.items-per-page-btn');
-            buttons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const items = parseInt(this.dataset.items);
-                    window.itemsPerPage = items;
-                    window.currentPage = 1;
-                    
-                    // Update button styles
-                    buttons.forEach(btn => {
-                        btn.classList.remove('border-blue-500', 'bg-blue-500/20', 'text-blue-400');
-                        btn.classList.add('border-gray-700', 'text-gray-400');
-                    });
-                    this.classList.remove('border-gray-700', 'text-gray-400');
-                    this.classList.add('border-blue-500', 'bg-blue-500/20', 'text-blue-400');
-                    
-                    // Redisplay current page
-                    displayCurrentPage();
-                });
-            });
-        }
-        
-        // Setup advanced pagination like category.html
-        function setupPagination(totalItems) {
-            const paginationContainer = document.getElementById('pagination-container');
-            if (!paginationContainer) return;
-            
-            const itemsPerPage = window.itemsPerPage || 48;
-            const currentPage = window.currentPage || 1;
-            const totalPages = Math.ceil(totalItems / itemsPerPage);
-            
-            let paginationHtml = '';
-            
-            // Previous button
-            const prevDisabled = currentPage === 1;
-            paginationHtml += `
-                <button onclick="changePage(${currentPage - 1})" 
-                        class="px-3 py-2 rounded-lg ${prevDisabled ? 'bg-gray-800 text-gray-600 cursor-not-allowed' : 'bg-gray-700 text-white hover:bg-gray-600'} transition"
-                        ${prevDisabled ? 'disabled' : ''}>
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                    </svg>
-                </button>
-            `;
-            
-            // Page numbers with smart display
-            let startPage = Math.max(1, currentPage - 2);
-            let endPage = Math.min(totalPages, startPage + 4);
-            
-            if (endPage - startPage < 4) {
-                startPage = Math.max(1, endPage - 4);
-            }
-            
-            // First page and ellipsis
-            if (startPage > 1) {
-                paginationHtml += `
-                    <button onclick="changePage(1)" class="px-3 py-2 rounded-lg bg-gray-700 text-white hover:bg-gray-600 transition">1</button>
-                `;
-                if (startPage > 2) {
-                    paginationHtml += `<span class="px-2 text-gray-500">...</span>`;
-                }
-            }
-            
-            // Page numbers
-            for (let i = startPage; i <= endPage; i++) {
-                const isActive = i === currentPage;
-                paginationHtml += `
-                    <button onclick="changePage(${i})" 
-                            class="px-3 py-2 rounded-lg ${isActive ? 'bg-indigo-600 text-white' : 'bg-gray-700 text-white hover:bg-gray-600'} transition">
-                        ${i}
-                    </button>
-                `;
-            }
-            
-            // Last page and ellipsis
-            if (endPage < totalPages) {
-                if (endPage < totalPages - 1) {
-                    paginationHtml += `<span class="px-2 text-gray-500">...</span>`;
-                }
-                paginationHtml += `
-                    <button onclick="changePage(${totalPages})" class="px-3 py-2 rounded-lg bg-gray-700 text-white hover:bg-gray-600 transition">${totalPages}</button>
-                `;
-            }
-            
-            // Next button
-            const nextDisabled = currentPage === totalPages;
-            paginationHtml += `
-                <button onclick="changePage(${currentPage + 1})" 
-                        class="px-3 py-2 rounded-lg ${nextDisabled ? 'bg-gray-800 text-gray-600 cursor-not-allowed' : 'bg-gray-700 text-white hover:bg-gray-600'} transition"
-                        ${nextDisabled ? 'disabled' : ''}>
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                    </svg>
-                </button>
-            `;
-            
-            paginationContainer.innerHTML = paginationHtml;
-        }
-        
-        // Change page function
-        function changePage(page) {
-            const movies = window.searchResults || [];
-            const totalPages = Math.ceil(movies.length / (window.itemsPerPage || 48));
-            
-            if (page < 1 || page > totalPages) return;
-            
-            window.currentPage = page;
-            displayCurrentPage();
-            
-            // Scroll to top of results
-            const searchResultsContainer = document.getElementById('search-results-container');
-            if (searchResultsContainer) {
-                searchResultsContainer.scrollIntoView({ behavior: 'smooth' });
-            }
-        }
-        
-        // Handle search form submission
-        function handleSearchSubmit(event) {
-            event.preventDefault();
-            const searchInput = document.getElementById('search-input');
-            const query = searchInput.value.trim();
-            
-            if (query.length >= 2) {
-                window.currentSearchQuery = query;
-                performGlobalSearch(query);
-            }
-        }
-        
-        // Clear search results and return to home
-        function clearSearchResults() {
-            const movieSectionsContainer = document.getElementById('movie-sections-container');
-            const searchResultsContainer = document.getElementById('search-results-container');
-            const desktopSearchInput = document.getElementById('desktop-search-input');
-            const searchInput = document.getElementById('search-input');
-            
-            if (movieSectionsContainer) movieSectionsContainer.classList.remove('hidden');
-            if (searchResultsContainer) searchResultsContainer.classList.add('hidden');
-            if (desktopSearchInput) desktopSearchInput.value = '';
-            if (searchInput) searchInput.value = '';
-            
-            // Reset search state
-            if (typeof window !== 'undefined') {
-                window.isSearchMode = false;
-                window.searchResults = [];
-                window.currentSearchQuery = '';
-                window.currentPage = 1;
-                window.itemsPerPage = 48;
-            }
-        }
-    </script>
-    
-    <!-- VIP Expiry Check -->
-    <script>
-        // Check VIP expiry and update menu status
-        async function checkVipExpiry() {
-            const vipData = localStorage.getItem('vip_access');
-            
-            if (!vipData) {
-                return;
-            }
-            
-            try {
-                const data = JSON.parse(vipData);
-                if (!data.expires) {
-                    return;
-                }
-                
-                let expiryDate = data.expires instanceof Date ? data.expires : new Date(data.expires);
-                
-                // Verify expiration date from Firebase if available
-                if (window.db && data.code) {
-                    try {
-                        const vipDoc = await window.db.collection('vip_codes').doc(data.code).get();
-                        if (vipDoc.exists) {
-                            const firebaseData = vipDoc.data();
-                            if (firebaseData.expires) {
-                                // Handle Firebase Timestamp properly
-                                if (firebaseData.expires.toDate) {
-                                    expiryDate = firebaseData.expires.toDate();
-                                } else {
-                                    expiryDate = new Date(firebaseData.expires);
-                                }
-                                
-                                // Validate the date before updating
-                                if (!isNaN(expiryDate.getTime())) {
-                                    // Update localStorage with Firebase expiration
-                                    data.expires = expiryDate.toISOString();
-                                    localStorage.setItem('vip_access', JSON.stringify(data));
-                                } else {
-                                    console.error('Invalid Firebase date:', firebaseData.expires);
-                                }
-                            }
-                        }
-                    } catch (error) {
-                        console.error('Error verifying VIP expiry:', error);
-                    }
-                }
-                
-                // Check if expired
-                if (new Date() > expiryDate) {
-                    localStorage.removeItem('vip_access');
-                    updateVipMenuStatus(false);
-                } else {
-                    updateVipMenuStatus(true);
-                }
-            } catch (error) {
-                console.error('Error checking VIP expiry:', error);
-                localStorage.removeItem('vip_access');
-                updateVipMenuStatus(false);
-            }
-        }
-
-        // Update VIP menu status
-        function updateVipMenuStatus(isVipActive) {
-            const loginBtn = document.getElementById('mobile-vip-login-btn');
-            const logoutBtn = document.getElementById('mobile-vip-logout-btn');
-            
-            if (loginBtn && logoutBtn) {
-                if (isVipActive) {
-                    loginBtn.classList.add('hidden');
-                    logoutBtn.classList.remove('hidden');
-                } else {
-                    loginBtn.classList.remove('hidden');
-                    logoutBtn.classList.add('hidden');
-                }
-            }
-        }
-
-        // Initialize VIP status check
-        document.addEventListener('DOMContentLoaded', function() {
-            checkVipExpiry();
-        });
-    </script>
 </body>
 </html>
