@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Subtitle Proxy</title>
+</head>
+<body>
+    <script>
+        // Get subtitle URL from query parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const subtitleUrl = urlParams.get('url');
+        
+        if (subtitleUrl) {
+            // Fetch subtitle and convert to WebVTT format
+            fetch(subtitleUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.text();
+                })
+                .then(srtContent => {
+                    // Convert SRT to WebVTT
+                    const vttContent = srtToVtt(srtContent);
+                    
+                    // Set proper content type and return content
+                    document.documentElement.innerHTML = `<pre>${vttContent}</pre>`;
+                })
+                .catch(error => {
+                    console.error('Error loading subtitle:', error);
+                    document.documentElement.innerHTML = 'WEBVTT\n\n00:00:00.000 --> 00:00:01.000\nSubtitle loading failed';
+                });
+        }
+        
+        // Convert SRT to WebVTT format
+        function srtToVtt(srt) {
+            // Add WebVTT header
+            let vtt = 'WEBVTT\n\n';
+            
+            // Replace SRT timestamps with WebVTT format
+            vtt += srt
+                .replace(/\r\n/g, '\n')
+                .replace(/\n\n+/g, '\n\n')
+                .replace(/(\d{1,2}:\d{2}:\d{2},\d{3}) --> (\d{1,2}:\d{2}:\d{2},\d{3})/g, 
+                    '$1 --> $2')
+                .replace(/,/g, '.');
+            
+            return vtt;
+        }
+    </script>
+</body>
+</html>

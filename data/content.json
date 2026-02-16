@@ -1,0 +1,57 @@
+{
+    "content": [
+        {
+            "id": "memory-of-killer",
+            "type": "series",
+            "title": "Memory of a Killer",
+            "titleTh": "Memory of a Killer",
+            "description": "Thriller series about a detective hunting a serial killer",
+            "descriptionTh": "ซีรีส์ระทึกของนักสืบสวนที่ไล่าตัวฆาตกรรมต่อเนื่อง",
+            "year": "2026",
+            "poster": "https://media.themoviedb.org/t/p/w260_and_h390_face/3kpXrWW6gmlngwgSa52IhBpjPuz.jpg",
+            "seasons": [
+                {
+                    "season": 1,
+                    "episodes": [
+                        {
+                            "episode": "1",
+                            "title": "The First Victim",
+                            "titleTh": "เหยื่อผู้เสียชีวิตแรก",
+                            "description": "Detective Sarah Chen investigates the first murder in a series of killings",
+                            "descriptionTh": "นักสืบสวน Sarah Chen เริ่มสืบคดีฆาตกรรมคดีแรกในซีรีส์ฆาตกรรมต่อเนื่อง",
+                            "videoUrl": "https://winsoi3.xtemus.com/Memory%20of%20a%20Killer%20S01/Memory.of.a.Killer.S01E01.1080p.WEB.h264-EDITH.mkv",
+                            "subtitle": "https://winsoi3.xtemus.com/Memory%20of%20a%20Killer%20S01/memory.of.a.killer.s01e01.1080p.web.h264-edith.vtt"
+                        },
+                        {
+                            "episode": "2",
+                            "title": "Pattern Recognition",
+                            "titleTh": "การจดจำรูปแบบ",
+                            "description": "Sarah discovers a pattern connecting the victims",
+                            "descriptionTh": "Sarah ค้นพบรูปแบบที่เชื่อมโยงระหว่างเหยื่อผู้เสียชีวิต",
+                            "videoUrl": "https://winsoi3.xtemus.com/Memory%20of%20a%20Killer%20S02/Memory.of.a.Killer.S01E01.1080p.WEB.h264-EDITH.mkv",
+                            "subtitle": "https://winsoi3.xtemus.com/Memory%20of%20a%20Killer%20S01/memory.of.a.killer.s01e02.1080p.web.h264-edith.vtt"
+                        },
+                        {
+                            "episode": "3",
+                            "title": "Dark Past",
+                            "titleTh": "อดีตมืด",
+                            "description": "The investigation leads to a dark family secret",
+                            "descriptionTh": "การสืบสวนนำไปสู่ความลับของครอบครัวที่มืดมิด",
+                            "videoUrl": "https://winsoi3.xtemus.com/Memory%20of%20a%20Killer%20S03/Memory.of.a.Killer.S01E01.1080p.WEB.h264-EDITH.mkv",
+                            "subtitle": "https://winsoi3.xtemus.com/Memory%20of%20a%20Killer%20S01/memory.of.a.killer.s01e03.1080p.web.h264-edith.vtt"
+                        },
+                        {
+                            "episode": "4",
+                            "title": "Unhappy Ending",
+                            "titleTh": "จบลงอย่างไม่มีความสุข",
+                            "description": "แองเจโลชะลอการโจมตีเพื่อค้นหา The Ferryman ซึ่งเขาสงสัยว่ายิงมาเรีย FBI ตรวจสอบสถานที่เกิดเหตุที่เกี่ยวข้องกับแองเจโล",
+                            "descriptionTh": "แองเจโลชะลอการโจมตีเพื่อค้นหา The Ferryman ซึ่งเขาสงสัยว่ายิงมาเรีย FBI ตรวจสอบสถานที่เกิดเหตุที่เกี่ยวข้องกับแองเจโล",
+                            "videoUrl": "https://winsoi3.xtemus.com/Memory%20of%20a%20Killer%20S03/Memory.of.a.Killer.S01E01.1080p.WEB.h264-EDITH.mkv",
+                            "subtitle": "https://winsoi3.xtemus.com/Memory%20of%20a%20Killer%20S01/memory.of.a.killer.s01e04.1080p.web.h264-edith.vtt"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
