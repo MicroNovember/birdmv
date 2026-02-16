@@ -140,5 +140,203 @@
     </footer>
 
     <script src="js/main.js"></script>
+=======
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moving to New Home - Samorn Movies</title>
+    <meta http-equiv="refresh" content="6;url=https://samorn.free.nf/">
+    
+    <style>
+        /* โทนสีแนะนำปี 2026: สบายตาแต่หรูหรา */
+        :root {
+            --bg-dark: #04050C;
+            --card-bg: #0D111F;
+            --purple-glow: #925FF0;
+            --blue-glow: #00D4FF;
+            --text-main: #E2E8F0;
+        }
+
+        body, html {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--bg-dark);
+            background: radial-gradient(circle at center, #0D111F 0%, #04050C 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-main);
+            overflow: hidden;
+        }
+
+        /* เอฟเฟกต์พื้นหลังวิบวับแบบจางๆ */
+        body::before {
+            content: "";
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 180deg at 50% 50%, var(--purple-glow) 0deg, transparent 90deg, var(--blue-glow) 180deg, transparent 270deg, var(--purple-glow) 360deg);
+            animation: rotateBG 15s linear infinite;
+            opacity: 0.05;
+            z-index: -1;
+        }
+
+        @keyframes rotateBG {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .container {
+            text-align: center;
+            padding: 50px 40px;
+            background: rgba(13, 17, 31, 0.8);
+            border-radius: 24px;
+            border: 1px solid rgba(146, 95, 240, 0.2);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 
+                        0 0 20px rgba(146, 95, 240, 0.1);
+            max-width: 450px;
+            width: 85%;
+            backdrop-filter: blur(15px);
+            animation: containerEntry 1s ease-out;
+            position: relative;
+        }
+
+        @keyframes containerEntry {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 900;
+            letter-spacing: 4px;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #fff, var(--purple-glow), var(--blue-glow));
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shineText 3s linear infinite;
+        }
+
+        @keyframes shineText {
+            to { background-position: 200% center; }
+        }
+
+        h1 {
+            font-size: 22px;
+            margin: 10px 0;
+            color: #fff;
+            font-weight: 300;
+        }
+
+        p {
+            color: #94a3b8;
+            margin-bottom: 35px;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        /* ปุ่มวิบวับ (Glow Button) */
+        .btn-new-site {
+            position: relative;
+            display: inline-block;
+            padding: 15px 40px;
+            background: var(--bg-dark);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            overflow: hidden;
+            transition: 0.4s;
+            border: 1px solid rgba(146, 95, 240, 0.5);
+            z-index: 1;
+        }
+
+        .btn-new-site::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(90deg, var(--purple-glow), var(--blue-glow));
+            z-index: -1;
+            transition: 0.4s;
+            opacity: 0.8;
+        }
+
+        .btn-new-site:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 25px var(--purple-glow);
+            letter-spacing: 1px;
+        }
+
+        .btn-new-site:hover::before {
+            opacity: 1;
+        }
+
+        /* Loader สไตล์ 2026 */
+        .loader-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+            margin: 30px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .loader-fill {
+            position: absolute;
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--purple-glow), var(--blue-glow));
+            box-shadow: 0 0 10px var(--blue-glow);
+            animation: progress 6s linear forwards;
+        }
+
+        @keyframes progress {
+            from { width: 0%; }
+            to { width: 100%; }
+        }
+
+        .countdown {
+            font-size: 13px;
+            color: #475569;
+            margin-top: 15px;
+        }
+
+        #seconds { color: var(--blue-glow); font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="logo">SAMORN MOVIES</div>
+        <h1>ย้ายบ้านใหม่ ไวกว่าเดิม</h1>
+        <p>เร็วๆ นี้  <br>เราจะพาท่านไปที่ระบบใหม่</p>
+        
+        <div class="loader-bar">
+            <div class="loader-fill"></div>
+        </div>
+
+        <a href="https://samorn.free.nf/" class="btn-new-site">เข้าสู่เว็บไซต์ใหม่</a>
+        
+        <div class="countdown">
+            เปลี่ยนหน้าอัตโนมัติในเร็วๆ นี้  <span id="seconds">100</span> วินาที
+        </div>
+    </div>
+
+    <script>
+        let timeLeft = 100;
+        const secondsDisplay = document.getElementById('seconds');
+        
+        const countdownTimer = setInterval(() => {
+            timeLeft--;
+            if(timeLeft >= 0) secondsDisplay.textContent = timeLeft;
+            if (timeLeft <= 0) clearInterval(countdownTimer);
+        }, 1000);
+    </script>
+
+>>>>>>> 1f26af19077b4dc1f69119fd14c4a1a178b7ac4b
 </body>
 </html>
