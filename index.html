@@ -3,60 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Netflix Clone - Web Player</title>
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+    <title>M3U Player</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body class="bg-[#141414] text-white antialiased">
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎬 M3U Player</h1>
+            <p class="subtitle">สตรีมวิดีโอจาก Playlist ของคุณ</p>
+        </div>
 
-    <nav id="navbar" class="fixed top-0 w-full z-50 px-4 md:px-12 py-4 flex flex-col md:flex-row justify-between items-center transition-all duration-500">
-        <div class="flex items-center gap-6 w-full md:w-auto">
-            <h1 class="text-red-600 text-3xl font-black tracking-tighter cursor-pointer" onclick="resetView()">NETFLIX</h1>
-            
-            <div class="relative flex-grow md:flex-grow-0">
-                <input type="text" id="searchInput" placeholder="ชื่อรายการ, หมวดหมู่..." 
-                       class="bg-black/40 border border-gray-600 text-white text-sm rounded py-2 px-10 focus:outline-none focus:border-white w-full md:w-80 transition-all">
-                <i class="fas fa-search absolute left-3 top-3 text-gray-400 text-xs"></i>
+        <div class="playlist-menu">
+            <div class="playlist-selector">
+                <label for="playlistSelect">📋 เลือก Playlist:</label>
+                <select id="playlistSelect"></select>
             </div>
-            
-            <button onclick="refreshPlaylist()" title="อัปเดตรายการใหม่" class="text-gray-400 hover:text-white transition">
-                <i class="fas fa-sync-alt" id="refresh-icon"></i>
-            </button>
+            <button id="addPlaylistBtn" class="add-playlist-btn">+ เพิ่ม Playlist</button>
         </div>
 
-        <div id="category-bar" class="flex gap-5 text-xs font-bold text-gray-400 overflow-x-auto w-full md:w-auto mt-4 md:mt-0 no-scrollbar">
+        <!-- Add Playlist Modal -->
+        <div class="modal" id="addPlaylistModal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>เพิ่ม Playlist ใหม่</h2>
+                    <button class="close-btn" id="closeModalBtn">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="playlistName">ชื่อ Playlist:</label>
+                        <input type="text" id="playlistName" placeholder="ตั้งชื่อ Playlist">
+                    </div>
+                    <div class="form-group">
+                        <label for="playlistUrlInput">URL ของ Playlist:</label>
+                        <input type="text" id="playlistUrlInput" placeholder="วาง URL ของ Playlist (.m3u)">
+                    </div>
+                    <div class="modal-actions">
+                        <button id="savePlaylistBtn" class="save-btn">บันทึก</button>
+                        <button id="cancelPlaylistBtn" class="cancel-btn">ยกเลิก</button>
+                    </div>
+                </div>
             </div>
-    </nav>
-
-    <main class="pt-32 px-4 md:px-12 min-h-screen">
-        <div class="flex justify-between items-end mb-8">
-            <h2 id="section-title" class="text-2xl font-bold tracking-tight">รายการแนะนำ</h2>
-            <span id="cache-status" class="text-[10px] text-gray-500 italic"></span>
         </div>
 
-        <div id="movie-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-y-10 gap-x-4">
+        <div class="controls-section">
+            <div class="file-upload">
+                <label for="m3uFile">📁 เลือกไฟล์ .m3u</label>
+                <input type="file" id="m3uFile" accept=".m3u">
             </div>
 
-        <div id="pagination" class="py-20 flex justify-center items-center gap-2"></div>
-    </main>
+            <div class="divider">หรือ</div>
 
-    <div id="player-page" class="fixed inset-0 z-[100] bg-black hidden flex flex-col">
-        <div class="absolute top-0 left-0 w-full p-6 z-[110] bg-gradient-to-b from-black/80 to-transparent flex items-center gap-4">
-            <button onclick="closePlayer()" class="text-white hover:text-red-500 transition text-2xl">
-                <i class="fas fa-arrow-left"></i>
-            </button>
-            <h3 id="playing-title" class="text-xl font-bold truncate mt-1"></h3>
+            <div class="url-section">
+                <div class="url-input-group">
+                    <input type="text" id="playlistUrl" placeholder="วาง URL ของ Playlist ที่นี่...">
+                    <button id="loadUrlBtn" class="load-btn">โหลด Playlist</button>
+                </div>
+                <p class="url-hint">รองรับ Google Drive URL และ URL ทั่วไป</p>
+            </div>
         </div>
-        
-        <div class="flex-grow flex items-center justify-center">
-            <video id="video-player" class="video-js vjs-big-play-centered w-full h-full" controls preload="auto"></video>
+
+        <div class="loading-indicator" id="loadingIndicator" style="display: none;">
+            <div class="spinner"></div>
+            <p>กำลังโหลด Playlist...</p>
         </div>
+
+        <div class="stats" id="stats"></div>
+
+        <div class="video-grid" id="videoGrid"></div>
+
+        <div class="pagination" id="pagination"></div>
     </div>
 
-    <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
-    <script src="script.js"></script>
+    <script src="playlist.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
