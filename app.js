@@ -105,7 +105,13 @@ function handlePlaylistChange() {
 async function loadPlaylistFromUrl(url) {
     showLoading(true);
     try {
-        const response = await fetch(url);
+        // Use CORS proxy for Google Drive URLs
+        let fetchUrl = url;
+        if (url.includes('drive.google.com')) {
+            fetchUrl = `https://corsproxy.io/?${encodeURIComponent(url)}`;
+        }
+
+        const response = await fetch(fetchUrl);
         if (!response.ok) {
             throw new Error('ไม่สามารถโหลด Playlist ได้');
         }
@@ -125,7 +131,11 @@ async function loadPlaylistFromUrl(url) {
         parseM3U(content);
     } catch (error) {
         console.error('Error loading playlist:', error);
-        alert('เกิดข้อผิดพลาดในการโหลด Playlist: ' + error.message);
+        if (error.message.includes('Failed to fetch') || error.message.includes('CORS')) {
+            alert('ไม่สามารถโหลด Playlist จาก URL นี้ได้เนื่องจาก CORS policy\n\nกรุณา:\n1. ใช้ไฟล์ .m3u จากเครื่องแทน\n2. หรือใช้ URL จาก server ที่รองรับ CORS\n3. หรืออัพโหลดไฟล์ไปยัง GitHub Pages หรือ hosting อื่นที่รองรับ');
+        } else {
+            alert('เกิดข้อผิดพลาดในการโหลด Playlist: ' + error.message);
+        }
     } finally {
         showLoading(false);
     }
