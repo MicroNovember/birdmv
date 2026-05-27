@@ -7,7 +7,7 @@ const defaultPlaylists = [
     {
         id: 'default',
         name: 'Default Playlist',
-        url: 'https://drive.google.com/uc?id=1laO8m4TokHGnMs56zI1PPF6rK3z-CIuJ',
+        url: 'https://drive.google.com/uc?id= ',
         lastUpdated: null
     }
 ];
