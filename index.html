@@ -2,253 +2,234 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SAMORN IPTV Player 2026</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>SAMORN IPTV Player 2026 | Ultra HD Smart Player</title>
+    <!-- TailwindCSS for modern styling (no impact on JS logic) -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- JW Player -->
     <script src="https://ssl.p.jwpcdn.com/player/v/8.26.0/jwplayer.js"></script>
-    <script>
-        jwplayer.key = 'XSuP4qMl+9tK17QNb+4+th2Pm9AWgMO/cYH8CI0HGGr7bdjo';
-    </script>
+    <script>jwplayer.key = 'XSuP4qMl+9tK17QNb+4+th2Pm9AWgMO/cYH8CI0HGGr7bdjo';</script>
     <style>
-        ::-webkit-scrollbar { width: 6px; }
+        /* Custom scroll & responsive touches */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #1f2937; }
-        ::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb { background: #f59e0b; border-radius: 3px; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+        /* เน้นปุ่ม active */
+        .btn-active {
+            background-color: #f59e0b !important;
+            color: #0f172a !important;
+            border-color: #f59e0b !important;
+        }
     </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans text-sm">
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col">
 
-    <header class="bg-slate-900 border-b border-slate-800 p-4 sticky top-0 z-50 shadow-md">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-            <h1 class="text-xl font-bold tracking-wider text-amber-500 flex items-center gap-2">
-                <span class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></span> JW ALL-IN-ONE PLAYER ++
-            </h1>
-            
-            <div class="flex flex-wrap items-center gap-2 w-full md:w-auto justify-end">
-                <label class="bg-blue-600 hover:bg-blue-500 text-slate-950 font-bold px-4 py-2 rounded-lg transition flex items-center gap-2 cursor-pointer shadow-lg shadow-blue-900/20">
-                    📂 เปิดไฟล์ M3U จากคอม (Offline)
-                    <input type="file" id="offlineFile" accept=".m3u,.txt" class="hidden" onchange="loadOfflineFile(event)">
+    <!-- Header Modern Glass -->
+    <header class="sticky top-0 z-50 bg-slate-900/80 backdrop-blur-md border-b border-slate-800 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-gradient-to-br from-amber-500 to-orange-600 rounded-xl flex items-center justify-center shadow-lg shadow-amber-500/20">
+                    <span class="text-black text-sm font-black">📺</span>
+                </div>
+                <h1 class="text-lg md:text-xl font-bold tracking-tight bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent">
+                    SAMORN IPTV <span class="text-white">2026</span>
+                </h1>
+                <div class="hidden md:flex items-center gap-1 ml-1">
+                    <span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
+                    <span class="text-[10px] font-mono text-slate-400">DRM READY</span>
+                </div>
+            </div>
+            <div class="flex gap-2">
+                <label class="bg-blue-600/90 hover:bg-blue-500 text-white font-semibold px-4 py-2 rounded-xl text-sm flex items-center gap-2 cursor-pointer shadow-md transition">
+                    📂 เปิดไฟล์ M3U
+                    <input type="file" id="offlineFile" accept=".m3u,.txt" class="hidden">
                 </label>
-
-                <button onclick="toggleManager()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-2 rounded-lg border border-slate-700 transition flex items-center gap-2 cursor-pointer">
-                    ⚙️ จัดการลิงก์ Playlist
+                <button id="openManagerBtn" class="bg-slate-800/80 hover:bg-slate-700 text-slate-200 px-4 py-2 rounded-xl text-sm font-medium border border-slate-700 flex items-center gap-2 shadow-md transition">
+                    ⚙️ คลัง Playlist
                 </button>
             </div>
         </div>
     </header>
 
-    <div id="playlistManagerModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-slate-800 rounded-xl w-full max-w-2xl max-h-[85vh] flex flex-col shadow-2xl">
-            <div class="p-4 border-b border-slate-800 flex justify-between items-center">
-                <h3 class="text-base font-bold text-amber-400">📝 คลังจัดเก็บข้อมูลลิงก์ Playlist</h3>
-                <button onclick="toggleManager()" class="text-slate-400 hover:text-white text-lg cursor-pointer">✕</button>
+    <main class="max-w-7xl w-full mx-auto p-4 flex flex-col gap-5 flex-grow">
+        <!-- Quick playlist bar horizontal scroll -->
+        <div class="bg-slate-900/40 backdrop-blur-sm rounded-2xl border border-slate-800/50 p-3">
+            <div class="flex items-center justify-between mb-2 px-1">
+                <span class="text-[11px] font-bold text-amber-400/90 uppercase tracking-wider">📡 แหล่งสัญญาณสด</span>
+                <span id="activeSourceBadge" class="text-[10px] bg-slate-800 px-2 py-0.5 rounded-full text-slate-300">คลังออนไลน์</span>
             </div>
-            
-            <div class="p-4 bg-slate-950/40 border-b border-slate-800 space-y-3">
-                <input type="hidden" id="editIndex" value="-1">
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                    <input type="text" id="plName" placeholder="ชื่อเพลย์ลิสต์ (เช่น iPTVplus)" class="sm:col-span-1 bg-slate-800 border border-slate-700 px-3 py-1.5 rounded focus:outline-none focus:border-amber-500 text-white">
-                    <input type="text" id="plUrl" placeholder="ลิงก์ URL ไฟล์ M3U" class="sm:col-span-2 bg-slate-800 border border-slate-700 px-3 py-1.5 rounded focus:outline-none focus:border-amber-500 text-white">
-                </div>
-                <div class="flex justify-end gap-2">
-                    <button id="cancelEditBtn" onclick="resetForm()" class="hidden bg-slate-800 hover:bg-slate-700 px-4 py-1.5 rounded transition cursor-pointer">ยกเลิก</button>
-                    <button id="savePlaylistBtn" onclick="savePlaylist()" class="bg-amber-600 hover:bg-amber-500 text-slate-950 font-semibold px-5 py-1.5 rounded transition cursor-pointer">➕ บันทึกลงคลัง</button>
-                </div>
+            <div id="quickPlaylistBar" class="flex flex-nowrap overflow-x-auto gap-2 pb-2 hide-scrollbar">
+                <!-- dynamic buttons -->
             </div>
-
-            <div class="p-4 overflow-y-auto flex-grow space-y-2" id="modalPlaylistList"></div>
-        </div>
-    </div>
-
-    <main class="max-w-7xl w-full mx-auto p-4 flex flex-col gap-4 flex-grow">
-        
-        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
-            <p class="text-xs text-slate-400 mb-2 font-medium">📋 แผงควบคุมรายการ Playlist ทั้งหมด:</p>
-            <div id="quickPlaylistBar" class="flex flex-wrap gap-2">
-                </div>
         </div>
 
+        <!-- Main 2 columns -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+            <!-- Left: Player + info -->
             <div class="lg:col-span-2 space-y-4">
-                <div class="bg-black rounded-xl overflow-hidden shadow-2xl border border-slate-900 aspect-video relative">
+                <div class="bg-black rounded-2xl overflow-hidden shadow-2xl border border-slate-800 aspect-video relative">
                     <div id="player"></div>
                 </div>
-                
-                <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-800 flex items-center gap-4">
-                    <div id="logoWrapper" class="w-14 h-14 bg-slate-800 rounded-xl flex items-center justify-center border border-slate-700 overflow-hidden shadow-md flex-shrink-0">
-                        <span id="textLogo" class="font-bold text-lg text-slate-400 uppercase">?</span>
-                        <img id="imgLogo" class="hidden w-full h-full object-contain p-1 bg-slate-900" alt="Logo">
+                <div class="bg-slate-900/70 backdrop-blur-sm rounded-2xl border border-slate-800 p-4 flex items-center gap-4">
+                    <div id="logoWrapper" class="w-14 h-14 md:w-16 md:h-16 bg-slate-800 rounded-2xl flex items-center justify-center border border-slate-700 shadow-md overflow-hidden flex-shrink-0">
+                        <span id="textLogo" class="font-black text-xl text-slate-300 uppercase">📺</span>
+                        <img id="imgLogo" class="hidden w-full h-full object-contain p-1.5 bg-slate-900" alt="Logo">
                     </div>
                     <div class="flex-grow min-w-0">
-                        <h2 id="currentTrackTitle" class="text-lg font-semibold text-slate-200 tracking-wide truncate">กรุณาเลือกรายการช่องสัญญาณ</h2>
-                        <div class="flex items-center gap-2 mt-0.5">
-                            <span id="liveStatusBadge" class="hidden text-[10px] bg-amber-500/10 text-amber-400 px-2 py-0.5 rounded font-medium border border-amber-500/20">JWPLAYER ENGINE</span>
-                            <p id="channelMeta" class="text-xs text-slate-500 truncate">รองรับคีย์ DRM ClearKey แปลงจาก Playlist ตรงรุ่น</p>
+                        <h2 id="currentTrackTitle" class="text-lg md:text-xl font-bold text-slate-100 truncate">กรุณาเลือกรายการ</h2>
+                        <div class="flex flex-wrap items-center gap-2 mt-1">
+                            <span id="liveStatusBadge" class="hidden text-[10px] bg-amber-500/20 text-amber-400 px-2 py-0.5 rounded-full border border-amber-500/30">JWPLAYER ENGINE</span>
+                            <p id="channelMeta" class="text-xs text-slate-400 truncate">รองรับ DRM ClearKey</p>
                         </div>
-                        <p id="videoUrl" class="text-[10px] text-slate-600 truncate mt-1 font-mono"></p>
+                        <p id="videoUrl" class="text-[10px] text-slate-600 truncate font-mono mt-1"></p>
                     </div>
                 </div>
             </div>
 
-            <div class="bg-slate-900 rounded-xl border border-slate-800 flex flex-col h-[calc(100vh-16rem)] min-h-[450px]">
-                <div class="p-4 border-b border-slate-800 flex justify-between items-center bg-slate-950/40 rounded-t-xl">
-                    <div class="min-w-0 flex-grow pr-2">
-                        <p class="text-[10px] text-amber-500 uppercase tracking-wider font-bold truncate" id="currentLoadedPlaylistName">แหล่งข้อมูล</p>
-                        <h3 class="font-semibold text-slate-300 text-sm">รายชื่อช่องสด (<span id="channelCount">0</span>)</h3>
+            <!-- Right: Channel list -->
+            <div class="bg-slate-900/70 backdrop-blur-sm rounded-2xl border border-slate-800 flex flex-col h-[70vh] min-h-[500px] shadow-xl overflow-hidden">
+                <div class="p-4 border-b border-slate-800 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 bg-slate-950/30">
+                    <div>
+                        <p class="text-[10px] text-amber-400 font-bold tracking-wider truncate" id="currentLoadedPlaylistName">— ไม่โหลด —</p>
+                        <h3 class="font-semibold text-slate-200 text-sm flex items-center gap-2">รายชื่อช่อง <span id="channelCount" class="text-amber-400 text-xs bg-slate-800 px-2 py-0.5 rounded-full">0</span></h3>
                     </div>
-                    <input type="text" id="searchBox" oninput="filterChannels()" placeholder="ค้นหาช่อง..." 
-                           class="bg-slate-800 border border-slate-700 px-2 py-1 rounded text-xs w-28 focus:outline-none focus:border-amber-500">
+                    <input type="text" id="searchBox" placeholder="🔍 ค้นหาช่อง..." class="w-full sm:w-44 bg-slate-800/90 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-amber-500/70">
                 </div>
-                
-                <div id="playlistContainer" class="overflow-y-auto flex-grow p-2 space-y-1">
-                    <div class="text-center text-slate-500 text-sm mt-8 p-4">ไม่มีรายการช่อง</div>
+                <div id="playlistContainer" class="overflow-y-auto flex-grow p-2 space-y-1.5 custom-scroll">
+                    <div class="text-center text-slate-500 text-sm mt-12 p-4">📭 โหลดเพลย์ลิสต์เพื่อแสดงช่อง</div>
                 </div>
             </div>
         </div>
     </main>
 
+    <!-- Modal จัดการ Playlist -->
+    <div id="playlistManagerModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-2xl max-h-[85vh] flex flex-col shadow-2xl">
+            <div class="p-5 border-b border-slate-800 flex justify-between items-center">
+                <h3 class="text-xl font-bold text-amber-400">📝 จัดการคลัง Playlist</h3>
+                <button id="closeModalBtn" class="text-slate-400 hover:text-white text-2xl leading-5">&times;</button>
+            </div>
+            <div class="p-5 bg-slate-950/30 border-b border-slate-800 space-y-4">
+                <input type="hidden" id="editIndex" value="-1">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <input type="text" id="plName" placeholder="ชื่อ Playlist" class="md:col-span-1 bg-slate-800 border border-slate-700 px-4 py-2.5 rounded-xl text-white text-sm">
+                    <input type="text" id="plUrl" placeholder="ลิงก์ URL .m3u" class="md:col-span-2 bg-slate-800 border border-slate-700 px-4 py-2.5 rounded-xl text-white text-sm font-mono">
+                </div>
+                <div class="flex justify-end gap-3">
+                    <button id="cancelEditBtn" class="hidden bg-slate-800 hover:bg-slate-700 px-5 py-2 rounded-xl text-sm transition">ยกเลิก</button>
+                    <button id="savePlaylistBtn" class="bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-slate-950 font-bold px-6 py-2 rounded-xl flex items-center gap-2">➕ บันทึก</button>
+                </div>
+            </div>
+            <div id="modalPlaylistList" class="p-4 overflow-y-auto flex-grow space-y-2 custom-scroll"></div>
+        </div>
+    </div>
+
+    <footer class="text-center text-[11px] text-slate-600 py-5 border-t border-slate-800/50 mt-4">
+        SAMORN IPTV 2026 · รองรับ M3U, HLS, DASH + DRM ClearKey (KODIPROP)
+    </footer>
+
     <script>
-        // 1. ระบุข้อมูลลิงก์ที่ฝังถาวรใน Code (แก้ไขตรงนี้ได้เลย)
+        // ==================== ข้อมูลเริ่มต้นและตัวแปร ====================
         const DEFAULT_PLAYLISTS = [
-            {
-                name: "iPTVplus ลิขสิทธิ์สด",
-                url: "https://raw.githubusercontent.com/ตัวอย่าง/main/iptv.m3u"
-            },
-            {
-                name: "สำรองช่องสตรีม 3BB",
-                url: "https://raw.githubusercontent.com/ตัวอย่าง/main/3bb-backup.m3u"
-            }
+            { name: "iPTVplus ลิขสิทธิ์สด", url: "https://raw.githubusercontent.com/ตัวอย่าง/main/iptv.m3u" },
+            { name: "สำรองช่องสตรีม 3BB", url: "https://raw.githubusercontent.com/ตัวอย่าง/main/3bb-backup.m3u" }
         ];
-
-        let playlists = []; // คลังเก็บเพลย์ลิสต์ลิงก์ออนไลน์
-        let allChannels = []; // คลังเก็บช่องสตรีมที่กำลังใช้งานอยู่ปัจจุบัน
-        let pcFileCache = null; // เก็บข้อมูลดิบของไฟล์ที่อัปโหลดจากคอม (กรณีสลับปุ่มไปมา)
-        let currentMode = 'online'; // 'online' หรือ 'offline'
-        let activePlaylistIdx = 0; 
-
+        let playlists = [];
+        let allChannels = [];
+        let pcFileCache = null;
+        let currentMode = 'online';
+        let activePlaylistIdx = 0;
         const logoGradients = ['from-amber-600 to-orange-700', 'from-cyan-600 to-blue-700', 'from-purple-600 to-indigo-700', 'from-emerald-600 to-teal-700'];
 
-        window.onload = function() {
-            initPlaylists();
-        };
-
+        // โหลดจาก localStorage
         function initPlaylists() {
             const saved = localStorage.getItem('jw_iptv_playlists');
-            if (saved) {
-                playlists = JSON.parse(saved);
-            } else {
-                playlists = [...DEFAULT_PLAYLISTS];
-                localStorage.setItem('jw_iptv_playlists', JSON.stringify(playlists));
-            }
+            if (saved) playlists = JSON.parse(saved);
+            else playlists = [...DEFAULT_PLAYLISTS];
+            localStorage.setItem('jw_iptv_playlists', JSON.stringify(playlists));
             renderQuickBar();
             renderModalList();
-            
-            // เริ่มต้นโหลดตัวแรกในคลังให้อัตโนมัติ
             if(playlists.length > 0 && !pcFileCache) {
                 fetchM3U(playlists[0].url, playlists[0].name, 0);
             }
         }
 
-        // วาดแผงควบคุมปุ่มด้านบน
         function renderQuickBar() {
             const bar = document.getElementById('quickPlaylistBar');
-            bar.innerHTML = "";
-
-            // วาดรายการคลังลิงก์ออนไลน์
+            bar.innerHTML = '';
             playlists.forEach((pl, idx) => {
                 const btn = document.createElement('button');
-                btn.id = "pl-btn-" + idx;
-                btn.className = "px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium rounded-lg border border-slate-700 text-xs transition cursor-pointer";
+                btn.id = `pl-btn-${idx}`;
+                btn.className = `px-3 py-2 bg-slate-800/80 hover:bg-slate-700 text-slate-300 font-medium rounded-xl border border-slate-700 text-sm transition whitespace-nowrap cursor-pointer`;
                 btn.innerText = pl.name;
                 btn.onclick = () => {
                     currentMode = 'online';
+                    activePlaylistIdx = idx;
                     fetchM3U(pl.url, pl.name, idx);
                 };
                 bar.appendChild(btn);
             });
-
-            // วาดปุ่มไฟล์จาก PC (ถ้ามีข้อมูลถูกอัปโหลดเข้ามา)
-            if (pcFileCache) {
+            if(pcFileCache) {
                 const divider = document.createElement('span');
-                divider.className = "text-slate-700 self-center px-1";
+                divider.className = "text-slate-600 text-xs mx-1 self-center";
                 divider.innerText = "|";
                 bar.appendChild(divider);
-
                 const pcBtn = document.createElement('button');
                 pcBtn.id = "pc-file-btn";
-                pcBtn.className = "px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-blue-400 font-medium rounded-lg border border-slate-700 text-xs transition cursor-pointer";
-                pcBtn.innerText = "💻 ไฟล์คอม: " + pcFileCache.name;
+                pcBtn.className = "px-3 py-2 bg-slate-800/80 hover:bg-slate-700 text-blue-400 font-medium rounded-xl border border-slate-700 text-sm transition whitespace-nowrap cursor-pointer";
+                pcBtn.innerText = `💻 ${pcFileCache.name}`;
                 pcBtn.onclick = () => {
                     currentMode = 'offline';
-                    activatePcFile();
+                    activateOfflineFile();
                 };
                 bar.appendChild(pcBtn);
             }
-        }
-
-        // จัดการเปิดไฟล์ออฟไลน์จาก PC
-        function loadOfflineFile(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                // บันทึกลงแคชเพื่อไว้ให้สลับกดปุ่มเล่นได้
-                pcFileCache = {
-                    name: file.name,
-                    content: e.target.result
-                };
-                currentMode = 'offline';
-                renderQuickBar();
-                activatePcFile();
-            };
-            reader.readAsText(file);
-        }
-
-        function activatePcFile() {
-            if (!pcFileCache) return;
-            document.getElementById('currentLoadedPlaylistName').innerText = "ไฟล์ในเครื่องคอมพิวเตอร์";
-            
-            // เคลียร์สีปุ่มออนไลน์ทั้งหมด และไปไฮไลท์ที่ปุ่มไฟล์คอมแทน
-            document.querySelectorAll('#quickPlaylistBar button').forEach(b => b.className = b.className.replace('bg-amber-600 text-slate-950 border-amber-500 hover:bg-amber-500', '').replace('bg-blue-600 text-slate-950 border-blue-400 hover:bg-blue-400', ''));
-            const pcBtn = document.getElementById('pc-file-btn');
-            if(pcBtn) pcBtn.className = "px-3 py-1.5 bg-blue-600 text-slate-950 font-medium rounded-lg border border-blue-400 text-xs transition cursor-pointer";
-
-            parseM3U(pcFileCache.content);
-        }
-
-        // ดึงไฟล์สตรีม M3U จากออนไลน์
-        async function fetchM3U(url, name, activeIdx) {
-            currentMode = 'online';
-            activePlaylistIdx = activeIdx;
-            document.getElementById('currentLoadedPlaylistName').innerText = name;
-            document.getElementById('playlistContainer').innerHTML = '<div class="text-center text-amber-400 text-xs mt-8 animate-pulse">กำลังโหลดสตรีมเพลย์ลิสต์...</div>';
-            
-            // เคลียร์สีไฮไลท์
-            document.querySelectorAll('#quickPlaylistBar button').forEach(b => b.className = b.className.replace('bg-amber-600 text-slate-950 border-amber-500 hover:bg-amber-500', '').replace('bg-blue-600 text-slate-950 border-blue-400 hover:bg-blue-400', ''));
-            const activeBtn = document.getElementById("pl-btn-" + activeIdx);
-            if(activeBtn) activeBtn.className = "px-3 py-1.5 bg-amber-600 text-slate-950 font-medium rounded-lg border border-amber-500 text-xs transition cursor-pointer";
-
-            try {
-                const response = await fetch(url);
-                if (!response.ok) throw new Error('ไม่สามารถเข้าถึงไฟล์ลิงก์นี้ได้ (ติดปัญหา CORS หรือลิงก์เสีย)');
-                const text = await response.text();
-                parseM3U(text);
-            } catch (error) {
-                document.getElementById('playlistContainer').innerHTML = `
-                    <div class="text-center p-4 text-xs text-red-400 space-y-2">
-                        <p>❌ โหลดไม่สำเร็จ</p>
-                        <p class="text-[11px] text-slate-500">${error.message}</p>
-                    </div>`;
+            // Highlight active
+            document.querySelectorAll('#quickPlaylistBar button').forEach(btn => {
+                btn.classList.remove('bg-amber-600', 'text-slate-950', 'border-amber-500');
+                btn.classList.add('bg-slate-800/80', 'text-slate-300');
+            });
+            if(currentMode === 'online') {
+                const activeBtn = document.getElementById(`pl-btn-${activePlaylistIdx}`);
+                if(activeBtn) {
+                    activeBtn.classList.remove('bg-slate-800/80', 'text-slate-300');
+                    activeBtn.classList.add('bg-amber-600', 'text-slate-950', 'border-amber-500');
+                }
+                document.getElementById('activeSourceBadge').innerText = 'คลังออนไลน์';
+            } else if(currentMode === 'offline' && pcFileCache) {
+                const pcBtn = document.getElementById('pc-file-btn');
+                if(pcBtn) {
+                    pcBtn.classList.remove('bg-slate-800/80', 'text-blue-400');
+                    pcBtn.classList.add('bg-blue-600', 'text-white', 'border-blue-400');
+                }
+                document.getElementById('activeSourceBadge').innerText = 'ไฟล์ในเครื่อง';
             }
         }
 
-        // ถอดรหัสชุดคำสั่ง M3U + ดักจับระบบ DRM ClearKey
-        function parseM3U(data) {
-            const lines = data.split('\n');
-            allChannels = [];
-            
-            let currentName = ""; let currentLogo = ""; let currentKeyId = ""; let currentKey = "";
+        // โหลด M3U ออนไลน์
+        async function fetchM3U(url, name, idx) {
+            currentMode = 'online';
+            activePlaylistIdx = idx;
+            document.getElementById('currentLoadedPlaylistName').innerText = name;
+            document.getElementById('playlistContainer').innerHTML = '<div class="text-center text-amber-400 text-xs mt-8 animate-pulse">กำลังโหลด...</div>';
+            renderQuickBar();
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error('HTTP '+response.status);
+                const text = await response.text();
+                parseM3U(text, name);
+            } catch(e) {
+                document.getElementById('playlistContainer').innerHTML = `<div class="text-center p-4 text-red-400 text-xs">❌ โหลดผิดพลาด: ${e.message}</div>`;
+            }
+        }
 
+        function parseM3U(data, playlistName) {
+            const lines = data.split('\n');
+            const channels = [];
+            let currentName = "", currentLogo = "", currentKeyId = "", currentKey = "";
             for (let i = 0; i < lines.length; i++) {
                 let line = lines[i].trim();
                 if (line.startsWith('#EXTINF:')) {
@@ -256,181 +237,213 @@
                     currentLogo = logoMatch ? logoMatch[1] : "";
                     const commaIndex = line.indexOf(',');
                     currentName = commaIndex !== -1 ? line.substring(commaIndex + 1).trim() : "";
-                } else if (line.startsWith('#KODIPROP:inputstream.adaptive.license_key=')) {
+                } else if (line.includes('#KODIPROP:inputstream.adaptive.license_key=')) {
                     const keyData = line.replace('#KODIPROP:inputstream.adaptive.license_key=', '').trim();
                     if (keyData.includes(':')) {
                         const parts = keyData.split(':');
-                        currentKeyId = parts[0]; currentKey = parts[1];
+                        currentKeyId = parts[0];
+                        currentKey = parts[1];
                     }
                 } else if (line.startsWith('http')) {
-                    allChannels.push({
-                        name: currentName || `CH ${allChannels.length + 1}`,
-                        logo: currentLogo, url: line, keyId: currentKeyId, key: currentKey,
-                        drm: currentKeyId && currentKey ? true : false
+                    channels.push({
+                        name: currentName || `ช่อง ${channels.length+1}`,
+                        logo: currentLogo,
+                        url: line,
+                        keyId: currentKeyId,
+                        key: currentKey,
+                        drm: !!(currentKeyId && currentKey)
                     });
                     currentName = ""; currentLogo = ""; currentKeyId = ""; currentKey = "";
                 }
             }
+            allChannels = channels;
             document.getElementById('channelCount').innerText = allChannels.length;
             renderChannels(allChannels);
             if(allChannels.length > 0) playStream(allChannels[0], null);
+            if(playlistName) document.getElementById('currentLoadedPlaylistName').innerText = playlistName;
         }
 
         function renderChannels(channels) {
             const container = document.getElementById('playlistContainer');
             container.innerHTML = "";
-            if (channels.length === 0) {
-                container.innerHTML = '<div class="text-center text-slate-600 text-xs mt-8">ไม่พบรายชื่อสถานี</div>';
+            if(channels.length === 0) {
+                container.innerHTML = '<div class="text-center text-slate-500 text-sm mt-8">ไม่พบรายการช่อง</div>';
                 return;
             }
-            channels.forEach((channel, index) => {
+            channels.forEach((ch, index) => {
                 const btn = document.createElement('button');
-                btn.className = "w-full text-left p-2 rounded text-xs transition bg-slate-800/40 hover:bg-slate-800 border border-transparent hover:border-slate-700 flex items-center gap-2 group cursor-pointer";
-                btn.id = "ch-btn-" + index;
-                btn.onclick = () => playStream(channel, btn);
-
-                let logoHtml = `<span class="w-6 h-6 rounded bg-slate-800 text-[10px] text-slate-500 group-hover:text-amber-400 font-mono flex items-center justify-center flex-shrink-0">${String(index + 1).padStart(2, '0')}</span>`;
-                if (channel.logo) {
-                    logoHtml = `<img src="${channel.logo}" class="w-6 h-6 rounded object-contain bg-slate-900 border border-slate-700/50 flex-shrink-0" onerror="this.style.display='none'">`;
+                btn.className = "w-full text-left p-3 rounded-xl transition bg-slate-800/30 hover:bg-slate-800/60 border border-transparent hover:border-slate-700 flex items-center gap-3 group";
+                btn.onclick = () => playStream(ch, btn);
+                let logoHtml = `<span class="w-8 h-8 rounded-lg bg-slate-700 text-xs text-slate-300 font-mono flex items-center justify-center flex-shrink-0">${String(index+1).slice(-2)}</span>`;
+                if(ch.logo) {
+                    logoHtml = `<img src="${ch.logo}" class="w-8 h-8 rounded-lg object-contain bg-slate-900 border border-slate-700 flex-shrink-0" onerror="this.style.display='none'">`;
                 }
-
                 btn.innerHTML = `
                     ${logoHtml}
-                    <span class="truncate text-slate-300 group-hover:text-white font-medium flex-grow">${channel.name}</span>
-                    ${channel.drm ? '<span class="text-[8px] bg-amber-500/20 text-amber-400 px-1 rounded border border-amber-500/30 flex-shrink-0">DRM</span>' : ''}
+                    <span class="truncate text-slate-200 group-hover:text-white font-medium flex-grow text-sm">${escapeHtml(ch.name)}</span>
+                    ${ch.drm ? '<span class="text-[9px] bg-amber-500/20 text-amber-400 px-1.5 py-0.5 rounded-full border border-amber-500/30">DRM</span>' : ''}
                 `;
                 container.appendChild(btn);
             });
         }
 
+        function escapeHtml(str) { return str.replace(/[&<>]/g, function(m){if(m==='&')return '&amp;';if(m==='<')return '&lt;';if(m==='>')return '&gt;';return m;}); }
+
+        // ***** ฟังก์ชันเล่นสตรีม (DRM ทำงานเหมือนของเดิม) *****
         function playStream(channel, element) {
+            // UI ไฮไลท์
+            document.querySelectorAll('#playlistContainer button').forEach(btn => {
+                btn.classList.remove('bg-amber-950/60', 'border-amber-700/80');
+                btn.classList.add('bg-slate-800/30', 'border-transparent');
+            });
+            if(element) {
+                element.classList.remove('bg-slate-800/30');
+                element.classList.add('bg-amber-950/60', 'border-amber-700/80');
+            }
+            document.getElementById('currentTrackTitle').innerText = channel.name;
+            document.getElementById('videoUrl').innerText = channel.url;
+            document.getElementById('liveStatusBadge').classList.remove('hidden');
+            // Logo handling
             const wrapper = document.getElementById('logoWrapper');
             const txtLogo = document.getElementById('textLogo');
             const imgLogo = document.getElementById('imgLogo');
-            
-            document.getElementById('currentTrackTitle').innerText = channel.name;
-            document.getElementById('liveStatusBadge').classList.remove('hidden');
-            document.getElementById('videoUrl').innerText = channel.url;
-            
-            if (channel.logo) {
-                txtLogo.classList.add('hidden'); imgLogo.classList.remove('hidden'); imgLogo.src = channel.logo;
-                wrapper.className = "w-14 h-14 bg-slate-900 rounded-xl flex items-center justify-center border border-slate-700 overflow-hidden flex-shrink-0";
+            if(channel.logo && channel.logo.trim() !== '') {
+                txtLogo.classList.add('hidden');
+                imgLogo.classList.remove('hidden');
+                imgLogo.src = channel.logo;
+                wrapper.className = "w-14 h-14 md:w-16 md:h-16 bg-slate-800 rounded-2xl flex items-center justify-center border border-slate-700 overflow-hidden flex-shrink-0";
             } else {
-                imgLogo.classList.add('hidden'); txtLogo.classList.remove('hidden');
-                txtLogo.innerText = channel.name.replace(/[^a-zA-Z0-9ก-๙]/g, '').substring(0, 2) || "TV";
-                wrapper.className = `w-14 h-14 bg-gradient-to-br ${logoGradients[Math.floor(Math.random() * logoGradients.length)]} rounded-xl flex items-center justify-center font-bold text-white border border-white/10 uppercase flex-shrink-0`;
+                imgLogo.classList.add('hidden');
+                txtLogo.classList.remove('hidden');
+                txtLogo.innerText = channel.name.replace(/[^a-zA-Z0-9ก-๙]/g, '').substring(0,2).toUpperCase() || "TV";
+                const randomGrad = logoGradients[Math.floor(Math.random() * logoGradients.length)];
+                wrapper.className = `w-14 h-14 md:w-16 md:h-16 bg-gradient-to-br ${randomGrad} rounded-2xl flex items-center justify-center font-bold text-white shadow-md flex-shrink-0`;
             }
-
-            document.querySelectorAll('#playlistContainer button').forEach(b => b.classList.remove('bg-amber-950/60', 'border-amber-700/80'));
-            if(element) element.classList.add('bg-amber-950/60', 'border-amber-700/80');
-
-            const config = { file: channel.url, width: "100%", aspectratio: "16:9", autostart: true, mute: false };
-            
-            // ตรวจสอบประเภทไฟล์จาก URL
+            // กำหนดค่า JW Player (เหมือนโค้ดเดิมที่ใช้งานได้)
             const isMpd = channel.url.toLowerCase().includes('.mpd');
             const isM3u8 = channel.url.toLowerCase().includes('.m3u8');
-            
+            const config = {
+                file: channel.url,
+                width: "100%",
+                aspectratio: "16:9",
+                autostart: true,
+                mute: false
+            };
             if (isMpd) {
-                // ไฟล์ .mpd (DASH)
-                if (channel.drm) {
-                    document.getElementById('channelMeta').innerText = "ประเภท: DASH DRM (ClearKey)";
-                    config.drm = { clearkey: { keyId: channel.keyId, key: channel.key } };
-                } else {
-                    document.getElementById('channelMeta').innerText = "ประเภท: DASH สตรีมมิ่งปกติ";
-                }
                 config.type = "dash";
-            } else {
-                // ไฟล์ .m3u8 (HLS) หรืออื่นๆ
+                document.getElementById('channelMeta').innerText = "ประเภท: DASH " + (channel.drm ? "🔐 DRM (ClearKey)" : "สตรีมปกติ");
                 if (channel.drm) {
-                    document.getElementById('channelMeta').innerText = "ประเภท: HLS DRM (ClearKey)";
                     config.drm = { clearkey: { keyId: channel.keyId, key: channel.key } };
-                } else {
-                    document.getElementById('channelMeta').innerText = "ประเภท: HLS สตรีมมิ่งปกติ";
                 }
+            } else {
                 config.type = "hls";
+                document.getElementById('channelMeta').innerText = "ประเภท: HLS " + (channel.drm ? "🔐 DRM (ClearKey)" : "สตรีมปกติ");
+                if (channel.drm) {
+                    config.drm = { clearkey: { keyId: channel.keyId, key: channel.key } };
+                }
             }
-            
             jwplayer("player").setup(config);
         }
 
-        // ==========================================
-        //  ระบบควบคุมหน้าต่างและการเซฟหลังบ้าน
-        // ==========================================
-        function toggleManager() {
-            document.getElementById('playlistManagerModal').classList.toggle('hidden');
+        // offline file handling
+        function loadOfflineFile(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                pcFileCache = { name: file.name, content: e.target.result };
+                currentMode = 'offline';
+                renderQuickBar();
+                activateOfflineFile();
+            };
+            reader.readAsText(file);
         }
-
-        function renderModalList() {
-            const list = document.getElementById('modalPlaylistList');
-            list.innerHTML = "";
-            if(playlists.length === 0) {
-                list.innerHTML = `<p class="text-center text-slate-500 py-6">ไม่มีลิงก์เพลย์ลิสต์ในคลังระบบ</p>`;
-                return;
-            }
-            playlists.forEach((pl, idx) => {
-                const item = document.createElement('div');
-                item.className = "bg-slate-950 border border-slate-800 p-3 rounded-lg flex justify-between items-center gap-4";
-                item.innerHTML = `
-                    <div class="min-w-0 flex-grow">
-                        <p class="font-bold text-amber-500 truncate">${pl.name}</p>
-                        <p class="text-xs text-slate-500 truncate font-mono">${pl.url}</p>
-                    </div>
-                    <div class="flex items-center gap-1 flex-shrink-0">
-                        <button onclick="editPlaylist(${idx})" class="text-xs bg-slate-800 hover:bg-slate-700 px-2.5 py-1.5 rounded text-blue-400 transition cursor-pointer">แก้ไข</button>
-                        <button onclick="deletePlaylist(${idx})" class="text-xs bg-slate-800 hover:bg-red-950 px-2.5 py-1.5 rounded text-red-400 transition cursor-pointer">ลบ</button>
-                    </div>
-                `;
-                list.appendChild(item);
-            });
+        function activateOfflineFile() {
+            if(!pcFileCache) return;
+            document.getElementById('currentLoadedPlaylistName').innerText = `📁 ${pcFileCache.name}`;
+            parseM3U(pcFileCache.content, pcFileCache.name);
+            renderQuickBar();
         }
-
-        function savePlaylist() {
-            const name = document.getElementById('plName').value.trim();
-            const url = document.getElementById('plUrl').value.trim();
-            const editIndex = parseInt(document.getElementById('editIndex').value);
-
-            if (!name || !url) return alert('กรุณากรอกข้อมูลให้ครบถ้วน');
-
-            if (editIndex === -1) {
-                playlists.push({ name, url });
-            } else {
-                playlists[editIndex] = { name, url };
-            }
-
-            localStorage.setItem('jw_iptv_playlists', JSON.stringify(playlists));
-            initPlaylists();
-            resetForm();
-        }
-
-        function editPlaylist(idx) {
-            document.getElementById('editIndex').value = idx;
-            document.getElementById('plName').value = playlists[idx].name;
-            document.getElementById('plUrl').value = playlists[idx].url;
-            document.getElementById('savePlaylistBtn').innerText = "💾 อัปเดตข้อมูล";
-            document.getElementById('cancelEditBtn').classList.remove('hidden');
-        }
-
-        function deletePlaylist(idx) {
-            if(!confirm(`ต้องการลบเพลย์ลิสต์ "${playlists[idx].name}" ?`)) return;
-            playlists.splice(idx, 1);
-            localStorage.setItem('jw_iptv_playlists', JSON.stringify(playlists));
-            initPlaylists();
-            resetForm();
-        }
-
-        function resetForm() {
-            document.getElementById('editIndex').value = "-1";
-            document.getElementById('plName').value = "";
-            document.getElementById('plUrl').value = "";
-            document.getElementById('savePlaylistBtn').innerText = "➕ บันทึกลงคลัง";
-            document.getElementById('cancelEditBtn').classList.add('hidden');
-        }
-
         function filterChannels() {
             const query = document.getElementById('searchBox').value.toLowerCase();
             const filtered = allChannels.filter(c => c.name.toLowerCase().includes(query));
             renderChannels(filtered);
         }
+
+        // Playlist Manager
+        function renderModalList() {
+            const container = document.getElementById('modalPlaylistList');
+            container.innerHTML = '';
+            if(playlists.length===0) { container.innerHTML='<div class="text-center text-slate-500 py-6">ไม่มีรายการ</div>'; return; }
+            playlists.forEach((pl, idx) => {
+                const div = document.createElement('div');
+                div.className = "bg-slate-950 border border-slate-800 p-3 rounded-xl flex justify-between items-center";
+                div.innerHTML = `
+                    <div class="min-w-0 flex-grow">
+                        <p class="font-bold text-amber-500 truncate text-sm">${escapeHtml(pl.name)}</p>
+                        <p class="text-xs text-slate-500 truncate font-mono">${escapeHtml(pl.url)}</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button data-edit="${idx}" class="edit-pl text-xs bg-slate-800 hover:bg-slate-700 px-3 py-1.5 rounded-lg text-blue-400">แก้ไข</button>
+                        <button data-del="${idx}" class="del-pl text-xs bg-slate-800 hover:bg-red-950 px-3 py-1.5 rounded-lg text-red-400">ลบ</button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+            document.querySelectorAll('.edit-pl').forEach(btn => btn.addEventListener('click', (e) => editPlaylist(parseInt(btn.dataset.edit))));
+            document.querySelectorAll('.del-pl').forEach(btn => btn.addEventListener('click', (e) => deletePlaylist(parseInt(btn.dataset.del))));
+        }
+        function savePlaylist() {
+            const name = document.getElementById('plName').value.trim();
+            const url = document.getElementById('plUrl').value.trim();
+            const editIndex = parseInt(document.getElementById('editIndex').value);
+            if(!name || !url) return alert('กรุณากรอกให้ครบ');
+            if(editIndex === -1) playlists.push({ name, url });
+            else playlists[editIndex] = { name, url };
+            localStorage.setItem('jw_iptv_playlists', JSON.stringify(playlists));
+            initPlaylists();
+            resetForm();
+            toggleManager(false);
+        }
+        function editPlaylist(idx) {
+            document.getElementById('editIndex').value = idx;
+            document.getElementById('plName').value = playlists[idx].name;
+            document.getElementById('plUrl').value = playlists[idx].url;
+            document.getElementById('savePlaylistBtn').innerHTML = '💾 อัปเดต';
+            document.getElementById('cancelEditBtn').classList.remove('hidden');
+        }
+        function deletePlaylist(idx) {
+            if(confirm(`ลบ ${playlists[idx].name}?`)) {
+                playlists.splice(idx,1);
+                localStorage.setItem('jw_iptv_playlists', JSON.stringify(playlists));
+                initPlaylists();
+                resetForm();
+            }
+        }
+        function resetForm() {
+            document.getElementById('editIndex').value = '-1';
+            document.getElementById('plName').value = '';
+            document.getElementById('plUrl').value = '';
+            document.getElementById('savePlaylistBtn').innerHTML = '➕ บันทึก';
+            document.getElementById('cancelEditBtn').classList.add('hidden');
+        }
+        function toggleManager(forceClose) {
+            const modal = document.getElementById('playlistManagerModal');
+            if(forceClose === false) modal.classList.add('hidden');
+            else modal.classList.toggle('hidden');
+            if(!modal.classList.contains('hidden')) renderModalList();
+        }
+
+        // Event Binding
+        document.getElementById('offlineFile').addEventListener('change', loadOfflineFile);
+        document.getElementById('openManagerBtn').addEventListener('click', () => toggleManager());
+        document.getElementById('closeModalBtn').addEventListener('click', () => toggleManager(false));
+        document.getElementById('savePlaylistBtn').addEventListener('click', savePlaylist);
+        document.getElementById('cancelEditBtn').addEventListener('click', resetForm);
+        document.getElementById('searchBox').addEventListener('input', filterChannels);
+        document.getElementById('playlistManagerModal').addEventListener('click', (e) => { if(e.target === document.getElementById('playlistManagerModal')) toggleManager(false); });
+
+        initPlaylists();
     </script>
 </body>
 </html>
