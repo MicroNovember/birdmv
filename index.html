@@ -1,302 +1,183 @@
-
 <!DOCTYPE html>
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+    <meta name="theme-color" content="#0a0a0e">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>SAMORN IPTV Player 2026 | Ultra HD Smart Player</title>
-    <!-- TailwindCSS for modern styling (no impact on JS logic) -->
+    
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <!-- JW Player -->
-    <script src="https://ssl.p.jwpcdn.com/player/v/8.26.0/jwplayer.js"></script>
-    <script>jwplayer.key = 'XSuP4qMl+9tK17QNb+4+th2Pm9AWgMO/cYH8CI0HGGr7bdjo';</script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.3.5/shaka-player.compiled.js"></script>
+
     <style>
-        /* Custom scroll & responsive touches */
-        ::-webkit-scrollbar { width: 4px; height: 4px; }
-        ::-webkit-scrollbar-track { background: #0f172a; }
-        ::-webkit-scrollbar-thumb { background: #f59e0b; border-radius: 4px; }
-        .hide-scrollbar::-webkit-scrollbar { display: none; }
-        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background: #0b1120; }
+        /* Modern iOS Luxury Style Premium Theme */
+        * { -webkit-tap-highlight-color: transparent; }
+        body {
+            background: #0C0C10;
+            color: #f8fafc;
+            letter-spacing: -0.01em;
+            font-family: -apple-system, 'SF Pro Text', 'SF Pro Display', system-ui, BlinkMacSystemFont, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .custom-scroll::-webkit-scrollbar { width: 4px; height: 4px; }
+        .custom-scroll::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); border-radius: 10px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: rgba(245,158,11,0.4); border-radius: 10px; }
+        .custom-scroll::-webkit-scrollbar-thumb:hover { background: #f59e0b; }
         
-        /* Grid view styles - compact & pro */
-        .channels-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            gap: 0.5rem;
-            padding: 0.25rem;
-        }
-        .channel-grid-item {
-            background: rgba(30, 41, 59, 0.5);
-            border-radius: 0.75rem;
-            border: 1px solid rgba(71, 85, 105, 0.4);
-            transition: all 0.2s ease;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            padding: 0.6rem 0.25rem;
-        }
-        .channel-grid-item:hover {
-            background: rgba(51, 65, 85, 0.7);
-            border-color: #f59e0b;
-            transform: translateY(-2px);
-        }
-        .channel-grid-item.active {
-            background: rgba(245, 158, 11, 0.15);
-            border-color: #f59e0b;
-            box-shadow: 0 0 0 1px rgba(245, 158, 11, 0.3);
-        }
-        .channel-grid-logo {
-            width: 44px;
-            height: 44px;
-            border-radius: 12px;
-            background: #1e293b;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 6px;
-            overflow: hidden;
-            font-weight: bold;
-            font-size: 12px;
-            color: #94a3b8;
-        }
-        .channel-grid-name {
-            font-size: 11px;
-            font-weight: 500;
-            color: #e2e8f0;
-            line-height: 1.3;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            max-width: 100%;
-            padding: 0 2px;
-        }
-        /* List view compact */
-        .channels-list {
-            display: flex;
-            flex-direction: column;
-            gap: 0.25rem;
-        }
+        /* Channel List & Grid Interaction styles */
+        .channels-list { display: flex; flex-direction: column; gap: 8px; }
         .channel-list-item {
-            width: 100%;
-            text-align: left;
-            padding: 0.5rem 0.75rem;
-            border-radius: 0.75rem;
-            transition: all 0.15s;
-            background: rgba(30, 41, 59, 0.3);
-            border: 1px solid transparent;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            cursor: pointer;
+            display: flex; align-items: center; gap: 12px; padding: 10px 14px;
+            background: rgba(255,255,255,0.03); border: 0.5px solid rgba(255,255,255,0.05);
+            border-radius: 14px; cursor: pointer; transition: all 0.2s;
         }
-        .channel-list-item:hover {
-            background: rgba(51, 65, 85, 0.6);
-            border-color: rgba(100, 116, 139, 0.5);
-        }
+        .channel-list-item:hover { background: rgba(255,255,255,0.08); transform: translateY(-1px); }
         .channel-list-item.active {
-            background: rgba(245, 158, 11, 0.15);
-            border-color: #f59e0b;
+            background: linear-gradient(135deg, rgba(245,158,11,0.15), rgba(234,88,12,0.15));
+            border-color: rgba(245,158,11,0.4);
         }
         .channel-list-logo {
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            background: #1e293b;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 11px;
-            font-weight: bold;
-            color: #94a3b8;
-            flex-shrink: 0;
-            overflow: hidden;
+            width: 38px; height: 38px; background: rgba(15,23,42,0.6);
+            border-radius: 10px; display: flex; align-items: center; justify-content: center;
+            overflow: hidden; border: 0.5px solid rgba(255,255,255,0.1); color: #94a3b8;
         }
-        .channel-list-name {
-            font-size: 13px;
-            font-weight: 500;
-            color: #f1f5f9;
-            flex-grow: 1;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+        .channel-list-name { font-size: 13px; font-weight: 500; flex-grow: 1; color: #e2e8f0; }
+
+        .channels-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; }
+        .channel-grid-item {
+            display: flex; flex-direction: column; align-items: center; text-align: center; padding: 12px 8px;
+            background: rgba(255,255,255,0.03); border: 0.5px solid rgba(255,255,255,0.05);
+            border-radius: 16px; cursor: pointer; transition: all 0.2s; gap: 6px;
         }
-        .btn-view-toggle {
-            background: #1e293b;
-            border-radius: 40px;
-            padding: 3px;
-            display: flex;
-            gap: 2px;
+        .channel-grid-item:hover { background: rgba(255,255,255,0.08); transform: scale(1.02); }
+        .channel-grid-item.active {
+            background: linear-gradient(135deg, rgba(245,158,11,0.15), rgba(234,88,12,0.15));
+            border-color: rgba(245,158,11,0.4);
         }
-        .btn-view-toggle button {
-            padding: 4px 10px;
-            border-radius: 40px;
-            font-size: 11px;
-            font-weight: 500;
-            transition: all 0.2s;
-            background: transparent;
-            color: #94a3b8;
+        .channel-grid-logo {
+            width: 48px; height: 48px; background: rgba(15,23,42,0.6);
+            border-radius: 12px; display: flex; align-items: center; justify-content: center;
+            overflow: hidden; border: 0.5px solid rgba(255,255,255,0.1); color: #94a3b8;
         }
+        .channel-grid-name { font-size: 11px; font-weight: 500; width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #cbd5e1; }
+        
         .btn-view-toggle button.active {
-            background: #f59e0b;
-            color: #0f172a;
-        }
-        /* Responsive adjustments */
-        @media (min-width: 1024px) {
-            .channels-grid {
-                grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-                gap: 0.6rem;
-            }
-        }
-        @media (max-width: 768px) {
-            .channels-grid {
-                grid-template-columns: repeat(auto-fill, minmax(85px, 1fr));
-                gap: 0.4rem;
-            }
-            .channel-grid-logo {
-                width: 38px;
-                height: 38px;
-            }
-            .channel-grid-name {
-                font-size: 10px;
-            }
-            .channel-list-item {
-                padding: 0.4rem 0.6rem;
-            }
+            background: linear-gradient(135deg, #f59e0b, #ea580c);
+            color: #0f0f13;
         }
     </style>
 </head>
-<body class="bg-gradient-to-br from-slate-950 to-slate-900 text-slate-100 min-h-screen flex flex-col">
+<body class="h-screen flex flex-col overflow-hidden select-none">
 
-    <!-- Header Modern Glass - compact -->
-    <header class="sticky top-0 z-50 bg-slate-900/80 backdrop-blur-md border-b border-slate-800/50 shadow-md">
-        <div class="max-w-7xl mx-auto px-3 py-2 flex flex-wrap items-center justify-between gap-2">
-            <div class="flex items-center gap-2">
-                <div class="w-7 h-7 bg-gradient-to-br from-amber-500 to-orange-600 rounded-lg flex items-center justify-center shadow-md">
-                    <span class="text-black text-xs font-black">📺</span>
-                </div>
-                <h1 class="text-base md:text-lg font-bold tracking-tight bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent">
-                    SAMORN IPTV <span class="text-white text-sm">2026</span>
-                </h1>
-                <div class="hidden md:flex items-center gap-1 ml-1">
-                    <span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
-                    <span class="text-[9px] font-mono text-slate-500">DRM READY</span>
-                </div>
+    <header class="bg-[#0f0f15]/80 backdrop-blur-xl border-b border-white/5 px-4 py-3 flex items-center justify-between z-10 flex-shrink-0">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-amber-500 to-orange-600 flex items-center justify-center font-bold text-black text-sm shadow-md">S</div>
+            <div>
+                <h1 class="text-sm font-bold text-white tracking-wide">SAMORN IPTV</h1>
+                <p class="text-[10px] text-slate-400 font-medium">Player Mode: <span id="activeSourceBadge" class="text-amber-400">คลังออนไลน์</span></p>
             </div>
-            <div class="flex gap-2">
-                <label class="bg-blue-600/80 hover:bg-blue-500 text-white font-semibold px-3 py-1.5 rounded-lg text-xs flex items-center gap-1 cursor-pointer shadow transition">
-                    📂 M3U
-                    <input type="file" id="offlineFile" accept=".m3u,.txt" class="hidden">
-                </label>
-                <button id="openManagerBtn" class="bg-slate-800/70 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-lg text-xs font-medium border border-slate-700 flex items-center gap-1 shadow transition">
-                    ⚙️ คลัง
-                </button>
-            </div>
+        </div>
+        <div class="flex items-center gap-2">
+            <label for="offlineFile" class="px-3 py-1.5 bg-slate-800/80 hover:bg-slate-700 text-slate-200 text-xs font-medium rounded-xl border border-white/5 transition cursor-pointer flex items-center gap-1">
+                📁 เลือกไฟล์
+            </label>
+            <input type="file" id="offlineFile" accept=".m3u,.txt" class="hidden">
+            <button id="openManagerBtn" class="px-3 py-1.5 bg-gradient-to-r from-amber-500/20 to-orange-500/20 hover:from-amber-500/30 hover:to-orange-500/30 border border-amber-500/30 text-amber-400 text-xs font-semibold rounded-xl transition cursor-pointer">
+                ⚙️ จัดการคลัง
+            </button>
         </div>
     </header>
 
-    <main class="max-w-7xl w-full mx-auto p-3 flex flex-col gap-4 flex-grow">
-        <!-- Quick playlist bar - compact -->
-        <div class="bg-slate-900/30 backdrop-blur-sm rounded-xl border border-slate-800/40 p-2">
-            <div class="flex items-center justify-between mb-1 px-1">
-                <span class="text-[9px] font-bold text-amber-400/80 uppercase tracking-wider">📡 แหล่งสัญญาณ</span>
-                <span id="activeSourceBadge" class="text-[9px] bg-slate-800 px-2 py-0.5 rounded-full text-slate-300">คลังออนไลน์</span>
-            </div>
-            <div id="quickPlaylistBar" class="flex flex-nowrap overflow-x-auto gap-1.5 pb-1 hide-scrollbar">
-                <!-- dynamic buttons -->
-            </div>
+    <div class="bg-[#08080c] px-4 py-2 border-b border-white/5 flex gap-2 overflow-x-auto hide-scrollbar flex-shrink-0" id="quickPlaylistBar">
         </div>
 
-        <!-- Main grid: Player + channel list - balanced proportions -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-5 items-start">
-            <!-- Left column: Video player + info - reduced size -->
-            <div class="lg:col-span-2 space-y-3">
-                <div class="relative bg-black rounded-xl overflow-hidden shadow-xl border border-slate-800 aspect-video">
-                    <div id="player" class="w-full h-full"></div>
-                    <div class="absolute bottom-2 left-2 z-10 bg-black/50 backdrop-blur rounded-full px-2 py-0.5 text-[8px] font-mono text-amber-300/80 border border-amber-500/20 hidden sm:block">
-                        JW 8.26 | DRM READY
+    <main class="flex-grow flex flex-col md:flex-row overflow-hidden min-h-0">
+        
+        <section class="w-full md:w-3/5 bg-black flex flex-col relative border-b md:border-b-0 md:border-r border-white/5">
+            <div class="flex-grow w-full h-full flex items-center justify-center relative bg-slate-950/40">
+                <video id="player" class="w-full h-full object-contain aspect-video" controls autoplay playsinline></video>
+            </div>
+            
+            <div class="p-4 bg-[#0a0a0f] border-t border-white/5 flex items-start gap-3 flex-shrink-0">
+                <div id="logoWrapper" class="w-11 h-11 bg-slate-800 rounded-xl flex items-center justify-center font-bold text-white shadow-md flex-shrink-0 text-xs">TV</div>
+                <div class="min-w-0 flex-grow">
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <h2 id="currentTrackTitle" class="text-sm font-bold text-white truncate">กรุณาเลือกช่องรายการ</h2>
+                        <span id="liveStatusBadge" class="hidden text-[9px] bg-red-600 text-white font-bold px-1.5 py-0.5 rounded-md uppercase tracking-wider animate-pulse">LIVE</span>
+                        <span id="channelMeta" class="text-[9px] bg-slate-800 text-slate-300 px-1.5 py-0.5 rounded-md font-mono">STANDBY</span>
                     </div>
+                    <p id="videoUrl" class="text-[10px] text-slate-500 font-mono truncate mt-0.5">No stream selected</p>
                 </div>
-                <!-- Metadata card compact -->
-                <div class="bg-slate-900/60 backdrop-blur rounded-xl border border-slate-800 p-3 flex items-center gap-3">
-                    <div id="logoWrapper" class="w-11 h-11 md:w-12 md:h-12 bg-slate-800 rounded-xl flex items-center justify-center border border-slate-700 shadow-md overflow-hidden flex-shrink-0">
-                        <span id="textLogo" class="font-bold text-sm text-slate-300 uppercase">📺</span>
-                        <img id="imgLogo" class="hidden w-full h-full object-contain p-1 bg-slate-900" alt="Logo">
-                    </div>
-                    <div class="flex-grow min-w-0">
-                        <h2 id="currentTrackTitle" class="text-sm md:text-base font-bold text-slate-100 truncate">ไม่มีช่องที่เลือก</h2>
-                        <div class="flex flex-wrap items-center gap-1.5 mt-0.5">
-                            <span id="liveStatusBadge" class="hidden text-[8px] bg-amber-500/20 text-amber-400 px-1.5 py-0.5 rounded-full">HLS/DASH</span>
-                            <p id="channelMeta" class="text-[10px] text-slate-400 truncate">เลือกช่องจากรายการ</p>
-                        </div>
-                        <p id="videoUrl" class="text-[8px] text-slate-600 truncate font-mono mt-0.5"></p>
-                    </div>
+            </div>
+        </section>
+
+        <section class="w-full md:w-2/5 flex flex-col bg-[#0f0f15]/40 backdrop-blur-md overflow-hidden">
+            <div class="p-3 border-b border-white/5 flex items-center gap-2 flex-shrink-0">
+                <div class="relative flex-grow">
+                    <input type="text" id="searchBox" placeholder="ค้นหาชื่อช่องรายการ..." class="w-full bg-white/5 border border-white/10 rounded-xl pl-8 pr-3 py-2 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-amber-500/50 transition">
+                    <span class="absolute left-2.5 top-2.5 text-xs text-slate-500">🔍</span>
+                </div>
+                <div class="btn-view-toggle bg-white/5 border border-white/10 p-0.5 rounded-xl flex flex-shrink-0">
+                    <button id="viewListBtn" class="active px-2.5 py-1.5 rounded-lg text-[10px] font-bold transition cursor-pointer">📋 รายการ</button>
+                    <button id="viewGridBtn" class="px-2.5 py-1.5 rounded-lg text-[10px] font-bold transition cursor-pointer">📱 ตาราง</button>
                 </div>
             </div>
 
-            <!-- Right: Channel list with view toggle - adjusted height -->
-            <div class="bg-slate-900/60 backdrop-blur rounded-xl border border-slate-800 flex flex-col h-[60vh] min-h-[420px] shadow-lg overflow-hidden">
-                <div class="p-2.5 border-b border-slate-800/80 flex flex-wrap justify-between items-center gap-2 bg-slate-950/30">
-                    <div class="min-w-0 flex-1">
-                        <p class="text-[8px] text-amber-400 font-bold tracking-wider truncate" id="currentLoadedPlaylistName">— ไม่โหลด —</p>
-                        <h3 class="font-semibold text-slate-200 text-xs flex items-center gap-1.5">รายการช่อง <span id="channelCount" class="text-amber-400 text-[10px] bg-slate-800 px-1.5 py-0.5 rounded-full">0</span></h3>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <div class="btn-view-toggle">
-                            <button id="viewListBtn" class="active">📋</button>
-                            <button id="viewGridBtn">⊞</button>
-                        </div>
-                        <input type="text" id="searchBox" placeholder="ค้นหา" class="w-28 sm:w-32 bg-slate-800/80 border border-slate-700 rounded-lg px-2 py-1 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-amber-500/60">
-                    </div>
-                </div>
-                <div id="playlistContainer" class="overflow-y-auto flex-grow p-1.5 custom-scroll">
-                    <div class="text-center text-slate-500 text-xs mt-12 p-4">📭 โหลดเพลย์ลิสต์เพื่อแสดงช่อง</div>
-                </div>
+            <div class="px-4 py-1.5 bg-white/[0.01] border-b border-white/5 flex justify-between items-center flex-shrink-0">
+                <span id="currentLoadedPlaylistName" class="text-[10px] font-semibold text-slate-400 truncate">คลังข้อมูลเริ่มต้น</span>
+                <span class="text-[10px] font-mono text-amber-500 bg-amber-500/10 px-1.5 py-0.5 rounded-md">พร้อมใช้งาน: <span id="channelCount">0</span> ช่อง</span>
             </div>
-        </div>
+
+            <div id="playlistContainer" class="flex-grow p-3 overflow-y-auto custom-scroll min-h-0">
+                </div>
+        </section>
     </main>
 
-    <!-- Modal จัดการ Playlist -->
-    <div id="playlistManagerModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-slate-700 rounded-xl w-full max-w-lg max-h-[80vh] flex flex-col shadow-2xl">
-            <div class="p-3 border-b border-slate-800 flex justify-between items-center">
-                <h3 class="text-base font-bold text-amber-400">📝 จัดการคลัง Playlist</h3>
-                <button id="closeModalBtn" class="text-slate-400 hover:text-white text-xl leading-5">&times;</button>
+    <div id="playlistManagerModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 z-50">
+        <div class="bg-[#121218] border border-white/10 w-full max-w-md rounded-2xl flex flex-col max-h-[85vh] shadow-2xl overflow-hidden" onclick="event.stopPropagation()">
+            <div class="p-4 border-b border-white/5 flex justify-between items-center bg-[#161620]">
+                <h3 class="text-sm font-bold text-white flex items-center gap-1.5">⚙️ จัดการคลังสตรีม M3U</h3>
+                <button id="closeModalBtn" class="w-6 h-6 rounded-full bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center text-xs transition cursor-pointer">✕</button>
             </div>
-            <div class="p-3 bg-slate-950/30 border-b border-slate-800 space-y-3">
+            
+            <div class="p-4 border-b border-white/5 space-y-3 bg-[#101016]">
                 <input type="hidden" id="editIndex" value="-1">
-                <div class="grid grid-cols-1 gap-2">
-                    <input type="text" id="plName" placeholder="ชื่อ Playlist" class="bg-slate-800 border border-slate-700 px-3 py-1.5 rounded-lg text-white text-sm">
-                    <input type="text" id="plUrl" placeholder="ลิงก์ URL .m3u" class="bg-slate-800 border border-slate-700 px-3 py-1.5 rounded-lg text-white text-sm font-mono">
+                <div class="flex flex-col gap-2">
+                    <input type="text" id="plName" placeholder="ชื่อคลัง (เช่น ดูฟรีทีวี)" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-amber-500/50">
+                    <input type="text" id="plUrl" placeholder="ลิงก์ไฟล์ .m3u หรือ URL สตรีมตรง" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-xs font-mono text-white placeholder:text-slate-500 focus:outline-none focus:border-amber-500/50">
                 </div>
                 <div class="flex justify-end gap-2">
-                    <button id="cancelEditBtn" class="hidden bg-slate-800 hover:bg-slate-700 px-3 py-1 rounded-lg text-xs transition">ยกเลิก</button>
-                    <button id="savePlaylistBtn" class="bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-slate-950 font-bold px-4 py-1.5 rounded-lg text-xs flex items-center gap-1">➕ บันทึก</button>
+                    <button id="cancelEditBtn" class="hidden bg-white/5 hover:bg-white/10 px-3 py-1.5 rounded-xl text-xs font-medium transition cursor-pointer">ยกเลิก</button>
+                    <button id="savePlaylistBtn" class="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-black font-bold px-4 py-1.5 rounded-xl text-xs shadow-md transition cursor-pointer">➕ บันทึก</button>
                 </div>
             </div>
-            <div id="modalPlaylistList" class="p-2 overflow-y-auto flex-grow space-y-1.5 custom-scroll"></div>
+
+            <div id="modalPlaylistList" class="p-3 overflow-y-auto custom-scroll flex-grow space-y-2 bg-[#0d0d12]">
+                </div>
         </div>
     </div>
 
-    <footer class="text-center text-[9px] text-slate-600 py-3 border-t border-slate-800/50 mt-3">
-        SAMORN IPTV 2026 · M3U, HLS, DASH + DRM ClearKey
-    </footer>
-
     <script>
-        // ==================== ข้อมูลเริ่มต้นและตัวแปร ====================
         const DEFAULT_PLAYLISTS = [
-            { name: "iPTVplus ลิขสิทธิ์สด", url: "https://raw.githubusercontent.com/ตัวอย่าง/main/iptv.m3u" },
-            { name: "สำรองช่องสตรีม 3BB", url: "https://raw.githubusercontent.com/ตัวอย่าง/main/3bb-backup.m3u" }
+            { name: "BeritaSelatan", url: "https://raw.githubusercontent.com/BeritaSelatan/MalayINDO/main/Tvalha" },
+            { name: "Thai Public M3U", url: "https://raw.githubusercontent.com/iptv-org/iptv/master/streams/th.m3u" },
+            { name: "sugus32", url: "https://raw.githubusercontent.com/sugus320/sugus320tv/refs/heads/main/DJTON-iPTVPlus.m3u" },
+            { name: "cattv976", url: "https://raw.githubusercontent.com/cattv976/iptv/refs/heads/main/cattv.m3u" },
+            { name: "CricHd", url: "https://raw.githubusercontent.com/abusaeeidx/CricHd-playlists-Auto-Update-permanent/refs/heads/main/ALL.m3u" },
+            { name: "warungtvbox", url: "https://raw.githubusercontent.com/warungtvbox/lokal/refs/heads/main/playlist2022" }
         ];
+
         let playlists = [];
         let allChannels = [];
         let pcFileCache = null;
         let currentMode = 'online';
         let activePlaylistIdx = 0;
         let currentView = 'list';
+        let shakaPlayerInstance = null; // ถือออบเจกต์เพื่อทำลายและสร้างใหม่ไม่ให้เกิดหน่วยความจำรั่วไหล
+        
         const logoGradients = ['from-amber-600 to-orange-700', 'from-cyan-600 to-blue-700', 'from-purple-600 to-indigo-700', 'from-emerald-600 to-teal-700'];
 
         function initPlaylists() {
@@ -317,7 +198,7 @@
             playlists.forEach((pl, idx) => {
                 const btn = document.createElement('button');
                 btn.id = `pl-btn-${idx}`;
-                btn.className = `px-2 py-1.5 bg-slate-800/70 hover:bg-slate-700 text-slate-300 font-medium rounded-lg border border-slate-700 text-[11px] transition whitespace-nowrap cursor-pointer`;
+                btn.className = `px-3 py-1.5 bg-white/5 hover:bg-white/10 text-slate-300 font-medium rounded-full border border-white/10 text-xs transition whitespace-nowrap cursor-pointer`;
                 btn.innerText = pl.name;
                 btn.onclick = () => {
                     currentMode = 'online';
@@ -328,12 +209,12 @@
             });
             if(pcFileCache) {
                 const divider = document.createElement('span');
-                divider.className = "text-slate-600 text-[9px] mx-1 self-center";
+                divider.className = "text-slate-700 text-xs mx-1 self-center";
                 divider.innerText = "|";
                 bar.appendChild(divider);
                 const pcBtn = document.createElement('button');
                 pcBtn.id = "pc-file-btn";
-                pcBtn.className = "px-2 py-1.5 bg-slate-800/70 hover:bg-slate-700 text-blue-400 font-medium rounded-lg border border-slate-700 text-[11px] transition whitespace-nowrap cursor-pointer";
+                pcBtn.className = "px-3 py-1.5 bg-blue-600/20 hover:bg-blue-600/30 text-blue-400 font-medium rounded-full border border-blue-500/30 text-xs transition whitespace-nowrap cursor-pointer";
                 pcBtn.innerText = `💻 ${pcFileCache.name}`;
                 pcBtn.onclick = () => {
                     currentMode = 'offline';
@@ -341,22 +222,24 @@
                 };
                 bar.appendChild(pcBtn);
             }
+            
             document.querySelectorAll('#quickPlaylistBar button').forEach(btn => {
-                btn.classList.remove('bg-amber-600', 'text-slate-950', 'border-amber-500');
-                btn.classList.add('bg-slate-800/70', 'text-slate-300');
+                btn.classList.remove('bg-gradient-to-r', 'from-amber-500', 'to-orange-500', 'text-black', 'border-transparent', 'font-bold');
+                btn.classList.add('bg-white/5', 'text-slate-300', 'border-white/10');
             });
+            
             if(currentMode === 'online') {
                 const activeBtn = document.getElementById(`pl-btn-${activePlaylistIdx}`);
                 if(activeBtn) {
-                    activeBtn.classList.remove('bg-slate-800/70', 'text-slate-300');
-                    activeBtn.classList.add('bg-amber-600', 'text-slate-950', 'border-amber-500');
+                    activeBtn.classList.remove('bg-white/5', 'text-slate-300', 'border-white/10');
+                    activeBtn.className += ' bg-gradient-to-r from-amber-500 to-orange-500 text-black border-transparent font-bold';
                 }
                 document.getElementById('activeSourceBadge').innerText = 'คลังออนไลน์';
             } else if(currentMode === 'offline' && pcFileCache) {
                 const pcBtn = document.getElementById('pc-file-btn');
                 if(pcBtn) {
-                    pcBtn.classList.remove('bg-slate-800/70', 'text-blue-400');
-                    pcBtn.classList.add('bg-blue-600', 'text-white', 'border-blue-400');
+                    pcBtn.classList.remove('bg-blue-600/20', 'text-blue-400', 'border-blue-500/30');
+                    pcBtn.className += ' bg-gradient-to-r from-blue-500 to-indigo-600 text-white border-transparent font-bold';
                 }
                 document.getElementById('activeSourceBadge').innerText = 'ไฟล์ในเครื่อง';
             }
@@ -366,7 +249,7 @@
             currentMode = 'online';
             activePlaylistIdx = idx;
             document.getElementById('currentLoadedPlaylistName').innerText = name;
-            document.getElementById('playlistContainer').innerHTML = '<div class="text-center text-amber-400 text-[10px] mt-8 animate-pulse">กำลังโหลด...</div>';
+            document.getElementById('playlistContainer').innerHTML = '<div class="text-center text-amber-400 text-xs mt-8 animate-pulse">⚙️ กำลังประมวลผลคำขอสตรีม...</div>';
             renderQuickBar();
             try {
                 const response = await fetch(url);
@@ -374,7 +257,7 @@
                 const text = await response.text();
                 parseM3U(text, name);
             } catch(e) {
-                document.getElementById('playlistContainer').innerHTML = `<div class="text-center p-3 text-red-400 text-[10px]">❌ โหลดผิดพลาด: ${e.message}</div>`;
+                document.getElementById('playlistContainer').innerHTML = `<div class="text-center p-3 text-red-400 text-xs">❌ โหลดสตรีมผิดพลาด: ${e.message}<br><span class="text-[10px] text-slate-500">อาจเกิดจากระบบป้องกัน CORS ของลิงก์ต้นทาง</span></div>`;
             }
         }
 
@@ -419,7 +302,7 @@
             const container = document.getElementById('playlistContainer');
             container.innerHTML = "";
             if(channels.length === 0) {
-                container.innerHTML = '<div class="text-center text-slate-500 text-[10px] mt-8">ไม่พบรายการช่อง</div>';
+                container.innerHTML = '<div class="text-center text-slate-500 text-xs mt-8">ไม่พบรายการช่องรายการที่ค้นหา</div>';
                 return;
             }
             
@@ -430,14 +313,14 @@
                     const gridItem = document.createElement('div');
                     gridItem.className = 'channel-grid-item';
                     gridItem.onclick = () => playStream(ch, gridItem);
-                    let logoHtml = `<div class="channel-grid-logo"><span class="text-xs font-mono">${String(index+1).slice(-2)}</span></div>`;
+                    let logoHtml = `<div class="channel-grid-logo"><span class="text-xs font-mono font-bold">${index+1}</span></div>`;
                     if(ch.logo && ch.logo.trim() !== '') {
-                        logoHtml = `<div class="channel-grid-logo"><img src="${ch.logo}" class="w-full h-full object-contain p-0.5" onerror="this.style.display='none'; this.parentElement.innerHTML='<span class=\'text-xs font-mono\'>${String(index+1).slice(-2)}</span>'"></div>`;
+                        logoHtml = `<div class="channel-grid-logo"><img src="${ch.logo}" class="w-full h-full object-contain p-1" onerror="this.style.display='none'; this.parentElement.innerHTML='<span class=\'text-xs font-mono font-bold\'>${index+1}</span>'"></div>`;
                     }
                     gridItem.innerHTML = `
                         ${logoHtml}
                         <div class="channel-grid-name">${escapeHtml(ch.name)}</div>
-                        ${ch.drm ? '<span class="text-[7px] bg-amber-500/20 text-amber-400 px-1 rounded-full mt-0.5">DRM</span>' : ''}
+                        ${ch.drm ? '<span class="text-[8px] font-bold bg-amber-500 text-black px-1 rounded-md scale-90">DRM</span>' : ''}
                     `;
                     gridDiv.appendChild(gridItem);
                 });
@@ -449,14 +332,14 @@
                     const item = document.createElement('div');
                     item.className = 'channel-list-item';
                     item.onclick = () => playStream(ch, item);
-                    let logoHtml = `<div class="channel-list-logo"><span class="text-[10px] font-mono">${String(index+1).slice(-2)}</span></div>`;
+                    let logoHtml = `<div class="channel-list-logo"><span class="text-xs font-mono font-bold">${index+1}</span></div>`;
                     if(ch.logo && ch.logo.trim() !== '') {
-                        logoHtml = `<div class="channel-list-logo"><img src="${ch.logo}" class="w-full h-full object-contain p-0.5" onerror="this.style.display='none'; this.parentElement.innerHTML='<span class=\'text-[10px] font-mono\'>${String(index+1).slice(-2)}</span>'"></div>`;
+                        logoHtml = `<div class="channel-list-logo"><img src="${ch.logo}" class="w-full h-full object-contain p-1" onerror="this.style.display='none'; this.parentElement.innerHTML='<span class=\'text-xs font-mono font-bold\'>${index+1}</span>'"></div>`;
                     }
                     item.innerHTML = `
                         ${logoHtml}
                         <div class="channel-list-name">${escapeHtml(ch.name)}</div>
-                        ${ch.drm ? '<span class="text-[8px] bg-amber-500/20 text-amber-400 px-1 rounded-full flex-shrink-0">DRM</span>' : ''}
+                        ${ch.drm ? '<span class="text-[9px] font-bold bg-amber-500 text-black px-1.5 py-0.5 rounded-md flex-shrink-0">🔐 DRM</span>' : ''}
                     `;
                     listDiv.appendChild(item);
                 });
@@ -466,13 +349,14 @@
 
         function escapeHtml(str) { return str.replace(/[&<>]/g, function(m){if(m==='&')return '&amp;';if(m==='<')return '&lt;';if(m==='>')return '&gt;';return m;}); }
 
-        function playStream(channel, element) {
+        // มอดูลการเล่นสตรีมด้วยสถาปัตยกรรมระดับอุตสาหกรรมแบบ Shaka Player แกะและยิง DRM ได้อย่างแม่นยำ
+        async function playStream(channel, element) {
             if (currentView === 'grid') {
                 document.querySelectorAll('.channel-grid-item').forEach(item => item.classList.remove('active'));
-                if(element) element.classList.add('active');
+                if(element) element.className += ' active';
             } else {
                 document.querySelectorAll('.channel-list-item').forEach(item => item.classList.remove('active'));
-                if(element) element.classList.add('active');
+                if(element) element.className += ' active';
             }
             document.getElementById('currentTrackTitle').innerText = channel.name;
             document.getElementById('videoUrl').innerText = channel.url;
@@ -481,37 +365,75 @@
             const wrapper = document.getElementById('logoWrapper');
             const txtLogo = document.getElementById('textLogo');
             const imgLogo = document.getElementById('imgLogo');
+            
+            // ล้างข้อมูลโลโก้เดิม
+            wrapper.innerHTML = '';
             if(channel.logo && channel.logo.trim() !== '') {
-                txtLogo.classList.add('hidden');
-                imgLogo.classList.remove('hidden');
-                imgLogo.src = channel.logo;
-                wrapper.className = "w-11 h-11 md:w-12 md:h-12 bg-slate-800 rounded-xl flex items-center justify-center border border-slate-700 overflow-hidden flex-shrink-0";
+                const img = document.createElement('img');
+                img.src = channel.logo;
+                img.className = "w-full h-full object-contain p-0.5";
+                img.onerror = () => {
+                    wrapper.innerHTML = channel.name.substring(0,2).toUpperCase();
+                    wrapper.className = `w-11 h-11 bg-gradient-to-br ${logoGradients[Math.floor(Math.random() * logoGradients.length)]} rounded-xl flex items-center justify-center font-bold text-white shadow-md flex-shrink-0 text-xs`;
+                };
+                wrapper.appendChild(img);
+                wrapper.className = "w-11 h-11 bg-slate-900 rounded-xl flex items-center justify-center border border-white/10 overflow-hidden flex-shrink-0";
             } else {
-                imgLogo.classList.add('hidden');
-                txtLogo.classList.remove('hidden');
-                txtLogo.innerText = channel.name.replace(/[^a-zA-Z0-9ก-๙]/g, '').substring(0,2).toUpperCase() || "TV";
+                wrapper.innerText = channel.name.replace(/[^a-zA-Z0-9ก-๙]/g, '').substring(0,2).toUpperCase() || "TV";
                 const randomGrad = logoGradients[Math.floor(Math.random() * logoGradients.length)];
-                wrapper.className = `w-11 h-11 md:w-12 md:h-12 bg-gradient-to-br ${randomGrad} rounded-xl flex items-center justify-center font-bold text-white shadow-md flex-shrink-0 text-xs`;
+                wrapper.className = `w-11 h-11 bg-gradient-to-br ${randomGrad} rounded-xl flex items-center justify-center font-bold text-white shadow-md flex-shrink-0 text-xs`;
             }
             
             const isMpd = channel.url.toLowerCase().includes('.mpd');
-            const config = {
-                file: channel.url,
-                width: "100%",
-                aspectratio: "16:9",
-                autostart: true,
-                mute: false
-            };
-            if (isMpd) {
-                config.type = "dash";
-                document.getElementById('channelMeta').innerText = "DASH " + (channel.drm ? "🔐 DRM" : "ปกติ");
-                if (channel.drm) config.drm = { clearkey: { keyId: channel.keyId, key: channel.key } };
-            } else {
-                config.type = "hls";
-                document.getElementById('channelMeta').innerText = "HLS " + (channel.drm ? "🔐 DRM" : "ปกติ");
-                if (channel.drm) config.drm = { clearkey: { keyId: channel.keyId, key: channel.key } };
+            document.getElementById('channelMeta').innerText = (isMpd ? "DASH " : "HLS ") + (channel.drm ? "🔐 DRM" : "ปกติ");
+
+            const video = document.getElementById('player');
+            
+            // บังคับติดตั้งโพลีฟิลล์ความเข้ากันได้ของระบบบราวเซอร์
+            shaka.polyfill.installAll();
+
+            if (!shaka.Player.isBrowserSupported()) {
+                alert('บราวเซอร์ของคุณไม่รองรับการถอดรหัสของเครื่องเล่นสตรีมรุ่นนี้');
+                return;
             }
-            jwplayer("player").setup(config);
+
+            // เคลียร์อินสแตนซ์เก่าออกเพื่อไม่ให้เกิดการชนกันของเธรดสตรีมมิ่ง
+            if (shakaPlayerInstance) {
+                try {
+                    await shakaPlayerInstance.destroy();
+                } catch(e) { console.error("Destroy error:", e); }
+                shakaPlayerInstance = null;
+            }
+
+            // ผูก Shaka เข้ากับองค์ประกอบวิดีโอหลัก
+            shakaPlayerInstance = new shaka.Player(video);
+
+            // ลงทะเบียนดักจับข้อผิดพลาดของสตรีมมิ่ง
+            shakaPlayerInstance.addEventListener('error', (event) => {
+                console.error('Shaka Player Engine Error:', event.detail);
+            });
+
+            // ตรวจจับและอัดฉีดค่าถอดรหัส ClearKey DRM เข้าสู่ MediaKeySystem ของบราวเซอร์ดั้งเดิม
+            if (channel.drm) {
+                const cleanKeyId = channel.keyId.trim();
+                const cleanKey = channel.key.trim();
+                
+                shakaPlayerInstance.configure({
+                    drm: {
+                        clearKeys: {
+                            [cleanKeyId]: cleanKey
+                        }
+                    }
+                });
+            }
+
+            // ทำการเชื่อมต่อเน็ตเวิร์กเพื่อดาวน์โหลด Manifest สตรีมและสั่งประมวลผลทันที
+            try {
+                await shakaPlayerInstance.load(channel.url);
+                video.play();
+            } catch (error) {
+                console.error('เกิดข้อผิดพลาดในการโหลดระบบสตรีม:', error);
+            }
         }
 
         function loadOfflineFile(event) {
@@ -526,12 +448,14 @@
             };
             reader.readAsText(file);
         }
+        
         function activateOfflineFile() {
             if(!pcFileCache) return;
             document.getElementById('currentLoadedPlaylistName').innerText = `📁 ${pcFileCache.name}`;
             parseM3U(pcFileCache.content, pcFileCache.name);
             renderQuickBar();
         }
+        
         function filterChannels() {
             const query = document.getElementById('searchBox').value.toLowerCase();
             const filtered = allChannels.filter(c => c.name.toLowerCase().includes(query));
@@ -549,26 +473,24 @@
                 gridBtn.classList.add('active');
                 listBtn.classList.remove('active');
             }
-            const query = document.getElementById('searchBox').value.toLowerCase();
-            const filtered = allChannels.filter(c => c.name.toLowerCase().includes(query));
-            renderChannels(filtered);
+            filterChannels();
         }
 
         function renderModalList() {
             const container = document.getElementById('modalPlaylistList');
             container.innerHTML = '';
-            if(playlists.length===0) { container.innerHTML='<div class="text-center text-slate-500 text-xs py-4">ไม่มีรายการ</div>'; return; }
+            if(playlists.length===0) { container.innerHTML='<div class="text-center text-slate-500 text-xs py-4">ไม่มีรายการคลังบันทึกไว้</div>'; return; }
             playlists.forEach((pl, idx) => {
                 const div = document.createElement('div');
-                div.className = "bg-slate-950 border border-slate-800 p-2 rounded-lg flex justify-between items-center";
+                div.className = "bg-black/40 border border-white/5 p-3 rounded-xl flex justify-between items-center gap-3";
                 div.innerHTML = `
                     <div class="min-w-0 flex-grow">
-                        <p class="font-bold text-amber-500 truncate text-xs">${escapeHtml(pl.name)}</p>
-                        <p class="text-[9px] text-slate-500 truncate font-mono">${escapeHtml(pl.url)}</p>
+                        <p class="font-bold text-amber-400 truncate text-xs">${escapeHtml(pl.name)}</p>
+                        <p class="text-[10px] text-slate-500 truncate font-mono mt-0.5">${escapeHtml(pl.url)}</p>
                     </div>
-                    <div class="flex gap-1">
-                        <button data-edit="${idx}" class="edit-pl text-[9px] bg-slate-800 hover:bg-slate-700 px-2 py-1 rounded-md text-blue-400">แก้ไข</button>
-                        <button data-del="${idx}" class="del-pl text-[9px] bg-slate-800 hover:bg-red-950 px-2 py-1 rounded-md text-red-400">ลบ</button>
+                    <div class="flex gap-1 flex-shrink-0">
+                        <button data-edit="${idx}" class="edit-pl text-[10px] bg-white/5 hover:bg-white/10 px-2.5 py-1 rounded-lg text-blue-400 font-medium transition cursor-pointer">แก้ไข</button>
+                        <button data-del="${idx}" class="del-pl text-[10px] bg-red-500/10 hover:bg-red-500/20 px-2.5 py-1 rounded-lg text-red-400 font-medium transition cursor-pointer">ลบ</button>
                     </div>
                 `;
                 container.appendChild(div);
@@ -576,11 +498,12 @@
             document.querySelectorAll('.edit-pl').forEach(btn => btn.addEventListener('click', (e) => editPlaylist(parseInt(btn.dataset.edit))));
             document.querySelectorAll('.del-pl').forEach(btn => btn.addEventListener('click', (e) => deletePlaylist(parseInt(btn.dataset.del))));
         }
+        
         function savePlaylist() {
             const name = document.getElementById('plName').value.trim();
             const url = document.getElementById('plUrl').value.trim();
             const editIndex = parseInt(document.getElementById('editIndex').value);
-            if(!name || !url) return alert('กรุณากรอกให้ครบ');
+            if(!name || !url) return alert('กรุณากรอกข้อมูลให้ครบถ้วนก่อนบันทึก');
             if(editIndex === -1) playlists.push({ name, url });
             else playlists[editIndex] = { name, url };
             localStorage.setItem('jw_iptv_playlists', JSON.stringify(playlists));
@@ -588,28 +511,32 @@
             resetForm();
             toggleManager(false);
         }
+        
         function editPlaylist(idx) {
             document.getElementById('editIndex').value = idx;
             document.getElementById('plName').value = playlists[idx].name;
             document.getElementById('plUrl').value = playlists[idx].url;
-            document.getElementById('savePlaylistBtn').innerHTML = '💾 อัปเดต';
+            document.getElementById('savePlaylistBtn').innerHTML = '💾 อัปเดตข้อมูล';
             document.getElementById('cancelEditBtn').classList.remove('hidden');
         }
+        
         function deletePlaylist(idx) {
-            if(confirm(`ลบ ${playlists[idx].name}?`)) {
+            if(confirm(`คุณต้องการลบคลังคิวรายการ "${playlists[idx].name}" ใช่หรือไม่?`)) {
                 playlists.splice(idx,1);
                 localStorage.setItem('jw_iptv_playlists', JSON.stringify(playlists));
                 initPlaylists();
                 resetForm();
             }
         }
+        
         function resetForm() {
             document.getElementById('editIndex').value = '-1';
             document.getElementById('plName').value = '';
             document.getElementById('plUrl').value = '';
-            document.getElementById('savePlaylistBtn').innerHTML = '➕ บันทึก';
+            document.getElementById('savePlaylistBtn').innerHTML = '➕ บันทึกข้อมูลคลัง';
             document.getElementById('cancelEditBtn').classList.add('hidden');
         }
+        
         function toggleManager(forceClose) {
             const modal = document.getElementById('playlistManagerModal');
             if(forceClose === false) modal.classList.add('hidden');
@@ -617,6 +544,7 @@
             if(!modal.classList.contains('hidden')) renderModalList();
         }
 
+        // เชื่อมโยงระบบตรวจจับการสั่งการจากผู้ใช้และคอนโทรลเลอร์ทั้งหมด เข้าสู่แกนระบบหลัก
         document.getElementById('offlineFile').addEventListener('change', loadOfflineFile);
         document.getElementById('openManagerBtn').addEventListener('click', () => toggleManager());
         document.getElementById('closeModalBtn').addEventListener('click', () => toggleManager(false));
@@ -627,6 +555,7 @@
         document.getElementById('viewListBtn').addEventListener('click', () => setView('list'));
         document.getElementById('viewGridBtn').addEventListener('click', () => setView('grid'));
 
+        // เริ่มต้นการประมวลผลเมื่อระบบหน้าบ้านประกอบโครงสร้างเสร็จสิ้น
         initPlaylists();
     </script>
 </body>
