@@ -182,53 +182,7 @@
 
         function escapeHtml(str) { return str.replace(/[&<>]/g, function(m){if(m==='&')return '&amp;';if(m==='<')return '&lt;';if(m==='>')return '&gt;';return m;}); }
 
-        function playStream(channel, element) {
-            if (currentView === 'grid') {
-                document.querySelectorAll('.channel-grid-item').forEach(item => item.classList.remove('active'));
-                if(element) element.classList.add('active');
-            } else {
-                document.querySelectorAll('.channel-list-item').forEach(item => item.classList.remove('active'));
-                if(element) element.classList.add('active');
-            }
-            document.getElementById('currentTrackTitle').innerText = channel.name;
-            document.getElementById('videoUrl').innerText = channel.url;
-            document.getElementById('liveStatusBadge').classList.remove('hidden');
-            
-            const wrapper = document.getElementById('logoWrapper');
-            const txtLogo = document.getElementById('textLogo');
-            const imgLogo = document.getElementById('imgLogo');
-            if(channel.logo && channel.logo.trim() !== '') {
-                txtLogo.classList.add('hidden');
-                imgLogo.classList.remove('hidden');
-                imgLogo.src = channel.logo;
-                wrapper.className = "w-11 h-11 md:w-12 md:h-12 bg-slate-800 rounded-xl flex items-center justify-center border border-slate-700 overflow-hidden flex-shrink-0";
-            } else {
-                imgLogo.classList.add('hidden');
-                txtLogo.classList.remove('hidden');
-                txtLogo.innerText = channel.name.replace(/[^a-zA-Z0-9ก-๙]/g, '').substring(0,2).toUpperCase() || "TV";
-                const randomGrad = logoGradients[Math.floor(Math.random() * logoGradients.length)];
-                wrapper.className = `w-11 h-11 md:w-12 md:h-12 bg-gradient-to-br ${randomGrad} rounded-xl flex items-center justify-center font-bold text-white shadow-md flex-shrink-0 text-xs`;
-            }
-            
-            const isMpd = channel.url.toLowerCase().includes('.mpd');
-            const config = {
-                file: channel.url,
-                width: "100%",
-                aspectratio: "16:9",
-                autostart: true,
-                mute: false
-            };
-            if (isMpd) {
-                config.type = "dash";
-                document.getElementById('channelMeta').innerText = "DASH " + (channel.drm ? "🔐 DRM" : "ปกติ");
-                if (channel.drm) config.drm = { clearkey: { keyId: channel.keyId, key: channel.key } };
-            } else {
-                config.type = "hls";
-                document.getElementById('channelMeta').innerText = "HLS " + (channel.drm ? "🔐 DRM" : "ปกติ");
-                if (channel.drm) config.drm = { clearkey: { keyId: channel.keyId, key: channel.key } };
-            }
-            jwplayer("player").setup(config);
-        }
+        function playStream
 
         function loadOfflineFile(event) {
             const file = event.target.files[0];
