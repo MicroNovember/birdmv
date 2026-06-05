@@ -2,631 +2,155 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+    <meta name="theme-color" content="#0a0a0e">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>SAMORN IPTV Player 2026 | Ultra HD Smart Player</title>
-    <!-- TailwindCSS for modern styling (no impact on JS logic) -->
+    <!-- TailwindCSS (lightweight, no core logic impact) -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <!-- JW Player -->
+    <!-- JW Player 8.26 -->
     <script src="https://ssl.p.jwpcdn.com/player/v/8.26.0/jwplayer.js"></script>
     <script>jwplayer.key = 'XSuP4qMl+9tK17QNb+4+th2Pm9AWgMO/cYH8CI0HGGr7bdjo';</script>
+    <link rel="stylesheet" href="style.css">
+    <!-- iOS style font -->
     <style>
-        /* Custom scroll & responsive touches */
-        ::-webkit-scrollbar { width: 4px; height: 4px; }
-        ::-webkit-scrollbar-track { background: #0f172a; }
-        ::-webkit-scrollbar-thumb { background: #f59e0b; border-radius: 4px; }
-        .hide-scrollbar::-webkit-scrollbar { display: none; }
-        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background: #0b1120; }
-        
-        /* Grid view styles - compact & pro */
-        .channels-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            gap: 0.5rem;
-            padding: 0.25rem;
-        }
-        .channel-grid-item {
-            background: rgba(30, 41, 59, 0.5);
-            border-radius: 0.75rem;
-            border: 1px solid rgba(71, 85, 105, 0.4);
-            transition: all 0.2s ease;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            padding: 0.6rem 0.25rem;
-        }
-        .channel-grid-item:hover {
-            background: rgba(51, 65, 85, 0.7);
-            border-color: #f59e0b;
-            transform: translateY(-2px);
-        }
-        .channel-grid-item.active {
-            background: rgba(245, 158, 11, 0.15);
-            border-color: #f59e0b;
-            box-shadow: 0 0 0 1px rgba(245, 158, 11, 0.3);
-        }
-        .channel-grid-logo {
-            width: 44px;
-            height: 44px;
-            border-radius: 12px;
-            background: #1e293b;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 6px;
-            overflow: hidden;
-            font-weight: bold;
-            font-size: 12px;
-            color: #94a3b8;
-        }
-        .channel-grid-name {
-            font-size: 11px;
-            font-weight: 500;
-            color: #e2e8f0;
-            line-height: 1.3;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            max-width: 100%;
-            padding: 0 2px;
-        }
-        /* List view compact */
-        .channels-list {
-            display: flex;
-            flex-direction: column;
-            gap: 0.25rem;
-        }
-        .channel-list-item {
-            width: 100%;
-            text-align: left;
-            padding: 0.5rem 0.75rem;
-            border-radius: 0.75rem;
-            transition: all 0.15s;
-            background: rgba(30, 41, 59, 0.3);
-            border: 1px solid transparent;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            cursor: pointer;
-        }
-        .channel-list-item:hover {
-            background: rgba(51, 65, 85, 0.6);
-            border-color: rgba(100, 116, 139, 0.5);
-        }
-        .channel-list-item.active {
-            background: rgba(245, 158, 11, 0.15);
-            border-color: #f59e0b;
-        }
-        .channel-list-logo {
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            background: #1e293b;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 11px;
-            font-weight: bold;
-            color: #94a3b8;
-            flex-shrink: 0;
-            overflow: hidden;
-        }
-        .channel-list-name {
-            font-size: 13px;
-            font-weight: 500;
-            color: #f1f5f9;
-            flex-grow: 1;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .btn-view-toggle {
-            background: #1e293b;
-            border-radius: 40px;
-            padding: 3px;
-            display: flex;
-            gap: 2px;
-        }
-        .btn-view-toggle button {
-            padding: 4px 10px;
-            border-radius: 40px;
-            font-size: 11px;
-            font-weight: 500;
-            transition: all 0.2s;
-            background: transparent;
-            color: #94a3b8;
-        }
-        .btn-view-toggle button.active {
-            background: #f59e0b;
-            color: #0f172a;
-        }
-        /* Responsive adjustments */
-        @media (min-width: 1024px) {
-            .channels-grid {
-                grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-                gap: 0.6rem;
-            }
-        }
-        @media (max-width: 768px) {
-            .channels-grid {
-                grid-template-columns: repeat(auto-fill, minmax(85px, 1fr));
-                gap: 0.4rem;
-            }
-            .channel-grid-logo {
-                width: 38px;
-                height: 38px;
-            }
-            .channel-grid-name {
-                font-size: 10px;
-            }
-            .channel-list-item {
-                padding: 0.4rem 0.6rem;
-            }
+        body {
+            font-family: -apple-system, 'SF Pro Text', 'SF Pro Display', system-ui, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
     </style>
 </head>
-<body class="bg-gradient-to-br from-slate-950 to-slate-900 text-slate-100 min-h-screen flex flex-col">
+<body class="bg-[#0C0C10] text-white selection:bg-amber-500/30">
 
-    <!-- Header Modern Glass - compact -->
-    <header class="sticky top-0 z-50 bg-slate-900/80 backdrop-blur-md border-b border-slate-800/50 shadow-md">
-        <div class="max-w-7xl mx-auto px-3 py-2 flex flex-wrap items-center justify-between gap-2">
-            <div class="flex items-center gap-2">
-                <div class="w-7 h-7 bg-gradient-to-br from-amber-500 to-orange-600 rounded-lg flex items-center justify-center shadow-md">
-                    <span class="text-black text-xs font-black">📺</span>
+    <!-- Header: iOS frosted glass -->
+    <header class="sticky top-0 z-50 bg-[#0C0C10]/70 backdrop-blur-xl border-b border-white/10 shadow-soft">
+        <div class="max-w-7xl mx-auto px-4 py-2.5 flex flex-wrap items-center justify-between gap-2">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-gradient-to-br from-amber-400 to-orange-500 rounded-xl flex items-center justify-center shadow-lg shadow-amber-500/20">
+                    <span class="text-black text-sm font-black">📺</span>
                 </div>
-                <h1 class="text-base md:text-lg font-bold tracking-tight bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent">
-                    SAMORN IPTV <span class="text-white text-sm">2026</span>
-                </h1>
-                <div class="hidden md:flex items-center gap-1 ml-1">
-                    <span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
-                    <span class="text-[9px] font-mono text-slate-500">DRM READY</span>
+                <div>
+                    <h1 class="text-lg md:text-xl font-semibold tracking-tight bg-gradient-to-r from-amber-300 to-orange-400 bg-clip-text text-transparent">
+                        SAMORN IPTV <span class="text-white/70 text-sm font-medium">2026</span>
+                    </h1>
+                    <div class="flex items-center gap-1.5 mt-0.5">
+                        <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></span>
+                        <span class="text-[9px] font-mono text-white/40 tracking-wide">Ultra HD · DRM Ready</span>
+                    </div>
                 </div>
             </div>
             <div class="flex gap-2">
-                <label class="bg-blue-600/80 hover:bg-blue-500 text-white font-semibold px-3 py-1.5 rounded-lg text-xs flex items-center gap-1 cursor-pointer shadow transition">
-                    📂 M3U
+                <label class="bg-white/10 hover:bg-white/20 text-white font-medium px-4 py-2 rounded-2xl text-xs flex items-center gap-1.5 cursor-pointer transition-all duration-200 backdrop-blur-sm border border-white/10 active:scale-95">
+                    📂 <span>M3U File</span>
                     <input type="file" id="offlineFile" accept=".m3u,.txt" class="hidden">
                 </label>
-                <button id="openManagerBtn" class="bg-slate-800/70 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-lg text-xs font-medium border border-slate-700 flex items-center gap-1 shadow transition">
-                    ⚙️ คลัง
+                <button id="openManagerBtn" class="bg-white/5 hover:bg-white/15 text-white/90 px-4 py-2 rounded-2xl text-xs font-medium border border-white/10 flex items-center gap-1.5 transition-all duration-200 backdrop-blur-sm active:scale-95">
+                    ⚙️ <span>Playlists</span>
                 </button>
             </div>
         </div>
     </header>
 
-    <main class="max-w-7xl w-full mx-auto p-3 flex flex-col gap-4 flex-grow">
-        <!-- Quick playlist bar - compact -->
-        <div class="bg-slate-900/30 backdrop-blur-sm rounded-xl border border-slate-800/40 p-2">
-            <div class="flex items-center justify-between mb-1 px-1">
-                <span class="text-[9px] font-bold text-amber-400/80 uppercase tracking-wider">📡 แหล่งสัญญาณ</span>
-                <span id="activeSourceBadge" class="text-[9px] bg-slate-800 px-2 py-0.5 rounded-full text-slate-300">คลังออนไลน์</span>
+    <main class="max-w-7xl w-full mx-auto p-4 flex flex-col gap-5 flex-grow">
+        <!-- Quick playlist bar -->
+        <div class="bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 p-2.5 shadow-sm">
+            <div class="flex items-center justify-between mb-2 px-1">
+                <span class="text-[10px] font-semibold text-amber-400/90 uppercase tracking-wider flex items-center gap-1">
+                    <span class="w-1 h-1 bg-amber-400 rounded-full"></span> ACTIVE SOURCE
+                </span>
+                <span id="activeSourceBadge" class="text-[9px] bg-white/10 px-3 py-1 rounded-full text-white/70 font-mono backdrop-blur-sm">คลังออนไลน์</span>
             </div>
-            <div id="quickPlaylistBar" class="flex flex-nowrap overflow-x-auto gap-1.5 pb-1 hide-scrollbar">
-                <!-- dynamic buttons -->
-            </div>
+            <div id="quickPlaylistBar" class="flex flex-nowrap overflow-x-auto gap-2 pb-1 hide-scrollbar"></div>
         </div>
 
-        <!-- Main grid: Player + channel list - balanced proportions -->
+        <!-- Main grid -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-5 items-start">
-            <!-- Left column: Video player + info - reduced size -->
-            <div class="lg:col-span-2 space-y-3">
-                <div class="relative bg-black rounded-xl overflow-hidden shadow-xl border border-slate-800 aspect-video">
+            <!-- Player column -->
+            <div class="lg:col-span-2 space-y-4">
+                <div class="relative bg-black/90 rounded-2xl overflow-hidden shadow-2xl shadow-black/50 border border-white/15 aspect-video">
                     <div id="player" class="w-full h-full"></div>
-                    <div class="absolute bottom-2 left-2 z-10 bg-black/50 backdrop-blur rounded-full px-2 py-0.5 text-[8px] font-mono text-amber-300/80 border border-amber-500/20 hidden sm:block">
-                        JW 8.26 | DRM READY
+                    <div class="absolute bottom-3 left-3 z-10 bg-black/50 backdrop-blur-md rounded-full px-3 py-1 text-[9px] font-mono text-amber-300/90 border border-white/20">
+                        JW 8.26 · ᴅʀᴍ ᴄʟᴇᴀʀᴋᴇʏ
                     </div>
                 </div>
-                <!-- Metadata card compact -->
-                <div class="bg-slate-900/60 backdrop-blur rounded-xl border border-slate-800 p-3 flex items-center gap-3">
-                    <div id="logoWrapper" class="w-11 h-11 md:w-12 md:h-12 bg-slate-800 rounded-xl flex items-center justify-center border border-slate-700 shadow-md overflow-hidden flex-shrink-0">
-                        <span id="textLogo" class="font-bold text-sm text-slate-300 uppercase">📺</span>
-                        <img id="imgLogo" class="hidden w-full h-full object-contain p-1 bg-slate-900" alt="Logo">
+                <!-- Metadata card -->
+                <div class="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/15 p-4 flex items-center gap-4 transition-all">
+                    <div id="logoWrapper" class="w-14 h-14 md:w-16 md:h-16 bg-white/10 rounded-2xl flex items-center justify-center border border-white/20 shadow-md overflow-hidden flex-shrink-0">
+                        <span id="textLogo" class="font-bold text-sm text-white/80 uppercase">📺</span>
+                        <img id="imgLogo" class="hidden w-full h-full object-contain p-1.5 bg-black/40" alt="Logo">
                     </div>
                     <div class="flex-grow min-w-0">
-                        <h2 id="currentTrackTitle" class="text-sm md:text-base font-bold text-slate-100 truncate">ไม่มีช่องที่เลือก</h2>
-                        <div class="flex flex-wrap items-center gap-1.5 mt-0.5">
-                            <span id="liveStatusBadge" class="hidden text-[8px] bg-amber-500/20 text-amber-400 px-1.5 py-0.5 rounded-full">HLS/DASH</span>
-                            <p id="channelMeta" class="text-[10px] text-slate-400 truncate">เลือกช่องจากรายการ</p>
+                        <h2 id="currentTrackTitle" class="text-base md:text-lg font-semibold text-white truncate tracking-tight">ไม่มีช่องที่เลือก</h2>
+                        <div class="flex flex-wrap items-center gap-2 mt-1">
+                            <span id="liveStatusBadge" class="hidden text-[9px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full font-mono">HLS / DASH</span>
+                            <p id="channelMeta" class="text-[10px] text-white/50 truncate font-mono">เลือกช่องจากรายการ</p>
                         </div>
-                        <p id="videoUrl" class="text-[8px] text-slate-600 truncate font-mono mt-0.5"></p>
+                        <p id="videoUrl" class="text-[8px] text-white/30 truncate font-mono mt-1.5"></p>
                     </div>
                 </div>
             </div>
 
-            <!-- Right: Channel list with view toggle - adjusted height -->
-            <div class="bg-slate-900/60 backdrop-blur rounded-xl border border-slate-800 flex flex-col h-[60vh] min-h-[420px] shadow-lg overflow-hidden">
-                <div class="p-2.5 border-b border-slate-800/80 flex flex-wrap justify-between items-center gap-2 bg-slate-950/30">
-                    <div class="min-w-0 flex-1">
-                        <p class="text-[8px] text-amber-400 font-bold tracking-wider truncate" id="currentLoadedPlaylistName">— ไม่โหลด —</p>
-                        <h3 class="font-semibold text-slate-200 text-xs flex items-center gap-1.5">รายการช่อง <span id="channelCount" class="text-amber-400 text-[10px] bg-slate-800 px-1.5 py-0.5 rounded-full">0</span></h3>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <div class="btn-view-toggle">
-                            <button id="viewListBtn" class="active">📋</button>
-                            <button id="viewGridBtn">⊞</button>
+            <!-- Channel list -->
+            <div class="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/15 flex flex-col h-[62vh] min-h-[460px] shadow-xl overflow-hidden">
+                <div class="p-3 border-b border-white/10 bg-black/20">
+                    <div class="flex flex-wrap justify-between items-center gap-2">
+                        <div class="min-w-0 flex-1">
+                            <p class="text-[9px] text-amber-400 font-semibold tracking-wider truncate" id="currentLoadedPlaylistName">— ไม่โหลด —</p>
+                            <h3 class="font-semibold text-white/90 text-sm flex items-center gap-2 mt-0.5">
+                                📡 ช่องสัญญาณ
+                                <span id="channelCount" class="text-amber-400 text-[11px] bg-amber-500/15 px-2 py-0.5 rounded-full font-mono">0</span>
+                            </h3>
                         </div>
-                        <input type="text" id="searchBox" placeholder="ค้นหา" class="w-28 sm:w-32 bg-slate-800/80 border border-slate-700 rounded-lg px-2 py-1 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-amber-500/60">
+                        <div class="flex items-center gap-2">
+                            <div class="btn-view-toggle bg-white/10 rounded-full p-0.5 backdrop-blur-sm">
+                                <button id="viewListBtn" class="active">📋 รายการ</button>
+                                <button id="viewGridBtn" class="">⊞ ตาราง</button>
+                            </div>
+                            <div class="relative">
+                                <input type="text" id="searchBox" placeholder="ค้นหาช่อง" class="w-32 sm:w-36 bg-white/10 border border-white/15 rounded-full px-3 py-1.5 text-xs text-white placeholder:text-white/40 focus:outline-none focus:ring-1 focus:ring-amber-500/70 transition-all font-mono">
+                                <span class="absolute right-2 top-1/2 -translate-y-1/2 text-white/30 text-[10px]">🔍</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div id="playlistContainer" class="overflow-y-auto flex-grow p-1.5 custom-scroll">
-                    <div class="text-center text-slate-500 text-xs mt-12 p-4">📭 โหลดเพลย์ลิสต์เพื่อแสดงช่อง</div>
+                <div id="playlistContainer" class="overflow-y-auto flex-grow p-2 custom-scroll smooth-scroll">
+                    <div class="text-center text-white/40 text-xs mt-16 p-5 flex flex-col items-center gap-2">
+                        <span class="text-4xl opacity-40">📡</span>
+                        <span>โหลดเพลย์ลิสต์เพื่อแสดงช่อง</span>
+                    </div>
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- Modal จัดการ Playlist -->
-    <div id="playlistManagerModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-slate-700 rounded-xl w-full max-w-lg max-h-[80vh] flex flex-col shadow-2xl">
-            <div class="p-3 border-b border-slate-800 flex justify-between items-center">
-                <h3 class="text-base font-bold text-amber-400">📝 จัดการคลัง Playlist</h3>
-                <button id="closeModalBtn" class="text-slate-400 hover:text-white text-xl leading-5">&times;</button>
+    <!-- Modal Manager -->
+    <div id="playlistManagerModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-md z-50 flex items-center justify-center p-4 transition-all duration-300">
+        <div class="bg-[#121216] border border-white/15 rounded-3xl w-full max-w-lg max-h-[80vh] flex flex-col shadow-2xl overflow-hidden animate-fade-in-up">
+            <div class="p-4 border-b border-white/10 flex justify-between items-center bg-black/20">
+                <h3 class="text-base font-semibold text-amber-400 flex items-center gap-2">📋 จัดการคลัง Playlist</h3>
+                <button id="closeModalBtn" class="text-white/60 hover:text-white text-2xl leading-5 w-8 h-8 rounded-full bg-white/5 transition-all">&times;</button>
             </div>
-            <div class="p-3 bg-slate-950/30 border-b border-slate-800 space-y-3">
+            <div class="p-4 bg-white/5 border-b border-white/10 space-y-4">
                 <input type="hidden" id="editIndex" value="-1">
-                <div class="grid grid-cols-1 gap-2">
-                    <input type="text" id="plName" placeholder="ชื่อ Playlist" class="bg-slate-800 border border-slate-700 px-3 py-1.5 rounded-lg text-white text-sm">
-                    <input type="text" id="plUrl" placeholder="ลิงก์ URL .m3u" class="bg-slate-800 border border-slate-700 px-3 py-1.5 rounded-lg text-white text-sm font-mono">
+                <div class="grid grid-cols-1 gap-3">
+                    <input type="text" id="plName" placeholder="ชื่อ Playlist (เช่น Thai TV)" class="bg-white/10 border border-white/15 rounded-2xl px-4 py-2.5 text-white text-sm placeholder:text-white/40 focus:ring-2 focus:ring-amber-500/50 outline-none transition">
+                    <input type="text" id="plUrl" placeholder="ลิงก์ไฟล์ .m3u หรือ .txt" class="bg-white/10 border border-white/15 rounded-2xl px-4 py-2.5 text-white text-sm font-mono placeholder:text-white/40 focus:ring-2 focus:ring-amber-500/50 outline-none transition">
                 </div>
                 <div class="flex justify-end gap-2">
-                    <button id="cancelEditBtn" class="hidden bg-slate-800 hover:bg-slate-700 px-3 py-1 rounded-lg text-xs transition">ยกเลิก</button>
-                    <button id="savePlaylistBtn" class="bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-slate-950 font-bold px-4 py-1.5 rounded-lg text-xs flex items-center gap-1">➕ บันทึก</button>
+                    <button id="cancelEditBtn" class="hidden bg-white/10 hover:bg-white/20 px-4 py-2 rounded-2xl text-xs font-medium transition">ยกเลิก</button>
+                    <button id="savePlaylistBtn" class="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-black font-semibold px-5 py-2 rounded-2xl text-xs flex items-center gap-1 shadow-md transition-all active:scale-95">➕ บันทึก</button>
                 </div>
             </div>
-            <div id="modalPlaylistList" class="p-2 overflow-y-auto flex-grow space-y-1.5 custom-scroll"></div>
+            <div id="modalPlaylistList" class="p-2 overflow-y-auto flex-grow space-y-2 custom-scroll bg-black/10"></div>
         </div>
     </div>
 
-    <footer class="text-center text-[9px] text-slate-600 py-3 border-t border-slate-800/50 mt-3">
-        SAMORN IPTV 2026 · M3U, HLS, DASH + DRM ClearKey
+    <footer class="text-center text-[8px] text-white/30 py-4 border-t border-white/5 mt-4 font-mono">
+        SAMORN IPTV 2026 · M3U, HLS, DASH + DRM ClearKey · Immersive Experience
     </footer>
 
-    <script>
-        // ==================== ข้อมูลเริ่มต้นและตัวแปร ====================
-        const DEFAULT_PLAYLISTS = [
-            { name: "iPTVplus ลิขสิทธิ์สด", url: "https://raw.githubusercontent.com/ตัวอย่าง/main/iptv.m3u" },
-            { name: "สำรองช่องสตรีม 3BB", url: "https://raw.githubusercontent.com/ตัวอย่าง/main/3bb-backup.m3u" }
-        ];
-        let playlists = [];
-        let allChannels = [];
-        let pcFileCache = null;
-        let currentMode = 'online';
-        let activePlaylistIdx = 0;
-        let currentView = 'list';
-        const logoGradients = ['from-amber-600 to-orange-700', 'from-cyan-600 to-blue-700', 'from-purple-600 to-indigo-700', 'from-emerald-600 to-teal-700'];
-
-        function initPlaylists() {
-            const saved = localStorage.getItem('jw_iptv_playlists');
-            if (saved) playlists = JSON.parse(saved);
-            else playlists = [...DEFAULT_PLAYLISTS];
-            localStorage.setItem('jw_iptv_playlists', JSON.stringify(playlists));
-            renderQuickBar();
-            renderModalList();
-            if(playlists.length > 0 && !pcFileCache) {
-                fetchM3U(playlists[0].url, playlists[0].name, 0);
-            }
-        }
-
-        function renderQuickBar() {
-            const bar = document.getElementById('quickPlaylistBar');
-            bar.innerHTML = '';
-            playlists.forEach((pl, idx) => {
-                const btn = document.createElement('button');
-                btn.id = `pl-btn-${idx}`;
-                btn.className = `px-2 py-1.5 bg-slate-800/70 hover:bg-slate-700 text-slate-300 font-medium rounded-lg border border-slate-700 text-[11px] transition whitespace-nowrap cursor-pointer`;
-                btn.innerText = pl.name;
-                btn.onclick = () => {
-                    currentMode = 'online';
-                    activePlaylistIdx = idx;
-                    fetchM3U(pl.url, pl.name, idx);
-                };
-                bar.appendChild(btn);
-            });
-            if(pcFileCache) {
-                const divider = document.createElement('span');
-                divider.className = "text-slate-600 text-[9px] mx-1 self-center";
-                divider.innerText = "|";
-                bar.appendChild(divider);
-                const pcBtn = document.createElement('button');
-                pcBtn.id = "pc-file-btn";
-                pcBtn.className = "px-2 py-1.5 bg-slate-800/70 hover:bg-slate-700 text-blue-400 font-medium rounded-lg border border-slate-700 text-[11px] transition whitespace-nowrap cursor-pointer";
-                pcBtn.innerText = `💻 ${pcFileCache.name}`;
-                pcBtn.onclick = () => {
-                    currentMode = 'offline';
-                    activateOfflineFile();
-                };
-                bar.appendChild(pcBtn);
-            }
-            document.querySelectorAll('#quickPlaylistBar button').forEach(btn => {
-                btn.classList.remove('bg-amber-600', 'text-slate-950', 'border-amber-500');
-                btn.classList.add('bg-slate-800/70', 'text-slate-300');
-            });
-            if(currentMode === 'online') {
-                const activeBtn = document.getElementById(`pl-btn-${activePlaylistIdx}`);
-                if(activeBtn) {
-                    activeBtn.classList.remove('bg-slate-800/70', 'text-slate-300');
-                    activeBtn.classList.add('bg-amber-600', 'text-slate-950', 'border-amber-500');
-                }
-                document.getElementById('activeSourceBadge').innerText = 'คลังออนไลน์';
-            } else if(currentMode === 'offline' && pcFileCache) {
-                const pcBtn = document.getElementById('pc-file-btn');
-                if(pcBtn) {
-                    pcBtn.classList.remove('bg-slate-800/70', 'text-blue-400');
-                    pcBtn.classList.add('bg-blue-600', 'text-white', 'border-blue-400');
-                }
-                document.getElementById('activeSourceBadge').innerText = 'ไฟล์ในเครื่อง';
-            }
-        }
-
-        async function fetchM3U(url, name, idx) {
-            currentMode = 'online';
-            activePlaylistIdx = idx;
-            document.getElementById('currentLoadedPlaylistName').innerText = name;
-            document.getElementById('playlistContainer').innerHTML = '<div class="text-center text-amber-400 text-[10px] mt-8 animate-pulse">กำลังโหลด...</div>';
-            renderQuickBar();
-            try {
-                const response = await fetch(url);
-                if (!response.ok) throw new Error('HTTP '+response.status);
-                const text = await response.text();
-                parseM3U(text, name);
-            } catch(e) {
-                document.getElementById('playlistContainer').innerHTML = `<div class="text-center p-3 text-red-400 text-[10px]">❌ โหลดผิดพลาด: ${e.message}</div>`;
-            }
-        }
-
-        function parseM3U(data, playlistName) {
-            const lines = data.split('\n');
-            const channels = [];
-            let currentName = "", currentLogo = "", currentKeyId = "", currentKey = "";
-            for (let i = 0; i < lines.length; i++) {
-                let line = lines[i].trim();
-                if (line.startsWith('#EXTINF:')) {
-                    const logoMatch = line.match(/tvg-logo=["']([^"']+)["']/i);
-                    currentLogo = logoMatch ? logoMatch[1] : "";
-                    const commaIndex = line.indexOf(',');
-                    currentName = commaIndex !== -1 ? line.substring(commaIndex + 1).trim() : "";
-                } else if (line.includes('#KODIPROP:inputstream.adaptive.license_key=')) {
-                    const keyData = line.replace('#KODIPROP:inputstream.adaptive.license_key=', '').trim();
-                    if (keyData.includes(':')) {
-                        const parts = keyData.split(':');
-                        currentKeyId = parts[0];
-                        currentKey = parts[1];
-                    }
-                } else if (line.startsWith('http')) {
-                    channels.push({
-                        name: currentName || `ช่อง ${channels.length+1}`,
-                        logo: currentLogo,
-                        url: line,
-                        keyId: currentKeyId,
-                        key: currentKey,
-                        drm: !!(currentKeyId && currentKey)
-                    });
-                    currentName = ""; currentLogo = ""; currentKeyId = ""; currentKey = "";
-                }
-            }
-            allChannels = channels;
-            document.getElementById('channelCount').innerText = allChannels.length;
-            renderChannels(allChannels);
-            if(allChannels.length > 0) playStream(allChannels[0], null);
-            if(playlistName) document.getElementById('currentLoadedPlaylistName').innerText = playlistName;
-        }
-
-        function renderChannels(channels) {
-            const container = document.getElementById('playlistContainer');
-            container.innerHTML = "";
-            if(channels.length === 0) {
-                container.innerHTML = '<div class="text-center text-slate-500 text-[10px] mt-8">ไม่พบรายการช่อง</div>';
-                return;
-            }
-            
-            if (currentView === 'grid') {
-                const gridDiv = document.createElement('div');
-                gridDiv.className = 'channels-grid';
-                channels.forEach((ch, index) => {
-                    const gridItem = document.createElement('div');
-                    gridItem.className = 'channel-grid-item';
-                    gridItem.onclick = () => playStream(ch, gridItem);
-                    let logoHtml = `<div class="channel-grid-logo"><span class="text-xs font-mono">${String(index+1).slice(-2)}</span></div>`;
-                    if(ch.logo && ch.logo.trim() !== '') {
-                        logoHtml = `<div class="channel-grid-logo"><img src="${ch.logo}" class="w-full h-full object-contain p-0.5" onerror="this.style.display='none'; this.parentElement.innerHTML='<span class=\'text-xs font-mono\'>${String(index+1).slice(-2)}</span>'"></div>`;
-                    }
-                    gridItem.innerHTML = `
-                        ${logoHtml}
-                        <div class="channel-grid-name">${escapeHtml(ch.name)}</div>
-                        ${ch.drm ? '<span class="text-[7px] bg-amber-500/20 text-amber-400 px-1 rounded-full mt-0.5">DRM</span>' : ''}
-                    `;
-                    gridDiv.appendChild(gridItem);
-                });
-                container.appendChild(gridDiv);
-            } else {
-                const listDiv = document.createElement('div');
-                listDiv.className = 'channels-list';
-                channels.forEach((ch, index) => {
-                    const item = document.createElement('div');
-                    item.className = 'channel-list-item';
-                    item.onclick = () => playStream(ch, item);
-                    let logoHtml = `<div class="channel-list-logo"><span class="text-[10px] font-mono">${String(index+1).slice(-2)}</span></div>`;
-                    if(ch.logo && ch.logo.trim() !== '') {
-                        logoHtml = `<div class="channel-list-logo"><img src="${ch.logo}" class="w-full h-full object-contain p-0.5" onerror="this.style.display='none'; this.parentElement.innerHTML='<span class=\'text-[10px] font-mono\'>${String(index+1).slice(-2)}</span>'"></div>`;
-                    }
-                    item.innerHTML = `
-                        ${logoHtml}
-                        <div class="channel-list-name">${escapeHtml(ch.name)}</div>
-                        ${ch.drm ? '<span class="text-[8px] bg-amber-500/20 text-amber-400 px-1 rounded-full flex-shrink-0">DRM</span>' : ''}
-                    `;
-                    listDiv.appendChild(item);
-                });
-                container.appendChild(listDiv);
-            }
-        }
-
-        function escapeHtml(str) { return str.replace(/[&<>]/g, function(m){if(m==='&')return '&amp;';if(m==='<')return '&lt;';if(m==='>')return '&gt;';return m;}); }
-
-        function playStream(channel, element) {
-            if (currentView === 'grid') {
-                document.querySelectorAll('.channel-grid-item').forEach(item => item.classList.remove('active'));
-                if(element) element.classList.add('active');
-            } else {
-                document.querySelectorAll('.channel-list-item').forEach(item => item.classList.remove('active'));
-                if(element) element.classList.add('active');
-            }
-            document.getElementById('currentTrackTitle').innerText = channel.name;
-            document.getElementById('videoUrl').innerText = channel.url;
-            document.getElementById('liveStatusBadge').classList.remove('hidden');
-            
-            const wrapper = document.getElementById('logoWrapper');
-            const txtLogo = document.getElementById('textLogo');
-            const imgLogo = document.getElementById('imgLogo');
-            if(channel.logo && channel.logo.trim() !== '') {
-                txtLogo.classList.add('hidden');
-                imgLogo.classList.remove('hidden');
-                imgLogo.src = channel.logo;
-                wrapper.className = "w-11 h-11 md:w-12 md:h-12 bg-slate-800 rounded-xl flex items-center justify-center border border-slate-700 overflow-hidden flex-shrink-0";
-            } else {
-                imgLogo.classList.add('hidden');
-                txtLogo.classList.remove('hidden');
-                txtLogo.innerText = channel.name.replace(/[^a-zA-Z0-9ก-๙]/g, '').substring(0,2).toUpperCase() || "TV";
-                const randomGrad = logoGradients[Math.floor(Math.random() * logoGradients.length)];
-                wrapper.className = `w-11 h-11 md:w-12 md:h-12 bg-gradient-to-br ${randomGrad} rounded-xl flex items-center justify-center font-bold text-white shadow-md flex-shrink-0 text-xs`;
-            }
-            
-            const isMpd = channel.url.toLowerCase().includes('.mpd');
-            const config = {
-                file: channel.url,
-                width: "100%",
-                aspectratio: "16:9",
-                autostart: true,
-                mute: false
-            };
-            if (isMpd) {
-                config.type = "dash";
-                document.getElementById('channelMeta').innerText = "DASH " + (channel.drm ? "🔐 DRM" : "ปกติ");
-                if (channel.drm) config.drm = { clearkey: { keyId: channel.keyId, key: channel.key } };
-            } else {
-                config.type = "hls";
-                document.getElementById('channelMeta').innerText = "HLS " + (channel.drm ? "🔐 DRM" : "ปกติ");
-                if (channel.drm) config.drm = { clearkey: { keyId: channel.keyId, key: channel.key } };
-            }
-            jwplayer("player").setup(config);
-        }
-
-        function loadOfflineFile(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                pcFileCache = { name: file.name, content: e.target.result };
-                currentMode = 'offline';
-                renderQuickBar();
-                activateOfflineFile();
-            };
-            reader.readAsText(file);
-        }
-        function activateOfflineFile() {
-            if(!pcFileCache) return;
-            document.getElementById('currentLoadedPlaylistName').innerText = `📁 ${pcFileCache.name}`;
-            parseM3U(pcFileCache.content, pcFileCache.name);
-            renderQuickBar();
-        }
-        function filterChannels() {
-            const query = document.getElementById('searchBox').value.toLowerCase();
-            const filtered = allChannels.filter(c => c.name.toLowerCase().includes(query));
-            renderChannels(filtered);
-        }
-
-        function setView(view) {
-            currentView = view;
-            const listBtn = document.getElementById('viewListBtn');
-            const gridBtn = document.getElementById('viewGridBtn');
-            if (view === 'list') {
-                listBtn.classList.add('active');
-                gridBtn.classList.remove('active');
-            } else {
-                gridBtn.classList.add('active');
-                listBtn.classList.remove('active');
-            }
-            const query = document.getElementById('searchBox').value.toLowerCase();
-            const filtered = allChannels.filter(c => c.name.toLowerCase().includes(query));
-            renderChannels(filtered);
-        }
-
-        function renderModalList() {
-            const container = document.getElementById('modalPlaylistList');
-            container.innerHTML = '';
-            if(playlists.length===0) { container.innerHTML='<div class="text-center text-slate-500 text-xs py-4">ไม่มีรายการ</div>'; return; }
-            playlists.forEach((pl, idx) => {
-                const div = document.createElement('div');
-                div.className = "bg-slate-950 border border-slate-800 p-2 rounded-lg flex justify-between items-center";
-                div.innerHTML = `
-                    <div class="min-w-0 flex-grow">
-                        <p class="font-bold text-amber-500 truncate text-xs">${escapeHtml(pl.name)}</p>
-                        <p class="text-[9px] text-slate-500 truncate font-mono">${escapeHtml(pl.url)}</p>
-                    </div>
-                    <div class="flex gap-1">
-                        <button data-edit="${idx}" class="edit-pl text-[9px] bg-slate-800 hover:bg-slate-700 px-2 py-1 rounded-md text-blue-400">แก้ไข</button>
-                        <button data-del="${idx}" class="del-pl text-[9px] bg-slate-800 hover:bg-red-950 px-2 py-1 rounded-md text-red-400">ลบ</button>
-                    </div>
-                `;
-                container.appendChild(div);
-            });
-            document.querySelectorAll('.edit-pl').forEach(btn => btn.addEventListener('click', (e) => editPlaylist(parseInt(btn.dataset.edit))));
-            document.querySelectorAll('.del-pl').forEach(btn => btn.addEventListener('click', (e) => deletePlaylist(parseInt(btn.dataset.del))));
-        }
-        function savePlaylist() {
-            const name = document.getElementById('plName').value.trim();
-            const url = document.getElementById('plUrl').value.trim();
-            const editIndex = parseInt(document.getElementById('editIndex').value);
-            if(!name || !url) return alert('กรุณากรอกให้ครบ');
-            if(editIndex === -1) playlists.push({ name, url });
-            else playlists[editIndex] = { name, url };
-            localStorage.setItem('jw_iptv_playlists', JSON.stringify(playlists));
-            initPlaylists();
-            resetForm();
-            toggleManager(false);
-        }
-        function editPlaylist(idx) {
-            document.getElementById('editIndex').value = idx;
-            document.getElementById('plName').value = playlists[idx].name;
-            document.getElementById('plUrl').value = playlists[idx].url;
-            document.getElementById('savePlaylistBtn').innerHTML = '💾 อัปเดต';
-            document.getElementById('cancelEditBtn').classList.remove('hidden');
-        }
-        function deletePlaylist(idx) {
-            if(confirm(`ลบ ${playlists[idx].name}?`)) {
-                playlists.splice(idx,1);
-                localStorage.setItem('jw_iptv_playlists', JSON.stringify(playlists));
-                initPlaylists();
-                resetForm();
-            }
-        }
-        function resetForm() {
-            document.getElementById('editIndex').value = '-1';
-            document.getElementById('plName').value = '';
-            document.getElementById('plUrl').value = '';
-            document.getElementById('savePlaylistBtn').innerHTML = '➕ บันทึก';
-            document.getElementById('cancelEditBtn').classList.add('hidden');
-        }
-        function toggleManager(forceClose) {
-            const modal = document.getElementById('playlistManagerModal');
-            if(forceClose === false) modal.classList.add('hidden');
-            else modal.classList.toggle('hidden');
-            if(!modal.classList.contains('hidden')) renderModalList();
-        }
-
-        document.getElementById('offlineFile').addEventListener('change', loadOfflineFile);
-        document.getElementById('openManagerBtn').addEventListener('click', () => toggleManager());
-        document.getElementById('closeModalBtn').addEventListener('click', () => toggleManager(false));
-        document.getElementById('savePlaylistBtn').addEventListener('click', savePlaylist);
-        document.getElementById('cancelEditBtn').addEventListener('click', resetForm);
-        document.getElementById('searchBox').addEventListener('input', filterChannels);
-        document.getElementById('playlistManagerModal').addEventListener('click', (e) => { if(e.target === document.getElementById('playlistManagerModal')) toggleManager(false); });
-        document.getElementById('viewListBtn').addEventListener('click', () => setView('list'));
-        document.getElementById('viewGridBtn').addEventListener('click', () => setView('grid'));
-
-        initPlaylists();
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
