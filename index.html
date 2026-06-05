@@ -4,30 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
     <meta name="theme-color" content="#0a0a0e">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>SAMORN IPTV Player 2026 | Ultra HD Smart Player</title>
     
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.3.5/shaka-player.compiled.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.3.5/shaka-player.ui.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.3.5/controls.min.css">
 
     <style>
-        /* Modern iOS Luxury Style Premium Theme */
         * { -webkit-tap-highlight-color: transparent; }
         body {
             background: #0C0C10;
             color: #f8fafc;
-            letter-spacing: -0.01em;
-            font-family: -apple-system, 'SF Pro Text', 'SF Pro Display', system-ui, BlinkMacSystemFont, sans-serif;
+            font-family: -apple-system, system-ui, sans-serif;
             -webkit-font-smoothing: antialiased;
         }
         .custom-scroll::-webkit-scrollbar { width: 4px; height: 4px; }
         .custom-scroll::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); border-radius: 10px; }
         .custom-scroll::-webkit-scrollbar-thumb { background: rgba(245,158,11,0.4); border-radius: 10px; }
-        .custom-scroll::-webkit-scrollbar-thumb:hover { background: #f59e0b; }
         
-        /* Channel List & Grid Interaction styles */
+        /* Lists & Grids */
         .channels-list { display: flex; flex-direction: column; gap: 8px; }
         .channel-list-item {
             display: flex; align-items: center; gap: 12px; padding: 10px 14px;
@@ -35,17 +31,8 @@
             border-radius: 14px; cursor: pointer; transition: all 0.2s;
         }
         .channel-list-item:hover { background: rgba(255,255,255,0.08); transform: translateY(-1px); }
-        .channel-list-item.active {
-            background: linear-gradient(135deg, rgba(245,158,11,0.15), rgba(234,88,12,0.15));
-            border-color: rgba(245,158,11,0.4);
-        }
-        .channel-list-logo {
-            width: 38px; height: 38px; background: rgba(15,23,42,0.6);
-            border-radius: 10px; display: flex; align-items: center; justify-content: center;
-            overflow: hidden; border: 0.5px solid rgba(255,255,255,0.1); color: #94a3b8;
-        }
-        .channel-list-name { font-size: 13px; font-weight: 500; flex-grow: 1; color: #e2e8f0; }
-
+        .channel-list-item.active { background: linear-gradient(135deg, rgba(245,158,11,0.15), rgba(234,88,12,0.15)); border-color: rgba(245,158,11,0.4); }
+        
         .channels-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; }
         .channel-grid-item {
             display: flex; flex-direction: column; align-items: center; text-align: center; padding: 12px 8px;
@@ -53,21 +40,22 @@
             border-radius: 16px; cursor: pointer; transition: all 0.2s; gap: 6px;
         }
         .channel-grid-item:hover { background: rgba(255,255,255,0.08); transform: scale(1.02); }
-        .channel-grid-item.active {
-            background: linear-gradient(135deg, rgba(245,158,11,0.15), rgba(234,88,12,0.15));
-            border-color: rgba(245,158,11,0.4);
-        }
-        .channel-grid-logo {
-            width: 48px; height: 48px; background: rgba(15,23,42,0.6);
-            border-radius: 12px; display: flex; align-items: center; justify-content: center;
+        .channel-grid-item.active { background: linear-gradient(135deg, rgba(245,158,11,0.15), rgba(234,88,12,0.15)); border-color: rgba(245,158,11,0.4); }
+        
+        .channel-list-logo, .channel-grid-logo {
+            background: rgba(15,23,42,0.6); display: flex; align-items: center; justify-content: center;
             overflow: hidden; border: 0.5px solid rgba(255,255,255,0.1); color: #94a3b8;
         }
-        .channel-grid-name { font-size: 11px; font-weight: 500; width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #cbd5e1; }
+        .channel-list-logo { width: 38px; height: 38px; border-radius: 10px; }
+        .channel-grid-logo { width: 48px; height: 48px; border-radius: 12px; }
         
-        .btn-view-toggle button.active {
-            background: linear-gradient(135deg, #f59e0b, #ea580c);
-            color: #0f0f13;
-        }
+        .channel-grid-name { font-size: 11px; font-weight: 500; width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #cbd5e1; }
+        .channel-list-name { font-size: 13px; font-weight: 500; flex-grow: 1; color: #e2e8f0; }
+
+        .btn-view-toggle button.active { background: linear-gradient(135deg, #f59e0b, #ea580c); color: #0f0f13; }
+        
+        /* Shaka UI Override */
+        .shaka-video-container { width: 100% !important; height: 100% !important; background-color: black; }
     </style>
 </head>
 <body class="h-screen flex flex-col overflow-hidden select-none">
@@ -85,24 +73,24 @@
                 📁 เลือกไฟล์
             </label>
             <input type="file" id="offlineFile" accept=".m3u,.txt" class="hidden">
-            <button id="openManagerBtn" class="px-3 py-1.5 bg-gradient-to-r from-amber-500/20 to-orange-500/20 hover:from-amber-500/30 hover:to-orange-500/30 border border-amber-500/30 text-amber-400 text-xs font-semibold rounded-xl transition cursor-pointer">
+            <button id="openManagerBtn" class="px-3 py-1.5 bg-gradient-to-r from-amber-500/20 to-orange-500/20 hover:from-amber-500/30 text-amber-400 text-xs font-semibold rounded-xl border border-amber-500/30 transition cursor-pointer">
                 ⚙️ จัดการคลัง
             </button>
         </div>
     </header>
 
-    <div class="bg-[#08080c] px-4 py-2 border-b border-white/5 flex gap-2 overflow-x-auto hide-scrollbar flex-shrink-0" id="quickPlaylistBar">
-        </div>
+    <div class="bg-[#08080c] px-4 py-2 border-b border-white/5 flex gap-2 overflow-x-auto hide-scrollbar flex-shrink-0" id="quickPlaylistBar"></div>
 
     <main class="flex-grow flex flex-col md:flex-row overflow-hidden min-h-0">
-        
         <section class="w-full md:w-3/5 bg-black flex flex-col relative border-b md:border-b-0 md:border-r border-white/5">
-            <div class="flex-grow w-full h-full flex items-center justify-center relative bg-slate-950/40">
-                <video id="player" class="w-full h-full object-contain aspect-video" controls autoplay playsinline></video>
+            <div class="flex-grow w-full h-full flex items-center justify-center relative bg-black">
+                <div id="videoContainer" class="w-full h-full relative aspect-video">
+                    <video id="player" class="w-full h-full object-contain" autoplay playsinline></video>
+                </div>
             </div>
             
             <div class="p-4 bg-[#0a0a0f] border-t border-white/5 flex items-start gap-3 flex-shrink-0">
-                <div id="logoWrapper" class="w-11 h-11 bg-slate-800 rounded-xl flex items-center justify-center font-bold text-white shadow-md flex-shrink-0 text-xs">TV</div>
+                <div id="logoWrapper" class="w-11 h-11 bg-slate-800 rounded-xl flex items-center justify-center font-bold text-white shadow-md flex-shrink-0 text-xs border border-white/10 overflow-hidden">TV</div>
                 <div class="min-w-0 flex-grow">
                     <div class="flex items-center gap-2 flex-wrap">
                         <h2 id="currentTrackTitle" class="text-sm font-bold text-white truncate">กรุณาเลือกช่องรายการ</h2>
@@ -114,7 +102,7 @@
             </div>
         </section>
 
-        <section class="w-full md:w-2/5 flex flex-col bg-[#0f0f15]/40 backdrop-blur-md overflow-hidden">
+        <section class="w-full md:w-2/5 flex flex-col bg-[#0f0f15] overflow-hidden">
             <div class="p-3 border-b border-white/5 flex items-center gap-2 flex-shrink-0">
                 <div class="relative flex-grow">
                     <input type="text" id="searchBox" placeholder="ค้นหาชื่อช่องรายการ..." class="w-full bg-white/5 border border-white/10 rounded-xl pl-8 pr-3 py-2 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-amber-500/50 transition">
@@ -125,49 +113,39 @@
                     <button id="viewGridBtn" class="px-2.5 py-1.5 rounded-lg text-[10px] font-bold transition cursor-pointer">📱 ตาราง</button>
                 </div>
             </div>
-
             <div class="px-4 py-1.5 bg-white/[0.01] border-b border-white/5 flex justify-between items-center flex-shrink-0">
-                <span id="currentLoadedPlaylistName" class="text-[10px] font-semibold text-slate-400 truncate">คลังข้อมูลเริ่มต้น</span>
-                <span class="text-[10px] font-mono text-amber-500 bg-amber-500/10 px-1.5 py-0.5 rounded-md">พร้อมใช้งาน: <span id="channelCount">0</span> ช่อง</span>
+                <span id="currentLoadedPlaylistName" class="text-[10px] font-semibold text-slate-400 truncate">กำลังโหลด...</span>
+                <span class="text-[10px] font-mono text-amber-500 bg-amber-500/10 px-1.5 py-0.5 rounded-md">พบ: <span id="channelCount">0</span> ช่อง</span>
             </div>
-
-            <div id="playlistContainer" class="flex-grow p-3 overflow-y-auto custom-scroll min-h-0">
-                </div>
+            <div id="playlistContainer" class="flex-grow p-3 overflow-y-auto custom-scroll min-h-0"></div>
         </section>
     </main>
 
     <div id="playlistManagerModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 z-50">
         <div class="bg-[#121218] border border-white/10 w-full max-w-md rounded-2xl flex flex-col max-h-[85vh] shadow-2xl overflow-hidden" onclick="event.stopPropagation()">
             <div class="p-4 border-b border-white/5 flex justify-between items-center bg-[#161620]">
-                <h3 class="text-sm font-bold text-white flex items-center gap-1.5">⚙️ จัดการคลังสตรีม M3U</h3>
+                <h3 class="text-sm font-bold text-white">⚙️ จัดการคลัง M3U</h3>
                 <button id="closeModalBtn" class="w-6 h-6 rounded-full bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center text-xs transition cursor-pointer">✕</button>
             </div>
-            
             <div class="p-4 border-b border-white/5 space-y-3 bg-[#101016]">
                 <input type="hidden" id="editIndex" value="-1">
                 <div class="flex flex-col gap-2">
-                    <input type="text" id="plName" placeholder="ชื่อคลัง (เช่น ดูฟรีทีวี)" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-amber-500/50">
-                    <input type="text" id="plUrl" placeholder="ลิงก์ไฟล์ .m3u หรือ URL สตรีมตรง" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-xs font-mono text-white placeholder:text-slate-500 focus:outline-none focus:border-amber-500/50">
+                    <input type="text" id="plName" placeholder="ชื่อคลัง" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-xs text-white placeholder:text-slate-500">
+                    <input type="text" id="plUrl" placeholder="ลิงก์ไฟล์ .m3u" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-xs font-mono text-white placeholder:text-slate-500">
                 </div>
                 <div class="flex justify-end gap-2">
-                    <button id="cancelEditBtn" class="hidden bg-white/5 hover:bg-white/10 px-3 py-1.5 rounded-xl text-xs font-medium transition cursor-pointer">ยกเลิก</button>
-                    <button id="savePlaylistBtn" class="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-black font-bold px-4 py-1.5 rounded-xl text-xs shadow-md transition cursor-pointer">➕ บันทึก</button>
+                    <button id="cancelEditBtn" class="hidden bg-white/5 hover:bg-white/10 px-3 py-1.5 rounded-xl text-xs transition cursor-pointer">ยกเลิก</button>
+                    <button id="savePlaylistBtn" class="bg-gradient-to-r from-amber-500 to-orange-500 text-black font-bold px-4 py-1.5 rounded-xl text-xs transition cursor-pointer">➕ บันทึก</button>
                 </div>
             </div>
-
-            <div id="modalPlaylistList" class="p-3 overflow-y-auto custom-scroll flex-grow space-y-2 bg-[#0d0d12]">
-                </div>
+            <div id="modalPlaylistList" class="p-3 overflow-y-auto custom-scroll flex-grow space-y-2 bg-[#0d0d12]"></div>
         </div>
     </div>
 
     <script>
         const DEFAULT_PLAYLISTS = [
-            { name: "BeritaSelatan", url: "https://raw.githubusercontent.com/BeritaSelatan/MalayINDO/main/Tvalha" },
-            { name: "Thai Public M3U", url: "https://raw.githubusercontent.com/iptv-org/iptv/master/streams/th.m3u" },
-            { name: "sugus32", url: "https://raw.githubusercontent.com/sugus320/sugus320tv/refs/heads/main/DJTON-iPTVPlus.m3u" },
-            { name: "cattv976", url: "https://raw.githubusercontent.com/cattv976/iptv/refs/heads/main/cattv.m3u" },
-            { name: "CricHd", url: "https://raw.githubusercontent.com/abusaeeidx/CricHd-playlists-Auto-Update-permanent/refs/heads/main/ALL.m3u" },
-            { name: "warungtvbox", url: "https://raw.githubusercontent.com/warungtvbox/lokal/refs/heads/main/playlist2022" }
+            { name: "iPTVplus ลิขสิทธิ์สด", url: "https://raw.githubusercontent.com/sugus320/sugus320tv/refs/heads/main/DJTON-iPTVPlus.m3u" },
+            { name: "Thai Public", url: "https://raw.githubusercontent.com/iptv-org/iptv/master/streams/th.m3u" }
         ];
 
         let playlists = [];
@@ -176,80 +154,63 @@
         let currentMode = 'online';
         let activePlaylistIdx = 0;
         let currentView = 'list';
-        let shakaPlayerInstance = null; // ถือออบเจกต์เพื่อทำลายและสร้างใหม่ไม่ให้เกิดหน่วยความจำรั่วไหล
         
+        // ตัวแปร Shaka Player ส่วนกลาง สร้างแค่ครั้งเดียว!
+        let shakaPlayer = null;
+        let shakaUI = null;
+
         const logoGradients = ['from-amber-600 to-orange-700', 'from-cyan-600 to-blue-700', 'from-purple-600 to-indigo-700', 'from-emerald-600 to-teal-700'];
 
-        function initPlaylists() {
+        // เริ่มต้นแอป
+        async function initApp() {
+            initShakaPlayer(); // โหลด Player ครั้งเดียว
+            
             const saved = localStorage.getItem('jw_iptv_playlists');
             if (saved) playlists = JSON.parse(saved);
             else playlists = [...DEFAULT_PLAYLISTS];
             localStorage.setItem('jw_iptv_playlists', JSON.stringify(playlists));
+            
             renderQuickBar();
             renderModalList();
+            
             if(playlists.length > 0 && !pcFileCache) {
                 fetchM3U(playlists[0].url, playlists[0].name, 0);
             }
         }
 
-        function renderQuickBar() {
-            const bar = document.getElementById('quickPlaylistBar');
-            bar.innerHTML = '';
-            playlists.forEach((pl, idx) => {
-                const btn = document.createElement('button');
-                btn.id = `pl-btn-${idx}`;
-                btn.className = `px-3 py-1.5 bg-white/5 hover:bg-white/10 text-slate-300 font-medium rounded-full border border-white/10 text-xs transition whitespace-nowrap cursor-pointer`;
-                btn.innerText = pl.name;
-                btn.onclick = () => {
-                    currentMode = 'online';
-                    activePlaylistIdx = idx;
-                    fetchM3U(pl.url, pl.name, idx);
-                };
-                bar.appendChild(btn);
-            });
-            if(pcFileCache) {
-                const divider = document.createElement('span');
-                divider.className = "text-slate-700 text-xs mx-1 self-center";
-                divider.innerText = "|";
-                bar.appendChild(divider);
-                const pcBtn = document.createElement('button');
-                pcBtn.id = "pc-file-btn";
-                pcBtn.className = "px-3 py-1.5 bg-blue-600/20 hover:bg-blue-600/30 text-blue-400 font-medium rounded-full border border-blue-500/30 text-xs transition whitespace-nowrap cursor-pointer";
-                pcBtn.innerText = `💻 ${pcFileCache.name}`;
-                pcBtn.onclick = () => {
-                    currentMode = 'offline';
-                    activateOfflineFile();
-                };
-                bar.appendChild(pcBtn);
+        // ฟังก์ชันสร้าง Shaka Player และ UI Overlay (รันแค่ครั้งเดียวเท่านั้น)
+        function initShakaPlayer() {
+            shaka.polyfill.installAll();
+            if (!shaka.Player.isBrowserSupported()) {
+                alert('บราวเซอร์ไม่รองรับเครื่องเล่นนี้');
+                return;
             }
+
+            const video = document.getElementById('player');
+            const videoContainer = document.getElementById('videoContainer');
             
-            document.querySelectorAll('#quickPlaylistBar button').forEach(btn => {
-                btn.classList.remove('bg-gradient-to-r', 'from-amber-500', 'to-orange-500', 'text-black', 'border-transparent', 'font-bold');
-                btn.classList.add('bg-white/5', 'text-slate-300', 'border-white/10');
+            shakaPlayer = new shaka.Player(video);
+            shakaUI = new shaka.ui.Overlay(shakaPlayer, videoContainer, video);
+
+            // เปิดเมนู UI ที่ต้องการ (ซับ, เสียง, ความละเอียด)
+            shakaUI.configure({
+                controlPanelElements: [
+                    'play_pause', 'time_and_duration', 'spacer', 'mute', 'volume', 
+                    'captions', 'language', 'quality', 'fullscreen'
+                ]
             });
-            
-            if(currentMode === 'online') {
-                const activeBtn = document.getElementById(`pl-btn-${activePlaylistIdx}`);
-                if(activeBtn) {
-                    activeBtn.classList.remove('bg-white/5', 'text-slate-300', 'border-white/10');
-                    activeBtn.className += ' bg-gradient-to-r from-amber-500 to-orange-500 text-black border-transparent font-bold';
-                }
-                document.getElementById('activeSourceBadge').innerText = 'คลังออนไลน์';
-            } else if(currentMode === 'offline' && pcFileCache) {
-                const pcBtn = document.getElementById('pc-file-btn');
-                if(pcBtn) {
-                    pcBtn.classList.remove('bg-blue-600/20', 'text-blue-400', 'border-blue-500/30');
-                    pcBtn.className += ' bg-gradient-to-r from-blue-500 to-indigo-600 text-white border-transparent font-bold';
-                }
-                document.getElementById('activeSourceBadge').innerText = 'ไฟล์ในเครื่อง';
-            }
+
+            shakaPlayer.addEventListener('error', (event) => {
+                console.error('Shaka Player Error:', event.detail);
+            });
         }
 
+        // โหลด M3U
         async function fetchM3U(url, name, idx) {
             currentMode = 'online';
             activePlaylistIdx = idx;
             document.getElementById('currentLoadedPlaylistName').innerText = name;
-            document.getElementById('playlistContainer').innerHTML = '<div class="text-center text-amber-400 text-xs mt-8 animate-pulse">⚙️ กำลังประมวลผลคำขอสตรีม...</div>';
+            document.getElementById('playlistContainer').innerHTML = '<div class="text-center text-amber-400 text-xs mt-8 animate-pulse">กำลังโหลดสตรีม...</div>';
             renderQuickBar();
             try {
                 const response = await fetch(url);
@@ -257,14 +218,16 @@
                 const text = await response.text();
                 parseM3U(text, name);
             } catch(e) {
-                document.getElementById('playlistContainer').innerHTML = `<div class="text-center p-3 text-red-400 text-xs">❌ โหลดสตรีมผิดพลาด: ${e.message}<br><span class="text-[10px] text-slate-500">อาจเกิดจากระบบป้องกัน CORS ของลิงก์ต้นทาง</span></div>`;
+                document.getElementById('playlistContainer').innerHTML = `<div class="text-center p-3 text-red-400 text-xs">❌ โหลดผิดพลาด: ${e.message}</div>`;
             }
         }
 
+        // แยกวิเคราะห์ M3U
         function parseM3U(data, playlistName) {
             const lines = data.split('\n');
             const channels = [];
             let currentName = "", currentLogo = "", currentKeyId = "", currentKey = "";
+            
             for (let i = 0; i < lines.length; i++) {
                 let line = lines[i].trim();
                 if (line.startsWith('#EXTINF:')) {
@@ -295,34 +258,81 @@
             document.getElementById('channelCount').innerText = allChannels.length;
             renderChannels(allChannels);
             if(allChannels.length > 0) playStream(allChannels[0], null);
-            if(playlistName) document.getElementById('currentLoadedPlaylistName').innerText = playlistName;
+        }
+
+        // จัดการคลิกเล่นสตรีม
+        async function playStream(channel, element) {
+            // จัดการคลาส active
+            document.querySelectorAll('.channel-grid-item, .channel-list-item').forEach(item => item.classList.remove('active'));
+            if(element) element.classList.add('active');
+            
+            // อัปเดตข้อมูล UI กล่องล่างซ้าย
+            document.getElementById('currentTrackTitle').innerText = channel.name;
+            document.getElementById('videoUrl').innerText = channel.url;
+            document.getElementById('liveStatusBadge').classList.remove('hidden');
+            
+            const wrapper = document.getElementById('logoWrapper');
+            wrapper.innerHTML = '';
+            if(channel.logo && channel.logo.trim() !== '') {
+                const img = document.createElement('img');
+                img.src = channel.logo;
+                img.className = "w-full h-full object-contain p-0.5";
+                img.onerror = () => { wrapper.innerText = channel.name.substring(0,2).toUpperCase(); };
+                wrapper.appendChild(img);
+            } else {
+                wrapper.innerText = channel.name.substring(0,2).toUpperCase() || "TV";
+                wrapper.style.background = "linear-gradient(to bottom right, #d97706, #c2410c)";
+            }
+            
+            const isMpd = channel.url.toLowerCase().includes('.mpd');
+            document.getElementById('channelMeta').innerText = (isMpd ? "DASH " : "HLS ") + (channel.drm ? "🔐 DRM" : "ปกติ");
+
+            // การตั้งค่า DRM (รีเซ็ตก่อน แล้วค่อยเซ็ตใหม่)
+            shakaPlayer.configure({ drm: { clearKeys: {} } });
+            if (channel.drm) {
+                shakaPlayer.configure({
+                    drm: { clearKeys: { [channel.keyId.trim()]: channel.key.trim() } }
+                });
+            }
+
+            // สั่งเล่น
+            try {
+                await shakaPlayer.load(channel.url);
+                document.getElementById('player').play();
+            } catch (error) {
+                console.error('Error loading stream:', error);
+            }
+        }
+
+        // Render ส่วนอื่นๆ (Quick Bar, Channel List, Modal)
+        function renderQuickBar() {
+            const bar = document.getElementById('quickPlaylistBar');
+            bar.innerHTML = '';
+            playlists.forEach((pl, idx) => {
+                const btn = document.createElement('button');
+                btn.className = `px-3 py-1.5 text-xs rounded-full border transition whitespace-nowrap cursor-pointer ${currentMode === 'online' && activePlaylistIdx === idx ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-black border-transparent font-bold' : 'bg-white/5 text-slate-300 border-white/10'}`;
+                btn.innerText = pl.name;
+                btn.onclick = () => fetchM3U(pl.url, pl.name, idx);
+                bar.appendChild(btn);
+            });
         }
 
         function renderChannels(channels) {
             const container = document.getElementById('playlistContainer');
             container.innerHTML = "";
-            if(channels.length === 0) {
-                container.innerHTML = '<div class="text-center text-slate-500 text-xs mt-8">ไม่พบรายการช่องรายการที่ค้นหา</div>';
-                return;
-            }
-            
             if (currentView === 'grid') {
                 const gridDiv = document.createElement('div');
                 gridDiv.className = 'channels-grid';
                 channels.forEach((ch, index) => {
-                    const gridItem = document.createElement('div');
-                    gridItem.className = 'channel-grid-item';
-                    gridItem.onclick = () => playStream(ch, gridItem);
-                    let logoHtml = `<div class="channel-grid-logo"><span class="text-xs font-mono font-bold">${index+1}</span></div>`;
-                    if(ch.logo && ch.logo.trim() !== '') {
-                        logoHtml = `<div class="channel-grid-logo"><img src="${ch.logo}" class="w-full h-full object-contain p-1" onerror="this.style.display='none'; this.parentElement.innerHTML='<span class=\'text-xs font-mono font-bold\'>${index+1}</span>'"></div>`;
-                    }
-                    gridItem.innerHTML = `
-                        ${logoHtml}
+                    const item = document.createElement('div');
+                    item.className = 'channel-grid-item';
+                    item.onclick = () => playStream(ch, item);
+                    item.innerHTML = `
+                        <div class="channel-grid-logo">${ch.logo ? `<img src="${ch.logo}" class="w-full h-full object-contain p-1">` : `<span class="text-xs font-bold">${index+1}</span>`}</div>
                         <div class="channel-grid-name">${escapeHtml(ch.name)}</div>
-                        ${ch.drm ? '<span class="text-[8px] font-bold bg-amber-500 text-black px-1 rounded-md scale-90">DRM</span>' : ''}
+                        ${ch.drm ? '<span class="text-[8px] font-bold bg-amber-500 text-black px-1 rounded-md">DRM</span>' : ''}
                     `;
-                    gridDiv.appendChild(gridItem);
+                    gridDiv.appendChild(item);
                 });
                 container.appendChild(gridDiv);
             } else {
@@ -332,14 +342,10 @@
                     const item = document.createElement('div');
                     item.className = 'channel-list-item';
                     item.onclick = () => playStream(ch, item);
-                    let logoHtml = `<div class="channel-list-logo"><span class="text-xs font-mono font-bold">${index+1}</span></div>`;
-                    if(ch.logo && ch.logo.trim() !== '') {
-                        logoHtml = `<div class="channel-list-logo"><img src="${ch.logo}" class="w-full h-full object-contain p-1" onerror="this.style.display='none'; this.parentElement.innerHTML='<span class=\'text-xs font-mono font-bold\'>${index+1}</span>'"></div>`;
-                    }
                     item.innerHTML = `
-                        ${logoHtml}
+                        <div class="channel-list-logo">${ch.logo ? `<img src="${ch.logo}" class="w-full h-full object-contain p-1">` : `<span class="text-xs font-bold">${index+1}</span>`}</div>
                         <div class="channel-list-name">${escapeHtml(ch.name)}</div>
-                        ${ch.drm ? '<span class="text-[9px] font-bold bg-amber-500 text-black px-1.5 py-0.5 rounded-md flex-shrink-0">🔐 DRM</span>' : ''}
+                        ${ch.drm ? '<span class="text-[9px] font-bold bg-amber-500 text-black px-1.5 py-0.5 rounded-md">🔐 DRM</span>' : ''}
                     `;
                     listDiv.appendChild(item);
                 });
@@ -347,216 +353,79 @@
             }
         }
 
-        function escapeHtml(str) { return str.replace(/[&<>]/g, function(m){if(m==='&')return '&amp;';if(m==='<')return '&lt;';if(m==='>')return '&gt;';return m;}); }
+        function escapeHtml(str) { return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m])); }
 
-        // มอดูลการเล่นสตรีมด้วยสถาปัตยกรรมระดับอุตสาหกรรมแบบ Shaka Player แกะและยิง DRM ได้อย่างแม่นยำ
-        async function playStream(channel, element) {
-            if (currentView === 'grid') {
-                document.querySelectorAll('.channel-grid-item').forEach(item => item.classList.remove('active'));
-                if(element) element.className += ' active';
-            } else {
-                document.querySelectorAll('.channel-list-item').forEach(item => item.classList.remove('active'));
-                if(element) element.className += ' active';
-            }
-            document.getElementById('currentTrackTitle').innerText = channel.name;
-            document.getElementById('videoUrl').innerText = channel.url;
-            document.getElementById('liveStatusBadge').classList.remove('hidden');
-            
-            const wrapper = document.getElementById('logoWrapper');
-            const txtLogo = document.getElementById('textLogo');
-            const imgLogo = document.getElementById('imgLogo');
-            
-            // ล้างข้อมูลโลโก้เดิม
-            wrapper.innerHTML = '';
-            if(channel.logo && channel.logo.trim() !== '') {
-                const img = document.createElement('img');
-                img.src = channel.logo;
-                img.className = "w-full h-full object-contain p-0.5";
-                img.onerror = () => {
-                    wrapper.innerHTML = channel.name.substring(0,2).toUpperCase();
-                    wrapper.className = `w-11 h-11 bg-gradient-to-br ${logoGradients[Math.floor(Math.random() * logoGradients.length)]} rounded-xl flex items-center justify-center font-bold text-white shadow-md flex-shrink-0 text-xs`;
-                };
-                wrapper.appendChild(img);
-                wrapper.className = "w-11 h-11 bg-slate-900 rounded-xl flex items-center justify-center border border-white/10 overflow-hidden flex-shrink-0";
-            } else {
-                wrapper.innerText = channel.name.replace(/[^a-zA-Z0-9ก-๙]/g, '').substring(0,2).toUpperCase() || "TV";
-                const randomGrad = logoGradients[Math.floor(Math.random() * logoGradients.length)];
-                wrapper.className = `w-11 h-11 bg-gradient-to-br ${randomGrad} rounded-xl flex items-center justify-center font-bold text-white shadow-md flex-shrink-0 text-xs`;
-            }
-            
-            const isMpd = channel.url.toLowerCase().includes('.mpd');
-            document.getElementById('channelMeta').innerText = (isMpd ? "DASH " : "HLS ") + (channel.drm ? "🔐 DRM" : "ปกติ");
-
-            const video = document.getElementById('player');
-            
-            // บังคับติดตั้งโพลีฟิลล์ความเข้ากันได้ของระบบบราวเซอร์
-            shaka.polyfill.installAll();
-
-            if (!shaka.Player.isBrowserSupported()) {
-                alert('บราวเซอร์ของคุณไม่รองรับการถอดรหัสของเครื่องเล่นสตรีมรุ่นนี้');
-                return;
-            }
-
-            // เคลียร์อินสแตนซ์เก่าออกเพื่อไม่ให้เกิดการชนกันของเธรดสตรีมมิ่ง
-            if (shakaPlayerInstance) {
-                try {
-                    await shakaPlayerInstance.destroy();
-                } catch(e) { console.error("Destroy error:", e); }
-                shakaPlayerInstance = null;
-            }
-
-            // ผูก Shaka เข้ากับองค์ประกอบวิดีโอหลัก
-            shakaPlayerInstance = new shaka.Player(video);
-
-            // ลงทะเบียนดักจับข้อผิดพลาดของสตรีมมิ่ง
-            shakaPlayerInstance.addEventListener('error', (event) => {
-                console.error('Shaka Player Engine Error:', event.detail);
-            });
-
-            // ตรวจจับและอัดฉีดค่าถอดรหัส ClearKey DRM เข้าสู่ MediaKeySystem ของบราวเซอร์ดั้งเดิม
-            if (channel.drm) {
-                const cleanKeyId = channel.keyId.trim();
-                const cleanKey = channel.key.trim();
-                
-                shakaPlayerInstance.configure({
-                    drm: {
-                        clearKeys: {
-                            [cleanKeyId]: cleanKey
-                        }
-                    }
-                });
-            }
-
-            // ทำการเชื่อมต่อเน็ตเวิร์กเพื่อดาวน์โหลด Manifest สตรีมและสั่งประมวลผลทันที
-            try {
-                await shakaPlayerInstance.load(channel.url);
-                video.play();
-            } catch (error) {
-                console.error('เกิดข้อผิดพลาดในการโหลดระบบสตรีม:', error);
-            }
-        }
-
-        function loadOfflineFile(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                pcFileCache = { name: file.name, content: e.target.result };
-                currentMode = 'offline';
-                renderQuickBar();
-                activateOfflineFile();
-            };
-            reader.readAsText(file);
-        }
+        // Event Listeners สำหรับการค้นหาและเปลี่ยนมุมมอง
+        document.getElementById('searchBox').addEventListener('input', (e) => {
+            renderChannels(allChannels.filter(c => c.name.toLowerCase().includes(e.target.value.toLowerCase())));
+        });
         
-        function activateOfflineFile() {
-            if(!pcFileCache) return;
-            document.getElementById('currentLoadedPlaylistName').innerText = `📁 ${pcFileCache.name}`;
-            parseM3U(pcFileCache.content, pcFileCache.name);
-            renderQuickBar();
-        }
+        document.getElementById('viewListBtn').addEventListener('click', () => {
+            currentView = 'list';
+            document.getElementById('viewListBtn').classList.add('active');
+            document.getElementById('viewGridBtn').classList.remove('active');
+            renderChannels(allChannels.filter(c => c.name.toLowerCase().includes(document.getElementById('searchBox').value.toLowerCase())));
+        });
         
-        function filterChannels() {
-            const query = document.getElementById('searchBox').value.toLowerCase();
-            const filtered = allChannels.filter(c => c.name.toLowerCase().includes(query));
-            renderChannels(filtered);
-        }
+        document.getElementById('viewGridBtn').addEventListener('click', () => {
+            currentView = 'grid';
+            document.getElementById('viewGridBtn').classList.add('active');
+            document.getElementById('viewListBtn').classList.remove('active');
+            renderChannels(allChannels.filter(c => c.name.toLowerCase().includes(document.getElementById('searchBox').value.toLowerCase())));
+        });
 
-        function setView(view) {
-            currentView = view;
-            const listBtn = document.getElementById('viewListBtn');
-            const gridBtn = document.getElementById('viewGridBtn');
-            if (view === 'list') {
-                listBtn.classList.add('active');
-                gridBtn.classList.remove('active');
-            } else {
-                gridBtn.classList.add('active');
-                listBtn.classList.remove('active');
-            }
-            filterChannels();
-        }
+        // Event Listeners จัดการ Modal และไฟล์
+        document.getElementById('openManagerBtn').addEventListener('click', () => { document.getElementById('playlistManagerModal').classList.remove('hidden'); renderModalList(); });
+        document.getElementById('closeModalBtn').addEventListener('click', () => document.getElementById('playlistManagerModal').classList.add('hidden'));
+        document.getElementById('playlistManagerModal').addEventListener('click', (e) => { if(e.target === document.getElementById('playlistManagerModal')) e.target.classList.add('hidden'); });
 
         function renderModalList() {
             const container = document.getElementById('modalPlaylistList');
             container.innerHTML = '';
-            if(playlists.length===0) { container.innerHTML='<div class="text-center text-slate-500 text-xs py-4">ไม่มีรายการคลังบันทึกไว้</div>'; return; }
             playlists.forEach((pl, idx) => {
                 const div = document.createElement('div');
                 div.className = "bg-black/40 border border-white/5 p-3 rounded-xl flex justify-between items-center gap-3";
                 div.innerHTML = `
-                    <div class="min-w-0 flex-grow">
-                        <p class="font-bold text-amber-400 truncate text-xs">${escapeHtml(pl.name)}</p>
-                        <p class="text-[10px] text-slate-500 truncate font-mono mt-0.5">${escapeHtml(pl.url)}</p>
-                    </div>
+                    <div class="min-w-0 flex-grow"><p class="font-bold text-amber-400 text-xs truncate">${escapeHtml(pl.name)}</p><p class="text-[10px] text-slate-500 font-mono truncate">${escapeHtml(pl.url)}</p></div>
                     <div class="flex gap-1 flex-shrink-0">
-                        <button data-edit="${idx}" class="edit-pl text-[10px] bg-white/5 hover:bg-white/10 px-2.5 py-1 rounded-lg text-blue-400 font-medium transition cursor-pointer">แก้ไข</button>
-                        <button data-del="${idx}" class="del-pl text-[10px] bg-red-500/10 hover:bg-red-500/20 px-2.5 py-1 rounded-lg text-red-400 font-medium transition cursor-pointer">ลบ</button>
-                    </div>
-                `;
+                        <button onclick="editPlaylist(${idx})" class="text-[10px] bg-white/5 px-2.5 py-1 rounded-lg text-blue-400">แก้ไข</button>
+                        <button onclick="deletePlaylist(${idx})" class="text-[10px] bg-red-500/10 px-2.5 py-1 rounded-lg text-red-400">ลบ</button>
+                    </div>`;
                 container.appendChild(div);
             });
-            document.querySelectorAll('.edit-pl').forEach(btn => btn.addEventListener('click', (e) => editPlaylist(parseInt(btn.dataset.edit))));
-            document.querySelectorAll('.del-pl').forEach(btn => btn.addEventListener('click', (e) => deletePlaylist(parseInt(btn.dataset.del))));
         }
         
-        function savePlaylist() {
+        document.getElementById('savePlaylistBtn').addEventListener('click', () => {
             const name = document.getElementById('plName').value.trim();
             const url = document.getElementById('plUrl').value.trim();
-            const editIndex = parseInt(document.getElementById('editIndex').value);
-            if(!name || !url) return alert('กรุณากรอกข้อมูลให้ครบถ้วนก่อนบันทึก');
-            if(editIndex === -1) playlists.push({ name, url });
-            else playlists[editIndex] = { name, url };
+            const idx = parseInt(document.getElementById('editIndex').value);
+            if(!name || !url) return alert('กรุณากรอกให้ครบ');
+            if(idx === -1) playlists.push({ name, url }); else playlists[idx] = { name, url };
             localStorage.setItem('jw_iptv_playlists', JSON.stringify(playlists));
-            initPlaylists();
-            resetForm();
-            toggleManager(false);
-        }
-        
+            initApp(); resetForm(); document.getElementById('playlistManagerModal').classList.add('hidden');
+        });
+
+        document.getElementById('cancelEditBtn').addEventListener('click', resetForm);
         function editPlaylist(idx) {
             document.getElementById('editIndex').value = idx;
             document.getElementById('plName').value = playlists[idx].name;
             document.getElementById('plUrl').value = playlists[idx].url;
-            document.getElementById('savePlaylistBtn').innerHTML = '💾 อัปเดตข้อมูล';
+            document.getElementById('savePlaylistBtn').innerHTML = '💾 อัปเดต';
             document.getElementById('cancelEditBtn').classList.remove('hidden');
         }
-        
         function deletePlaylist(idx) {
-            if(confirm(`คุณต้องการลบคลังคิวรายการ "${playlists[idx].name}" ใช่หรือไม่?`)) {
-                playlists.splice(idx,1);
-                localStorage.setItem('jw_iptv_playlists', JSON.stringify(playlists));
-                initPlaylists();
-                resetForm();
-            }
+            if(confirm('ลบคลังนี้?')) { playlists.splice(idx,1); localStorage.setItem('jw_iptv_playlists', JSON.stringify(playlists)); initApp(); }
         }
-        
         function resetForm() {
             document.getElementById('editIndex').value = '-1';
             document.getElementById('plName').value = '';
             document.getElementById('plUrl').value = '';
-            document.getElementById('savePlaylistBtn').innerHTML = '➕ บันทึกข้อมูลคลัง';
+            document.getElementById('savePlaylistBtn').innerHTML = '➕ บันทึก';
             document.getElementById('cancelEditBtn').classList.add('hidden');
         }
-        
-        function toggleManager(forceClose) {
-            const modal = document.getElementById('playlistManagerModal');
-            if(forceClose === false) modal.classList.add('hidden');
-            else modal.classList.toggle('hidden');
-            if(!modal.classList.contains('hidden')) renderModalList();
-        }
 
-        // เชื่อมโยงระบบตรวจจับการสั่งการจากผู้ใช้และคอนโทรลเลอร์ทั้งหมด เข้าสู่แกนระบบหลัก
-        document.getElementById('offlineFile').addEventListener('change', loadOfflineFile);
-        document.getElementById('openManagerBtn').addEventListener('click', () => toggleManager());
-        document.getElementById('closeModalBtn').addEventListener('click', () => toggleManager(false));
-        document.getElementById('savePlaylistBtn').addEventListener('click', savePlaylist);
-        document.getElementById('cancelEditBtn').addEventListener('click', resetForm);
-        document.getElementById('searchBox').addEventListener('input', filterChannels);
-        document.getElementById('playlistManagerModal').addEventListener('click', (e) => { if(e.target === document.getElementById('playlistManagerModal')) toggleManager(false); });
-        document.getElementById('viewListBtn').addEventListener('click', () => setView('list'));
-        document.getElementById('viewGridBtn').addEventListener('click', () => setView('grid'));
-
-        // เริ่มต้นการประมวลผลเมื่อระบบหน้าบ้านประกอบโครงสร้างเสร็จสิ้น
-        initPlaylists();
+        // รันฟังก์ชันเมื่อโหลดเสร็จ
+        document.addEventListener('DOMContentLoaded', initApp);
     </script>
 </body>
 </html>
