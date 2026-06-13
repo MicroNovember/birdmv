@@ -4,11 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>SAMORN IPTV 2026 | Ultra-Fast Shaka Player</title>
-    <!-- Preconnect & Preload critical resources -->
     <link rel="preconnect" href="https://raw.githubusercontent.com">
     <link rel="preconnect" href="https://udn-streamer1.cdn.3bbtv.com">
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
-    <!-- TailwindCSS + Shaka Player -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://cdn.jsdelivr.net/npm/shaka-player@4.11.6/dist/shaka-player.compiled.js"></script>
     <style>
@@ -75,7 +73,8 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-5 items-start">
         <div class="lg:col-span-2 space-y-3">
             <div class="relative bg-black rounded-xl overflow-hidden shadow-xl border border-slate-800 aspect-video">
-                <video id="videoPlayer" class="w-full h-full" controls autoplay playsinline></video>
+                <video id="videoPlayer" class="w-full h-full" controls autoplay playsinline style="display:none;"></video>
+                <iframe id="iframePlayer" allowfullscreen allow="autoplay" class="w-full h-full border-none" style="display:none;"></iframe>
             </div>
             <div class="bg-slate-900/60 backdrop-blur rounded-xl border border-slate-800 p-3 flex items-center gap-3">
                 <div id="logoWrapper" class="w-11 h-11 bg-slate-800 rounded-xl flex items-center justify-center border border-slate-700 overflow-hidden flex-shrink-0">
@@ -135,7 +134,8 @@
     let currentAbortController = null;
     let playlistCache = new Map(); // cache M3U text
 
-    const logoGradients = ['from-amber-600 to-orange-700', 'from-cyan-600 to-blue-700', 'from-purple-600 to-indigo-700'];
+    const videoPlayer = document.getElementById("videoPlayer");
+    const iframePlayer = document.getElementById("iframePlayer");
 
     // ---------- Helper ----------
     function escapeHtml(str) { return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]); }
@@ -149,41 +149,82 @@
         savePlaylistsToLocal();
     }
 
-    // ---------- Shaka Player (Destroy & Recreate) ----------
-    async function destroyPlayer() {
-        if(shakaPlayer) {
+    // ---------- เล่นวิดีโอ (ยกมาจากโค้ดแรกและปรับปรุงร่วมกับแอปเดิม) ----------
+    async function playChannel(channel) {
+        if (!videoPlayer || !iframePlayer) return;
+
+        // เช็คประเภท URL (ถ้าเป็น php, embed, youtube จะเปิดเป็น iframe)
+        const isIframe = channel.url.includes(".php") || channel.url.includes("embed") || channel.url.includes("youtube");
+
+        // รีเซ็ตการแสดงผลผู้เล่นทั้งสองอันก่อน
+        videoPlayer.style.display = "none";
+        iframePlayer.style.display = "none";
+        iframePlayer.src = "";
+
+        // ทำลาย (destroy) Shaka player ตัวเก่าทิ้งก่อน (ดึงมาจากระบบโครงสร้างโค้ดแรก)
+        if (shakaPlayer) {
             await shakaPlayer.destroy();
             shakaPlayer = null;
         }
-    }
-    async function initShaka(videoElement) {
-        await destroyPlayer();
-        shakaPlayer = new shaka.Player(videoElement);
-        shakaPlayer.configure({
-            streaming: { rebufferingGoal: 2, bufferBehind: 30 },
-            abr: { enabled: true, defaultBandwidthEstimate: 10e6 }
-        });
-        shakaPlayer.addEventListener('error', (e) => console.warn('Shaka error', e.detail));
-        return shakaPlayer;
-    }
 
-    async function playChannel(channel) {
-        const video = document.getElementById('videoPlayer');
-        if(!video) return;
-        await initShaka(video);
+        // อัปเดตข้อมูล UI หัวข้อช่องด้านล่างเครื่องเล่น
         document.getElementById('currentTrackTitle').innerText = channel.name;
-        const isMpd = channel.url.toLowerCase().includes('.mpd');
-        document.getElementById('channelMeta').innerText = (isMpd ? 'DASH' : 'HLS') + (channel.drm ? ' 🔐 DRM' : '');
-        try {
-            let drmConfig = {};
-            if(channel.drm && channel.keyId && channel.key) {
-                drmConfig = { drm: { clearKeys: { [channel.keyId]: channel.key } } };
-                await shakaPlayer.configure(drmConfig);
-            } else {
-                await shakaPlayer.configure({ drm: { clearKeys: {} } });
+        
+        // อัปเดตโลโก้ (ถ้ามี)
+        const imgLogo = document.getElementById('imgLogo');
+        const textLogo = document.getElementById('textLogo');
+        if(channel.logo) {
+            imgLogo.src = channel.logo;
+            imgLogo.classList.remove('hidden');
+            textLogo.classList.add('hidden');
+        } else {
+            imgLogo.classList.add('hidden');
+            textLogo.classList.remove('hidden');
+        }
+
+        // ================= รูปแบบ 1: เล่นด้วย IFRAME =================
+        if (isIframe) {
+            iframePlayer.style.display = "block";
+            iframePlayer.src = channel.url;
+            document.getElementById('channelMeta').innerText = 'เว็บภายนอก (iFrame)';
+        } 
+        // ================= รูปแบบ 2: เล่นด้วย VIDEO (SHAKA PLAYER) =================
+        else {
+            videoPlayer.style.display = "block";
+            
+            // สร้างอินสแตนซ์ของ Shaka Player ขึ้นมาใหม่
+            shakaPlayer = new shaka.Player(videoPlayer);
+
+            // ดักจับ Error log แบบโค้ดแรก
+            shakaPlayer.addEventListener('error', e => {
+                console.error('Shaka Error', e.detail);
+            });
+
+            const isMpd = channel.url.toLowerCase().includes('.mpd');
+            document.getElementById('channelMeta').innerText = (isMpd ? 'DASH' : 'HLS') + (channel.drm ? ' 🔐 DRM' : '');
+
+            // ตั้งค่าระบบลิขสิทธิ์ DRM (ClearKeys) หากระบุมาในสตรีม
+            if (channel.drm && channel.keyId && channel.key) {
+                // ตัวอย่างรูปแบบ ClearKey ของ Shaka คือ { "keyId": "key" }
+                shakaPlayer.configure({
+                    drm: {
+                        clearKeys: {
+                            [channel.keyId]: channel.key
+                        }
+                    }
+                });
             }
-            await shakaPlayer.load(channel.url);
-        } catch(err) { console.error(err); document.getElementById('channelMeta').innerText = '❌ เล่นไม่ได้'; }
+
+            try {
+                // โหลดและสั่งเล่นวิดีโอ
+                await shakaPlayer.load(channel.url);
+                await videoPlayer.play();
+                console.log("กำลังเล่น:", channel.name);
+            } catch(err) {
+                console.error("เล่นไม่ได้", err);
+                document.getElementById('channelMeta').innerText = '❌ เล่นไม่ได้';
+            }
+        }
     }
 
     // ---------- M3U Parser (รองรับ #KODIPROP) ----------
@@ -232,7 +273,6 @@
         const signal = currentAbortController.signal;
         document.getElementById('playlistContainer').innerHTML = '<div class="text-center text-amber-400 text-xs p-4">⏳ กำลังโหลด...</div>';
         try {
-            // ตรวจสอบ cache ก่อน
             if(playlistCache.has(url)) {
                 parseM3U(playlistCache.get(url), name);
                 return;
