@@ -1,516 +1,539 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<title>หรรมน้อย ออนไลน์ (M3U Player)</title>
-
-<script src="https://cdn.jsdelivr.net/npm/shaka-player/dist/shaka-player.compiled.js"></script>
-
-<style>
-html, body {
-    margin: 0;
-    height: 100%;
-    background: linear-gradient(135deg, #0f0f0f, #1a1a2e);
-    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-    color: #fff;
-}
-
-.container {
-    height: 100vh;
-    position: relative;
-}
-
-/* layout */
-.playlist {
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-}
-
-/* header */
-.playlist-header {
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    padding: 14px;
-    background: rgba(15,15,15,0.95);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(255,255,255,0.08);
-    z-index: 100;
-}
-
-.playlist-header img {
-    width: 120px;
-}
-
-/* tabs */
-.tabs {
-    flex-shrink: 0;
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    padding: 12px;
-    background: rgba(15,15,15,0.95);
-    backdrop-filter: blur(12px);
-    box-shadow: 0 8px 20px rgba(0,0,0,.25);
-}
-
-.tab {
-    padding: 8px 16px;
-    border: none;
-    border-radius: 20px;
-    background: rgba(255,255,255,0.06);
-    color: #aaa;
-    cursor: pointer;
-    transition: .25s;
-}
-
-.tab:hover {
-    background: rgba(255,255,255,0.12);
-    color: #fff;
-}
-
-.tab.active {
-    background: linear-gradient(135deg,#00c6ff,#0072ff);
-    color: #fff;
-}
-
-/* scroll area */
-.channels-wrap {
-    flex: 1;
-    overflow-y: auto;
-    padding: 20px;
-}
-
-/* grid */
-#playlist {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 14px;
-}
-
-/* channel */
-.channel {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 12px;
-    border-radius: 10px;
-    background: rgba(255,255,255,0.05);
-    cursor: pointer;
-    transition: .25s;
-    box-sizing: border-box;
-}
-
-.channel:hover {
-    transform: scale(1.05);
-    background: rgba(255,255,255,0.12);
-}
-
-.channel.active {
-    background: linear-gradient(135deg,#00c6ff,#0072ff);
-}
-
-.channel img {
-    width: 80px;
-    height: 80px;
-    object-fit: contain;
-    margin-bottom: 8px;
-}
-
-.channel span {
-    font-size: 14px;
-    text-align: center;
-    word-break: break-word;
-}
-
-/* player popup */
-.video-float {
-    display: none;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    
-    width: 95vw;
-    height: 95vh;
-    max-width: 1600px;
-    max-height: 95vh;
-
-    border-radius: 16px;
-    overflow: hidden;
-    background: #000;
-    box-shadow: 0 0 45px rgba(0,0,0,.85);
-    z-index: 9999;
-}
-
-.float-header {
-    height: 42px;
-    padding: 0 14px;
-    background: rgba(20,20,20,.95);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-#closePlayer {
-    border: none;
-    background: rgba(255,255,255,.08);
-    color: #fff;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    cursor: pointer;
-}
-
-#closePlayer:hover {
-    background: #ff3b30;
-}
-
-/* responsive */
-@media (max-width:1200px){
-    #playlist { grid-template-columns: repeat(5,1fr); }
-}
-@media (max-width:900px){
-    #playlist { grid-template-columns: repeat(4,1fr); }
-}
-@media (max-width:600px){
-    #playlist { grid-template-columns: repeat(2,1fr); }
-}
-
-.top-bar{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    background:#111;
-    padding:10px;
-    width:100%;
-    box-sizing:border-box;
-}
-
-.left-box,
-.right-box{
-    flex:1;
-}
-
-.tabs{
-    flex:2;
-    display:flex;
-    justify-content:center;
-    gap:8px;
-    flex-wrap:wrap;
-}
-
-.home-btn{
-    background:#ef4444;
-    color:#fff;
-    border:none;
-    padding:6px 12px;
-    border-radius:6px;
-    cursor:pointer;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>หรรมน้อย IPTV Pro · M3U + DRM</title>
+    <script src="https://cdn.jsdelivr.net/npm/shaka-player@4.11.6/dist/shaka-player.compiled.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: linear-gradient(135deg, #0f0f0f, #1a1a2e);
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            color: #fff;
+            min-height: 100vh;
+        }
+        .app-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 16px;
+        }
+        /* Header + Playlist Manager */
+        .top-header {
+            background: rgba(15,15,15,0.95);
+            backdrop-filter: blur(12px);
+            border-radius: 24px;
+            padding: 12px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+        .logo h1 { font-size: 1.4rem; background: linear-gradient(135deg,#00c6ff,#0072ff); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .playlist-controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .playlist-controls select, .playlist-controls button {
+            background: #1e293b;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 40px;
+            color: white;
+            font-size: 13px;
+            cursor: pointer;
+        }
+        .playlist-controls button { background: #0072ff; }
+        .playlist-controls button.danger { background: #ef4444; }
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: #1e293b;
+            border-radius: 40px;
+            padding: 5px 15px;
+            gap: 8px;
+        }
+        .search-box input {
+            background: transparent;
+            border: none;
+            color: white;
+            outline: none;
+            width: 180px;
+        }
+        /* Layout 2 คอลัมน์ */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.8fr;
+            gap: 20px;
+        }
+        @media (max-width: 900px) {
+            .main-grid { grid-template-columns: 1fr; }
+        }
+        /* Player area */
+        .player-area {
+            background: #000;
+            border-radius: 20px;
+            overflow: hidden;
+            aspect-ratio: 16/9;
+            position: relative;
+        }
+        video { width: 100%; height: 100%; display: block; }
+        .player-info {
+            background: rgba(0,0,0,0.6);
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 16px;
+            font-size: 14px;
+        }
+        /* Channels area */
+        .channels-area {
+            background: rgba(15,15,15,0.7);
+            backdrop-filter: blur(8px);
+            border-radius: 24px;
+            display: flex;
+            flex-direction: column;
+            height: 70vh;
+            overflow: hidden;
+        }
+        .channels-header {
+            padding: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .tabs-container {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding: 8px 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .tab {
+            background: rgba(255,255,255,0.06);
+            border: none;
+            padding: 6px 14px;
+            border-radius: 30px;
+            color: #ccc;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .tab.active { background: linear-gradient(135deg,#00c6ff,#0072ff); color: white; }
+        .channels-grid {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            gap: 12px;
+        }
+        .channel-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .channel-card:hover { transform: translateY(-3px); background: rgba(255,255,255,0.12); }
+        .channel-card.active { background: linear-gradient(135deg,#00c6ff,#0072ff); }
+        .channel-card img {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            margin-bottom: 6px;
+        }
+        .channel-card span { font-size: 12px; display: block; }
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(8px);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: #1e293b;
+            border-radius: 32px;
+            width: 90%;
+            max-width: 500px;
+            padding: 24px;
+        }
+        .modal-content input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 40px;
+            border: none;
+            background: #0f172a;
+            color: white;
+        }
+        .modal-buttons { display: flex; gap: 12px; justify-content: flex-end; margin-top: 20px; }
+        .btn { padding: 8px 16px; border-radius: 40px; border: none; cursor: pointer; }
+        .btn-primary { background: #0072ff; color: white; }
+        .btn-secondary { background: #475569; color: white; }
+        .playlist-list { max-height: 300px; overflow-y: auto; margin: 15px 0; }
+        .playlist-item {
+            background: #0f172a;
+            margin: 8px 0;
+            padding: 10px;
+            border-radius: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
 </head>
 <body>
-
-<div class="container">
-
-    <div class="video-float" id="videoFloat">
-        <div class="float-header">
-            <span id="playerTitle">หรรมน้อย ออนไลน์  รอโหลด...สักครู่</span>
-            <button id="closePlayer">✕</button>
+<div class="app-container">
+    <!-- Header with Playlist Manager -->
+    <div class="top-header">
+        <div class="logo"><h1>📺 หรรมน้อย IPTV Pro</h1></div>
+        <div class="playlist-controls">
+            <select id="playlistSelect"></select>
+            <button id="managePlaylistBtn">📋 จัดการ Playlist</button>
+            <label class="btn" style="background:#475569; cursor:pointer;">📂 โหลด M3U ไฟล์<input type="file" id="fileInput" accept=".m3u,.txt" hidden></label>
+            <div class="search-box"><span>🔍</span><input type="text" id="searchInput" placeholder="ค้นหาช่อง..."></div>
         </div>
-        
-        <video
-            id="videoPlayer"
-            controls
-            autoplay
-            muted
-            playsinline
-            webkit-playsinline
-            style="width:100%;height:calc(100% - 42px);background:#000;display:none;">
-        </video>
-
-        <iframe
-            id="iframePlayer"
-            allowfullscreen
-            allow="autoplay"
-            style="width:100%;height:calc(100% - 42px);border:none;display:none;">
-         frameBorder="0"></iframe>
     </div>
 
-    <div class="playlist">
-        <div class="playlist-header">
-            <span>หรรมน้อย ออนไลน์ (M3U Player)</span>
+    <div class="main-grid">
+        <!-- Player -->
+        <div>
+            <div class="player-area">
+                <video id="videoPlayer" controls autoplay playsinline></video>
+            </div>
+            <div class="player-info" id="playerInfo">🎬 เลือกช่องจากด้านขวาเพื่อเล่น</div>
         </div>
 
-        <div class="top-bar">
-            <div class="left-box">
-                <button onclick="goHome()" class="home-btn">⬅ กลับหน้าหลัก</button>
+        <!-- Channels -->
+        <div class="channels-area">
+            <div class="channels-header">
+                <span>📡 รายการช่อง <span id="channelCount">0</span></span>
             </div>
-            <div class="tabs" id="tabs">
+            <div class="tabs-container" id="tabsContainer">
                 <button class="tab active" data-cat="ทั้งหมด">ทั้งหมด</button>
             </div>
-            <div class="right-box"></div>
-        </div>
-
-        <div class="channels-wrap">
-            <div id="playlist"></div>
+            <div id="channelsGrid" class="channels-grid"></div>
         </div>
     </div>
+</div>
 
+<!-- Modal จัดการ Playlist -->
+<div id="playlistModal" class="modal">
+    <div class="modal-content">
+        <h3>📝 จัดการ Playlist</h3>
+        <input type="text" id="plName" placeholder="ชื่อ Playlist">
+        <input type="text" id="plUrl" placeholder="URL ของไฟล์ .m3u (ไม่ต้องใส่ถ้าเป็นไฟล์)">
+        <div id="playlistList" class="playlist-list"></div>
+        <div class="modal-buttons">
+            <button id="savePlaylistBtn" class="btn btn-primary">💾 บันทึก/เพิ่ม</button>
+            <button id="closeModalBtn" class="btn btn-secondary">ปิด</button>
+        </div>
+        <p style="font-size:11px; color:#aaa; margin-top:10px;">💡 Tips: กด "โหลด M3U ไฟล์" เพื่ออัปโหลดจากเครื่อง หรือเพิ่ม URL แล้วกดบันทึก</p>
+    </div>
 </div>
 
 <script>
-// ข้อมูลสถานีที่ถูกดึงมาจาก m3u
-let data = {
-    stations: []
-};
+    // ---------- โครงสร้างข้อมูล ----------
+    let playlists = [];          // แต่ละรายการ: { id, name, url, channels: [] }
+    let currentPlaylistId = null;
+    let allChannels = [];
+    let currentCategory = "ทั้งหมด";
+    let searchKeyword = "";
+    let shakaPlayer = null;
+    let currentChannelPlaying = null;
 
-// --- การตั้งค่าหลัก (ปรับเปลี่ยนที่นี่ได้ครับ) ---
-// วาง URL ของไฟล์ M3U ของคุณแทนที่ลิงก์ด้านล่างนี้ได้เลย
-const PLAYLIST_URL = "https://raw.githubusercontent.com/ตัวอย่าง/main/iptv.m3u"; 
+    const videoEl = document.getElementById('videoPlayer');
+    const channelsGrid = document.getElementById('channelsGrid');
+    const tabsContainer = document.getElementById('tabsContainer');
+    const playerInfo = document.getElementById('playerInfo');
+    const playlistSelect = document.getElementById('playlistSelect');
+    const searchInput = document.getElementById('searchInput');
 
-// เปิดใช้งาน CORS Proxy หากนำไปรันแล้วเล่นไม่ได้หรือโหลดรายการไม่มา (true = เปิด / false = ปิด)
-const USE_CORS_PROXY = true;
-const CORS_PROXY_URL = "https://cors-anywhere.herokuapp.com/";
-
-// คลึง Element หลักจาก DOM
-const videoPlayer = document.getElementById("videoPlayer");
-const iframePlayer = document.getElementById("iframePlayer");
-const playlistEl = document.getElementById("playlist");
-const float = document.getElementById("videoFloat");
-const tabsEl = document.getElementById("tabs");
-const playerTitle = document.getElementById("playerTitle");
-
-let shakaPlayer = null;
-
-// ================= ฟังก์ชันเล่นวิดีโอ (SHAKA PLAYER) =================
-async function playVideo(ch) {
-    videoPlayer.style.display = "block";
-    iframePlayer.style.display = "none";
-    playerTitle.innerText = "กำลังเชื่อมต่อสตรีม: " + ch.name;
-
-    // ทำลายอินสแตนซ์ผู้เล่นเก่าทิ้ง ป้องกันระบบทับซ้อนค้าง
-    if (shakaPlayer) {
-        await shakaPlayer.destroy();
-        shakaPlayer = null;
+    // ---------- Local Storage ----------
+    function saveData() {
+        localStorage.setItem('m3u_pro_playlists', JSON.stringify(playlists));
+        localStorage.setItem('m3u_pro_current_id', currentPlaylistId);
+    }
+    function loadData() {
+        const stored = localStorage.getItem('m3u_pro_playlists');
+        if(stored) playlists = JSON.parse(stored);
+        if(!playlists.length) {
+            playlists.push({ id: Date.now(), name: "ตัวอย่าง Playlist", url: "", channels: [] });
+        }
+        const savedId = localStorage.getItem('m3u_pro_current_id');
+        if(savedId && playlists.find(p => p.id == savedId)) currentPlaylistId = parseInt(savedId);
+        else currentPlaylistId = playlists[0].id;
     }
 
-    shakaPlayer = new shaka.Player(videoPlayer);
-
-    // ดักจับ Error แจ้งเตือนใน Console
-    shakaPlayer.addEventListener('error', e => {
-        console.error('Shaka Player Error:', e.detail);
-    });
-
-    // ตรวจสอบและตั้งค่าลิขสิทธิ์ ClearKey DRM
-    if (ch.key) {
+    // ---------- Shaka Player (Optimized) ----------
+    async function destroyShaka() {
+        if(shakaPlayer) {
+            await shakaPlayer.destroy();
+            shakaPlayer = null;
+        }
+    }
+    async function initShaka() {
+        await destroyShaka();
+        shakaPlayer = new shaka.Player(videoEl);
         shakaPlayer.configure({
-            drm: {
-                clearKeys: ch.key
+            manifest: { hls: { default: true } },
+            streaming: { rebufferingGoal: 2, bufferBehind: 30 },
+            abr: { enabled: true, defaultBandwidthEstimate: 10e6 }
+        });
+        shakaPlayer.addEventListener('error', (e) => console.error('Shaka error', e.detail));
+        return shakaPlayer;
+    }
+    async function playChannel(channel) {
+        if(!channel || !channel.url) return;
+        currentChannelPlaying = channel;
+        playerInfo.innerText = `⏳ กำลังโหลด: ${channel.name} ...`;
+        try {
+            await initShaka();
+            let drmConfig = {};
+            if(channel.key && typeof channel.key === 'object') {
+                drmConfig = { drm: { clearKeys: channel.key } };
+                await shakaPlayer.configure(drmConfig);
             }
+            await shakaPlayer.load(channel.url);
+            playerInfo.innerText = `▶️ กำลังเล่น: ${channel.name} ${channel.key ? '🔐 DRM' : ''}`;
+        } catch(err) {
+            playerInfo.innerText = `❌ เล่น ${channel.name} ไม่ได้: ${err.message}`;
+            console.error(err);
+        }
+    }
+
+    // ---------- M3U Parser (รองรับ #KODIPROP) ----------
+    function parseM3U(content) {
+        const lines = content.split(/\r?\n/);
+        let channels = [];
+        let current = { name: "", logo: "", category: "ทั่วไป", key: null };
+        let tempKeyObj = null;
+        for(let line of lines) {
+            line = line.trim();
+            if(line.startsWith('#EXTINF')) {
+                const logoMatch = line.match(/tvg-logo="([^"]+)"/);
+                const groupMatch = line.match(/group-title="([^"]+)"/);
+                const nameMatch = line.match(/,([^,]+)$/);
+                current.name = nameMatch ? nameMatch[1].trim() : "ไม่ระบุ";
+                current.logo = logoMatch ? logoMatch[1] : "";
+                current.category = groupMatch ? groupMatch[1] : "ทั่วไป";
+            }
+            else if(line.includes('#KODIPROP:inputstream.adaptive.license_key=')) {
+                const keyRaw = line.split('=')[1];
+                if(keyRaw && keyRaw.includes(':')) {
+                    const [kid, k] = keyRaw.split(':');
+                    tempKeyObj = { [kid.trim()]: k.trim() };
+                }
+            }
+            else if(line.startsWith('http://') || line.startsWith('https://')) {
+                if(current.name) {
+                    channels.push({
+                        name: current.name,
+                        logo: current.logo,
+                        url: line,
+                        category: current.category,
+                        key: tempKeyObj
+                    });
+                }
+                current = { name: "", logo: "", category: "ทั่วไป", key: null };
+                tempKeyObj = null;
+            }
+        }
+        return channels;
+    }
+
+    // ---------- โหลด Playlist จาก URL หรือจาก cache ----------
+    async function loadPlaylistFromUrl(url, playlistName) {
+        try {
+            const response = await fetch(url + "?t=" + Date.now());
+            if(!response.ok) throw new Error(`HTTP ${response.status}`);
+            const text = await response.text();
+            const channels = parseM3U(text);
+            // อัปเดต playlist ปัจจุบัน
+            const pl = playlists.find(p => p.id === currentPlaylistId);
+            if(pl) {
+                pl.channels = channels;
+                pl.url = url;
+                saveData();
+            }
+            allChannels = channels;
+            renderUI();
+        } catch(err) {
+            playerInfo.innerText = `❌ โหลด Playlist ไม่สำเร็จ: ${err.message}`;
+        }
+    }
+
+    // ใช้ไฟล์จากเครื่อง
+    function loadFromFile(file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const channels = parseM3U(e.target.result);
+            const newId = Date.now();
+            playlists.push({ id: newId, name: file.name.replace(/\.m3u.*/i,''), url: "", channels: channels });
+            currentPlaylistId = newId;
+            saveData();
+            renderPlaylistDropdown();
+            allChannels = channels;
+            renderUI();
+        };
+        reader.readAsText(file);
+    }
+
+    // ---------- Render UI: Tabs + Channels ----------
+    function renderUI() {
+        if(!allChannels.length) {
+            channelsGrid.innerHTML = '<div style="text-align:center; padding:40px;">📭 ไม่มีช่อง ให้โหลด Playlist</div>';
+            document.getElementById('channelCount').innerText = "0";
+            return;
+        }
+        // สร้าง Tabs จาก categories
+        const cats = ["ทั้งหมด", ...new Set(allChannels.map(ch => ch.category))];
+        tabsContainer.innerHTML = '';
+        cats.forEach(cat => {
+            const btn = document.createElement('button');
+            btn.className = `tab ${currentCategory === cat ? 'active' : ''}`;
+            btn.innerText = cat;
+            btn.onclick = () => {
+                currentCategory = cat;
+                renderUI();
+            };
+            tabsContainer.appendChild(btn);
+        });
+        // กรอง channel ตามหมวด + ค้นหา
+        let filtered = allChannels;
+        if(currentCategory !== "ทั้งหมด") filtered = filtered.filter(ch => ch.category === currentCategory);
+        if(searchKeyword.trim()) {
+            const kw = searchKeyword.toLowerCase();
+            filtered = filtered.filter(ch => ch.name.toLowerCase().includes(kw));
+        }
+        document.getElementById('channelCount').innerText = filtered.length;
+        // แสดง Grid
+        channelsGrid.innerHTML = '';
+        filtered.forEach((ch, idx) => {
+            const card = document.createElement('div');
+            card.className = 'channel-card';
+            if(currentChannelPlaying && currentChannelPlaying.name === ch.name) card.classList.add('active');
+            card.innerHTML = `
+                <img src="${ch.logo || 'https://placehold.co/80x80/1e293b/ffffff?text=TV'}" onerror="this.src='https://placehold.co/80x80/1e293b/ffffff?text=IPTV'">
+                <span>${escapeHtml(ch.name)}</span>
+                ${ch.key ? '<span style="font-size:9px; color:#00c6ff;">🔐</span>' : ''}
+            `;
+            card.onclick = () => playChannel(ch);
+            channelsGrid.appendChild(card);
         });
     }
 
-    try {
-        // ทำการโหลดและสั่งให้วิดีโอทำงาน
-        await shakaPlayer.load(ch.url);
-        videoPlayer.muted = false; // เปิดเสียงหลังจากสตรีมพร้อมเล่นสำเร็จ
-        await videoPlayer.play();
-        playerTitle.innerText = "กำลังรับชม: " + ch.name;
-        console.log("กำลังเล่น:", ch.name, "DRM:", ch.key ? "Yes" : "No");
-    } catch(err) {
-        playerTitle.innerText = "❌ ช่องนี้เล่นไม่ได้ชั่วคราว";
-        console.error("สตรีมเกิดข้อผิดพลาดในการโหลด:", err);
+    function escapeHtml(str) { return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]); }
+
+    // ---------- Playlist Dropdown + Manager ----------
+    function renderPlaylistDropdown() {
+        playlistSelect.innerHTML = '';
+        playlists.forEach(pl => {
+            const opt = document.createElement('option');
+            opt.value = pl.id;
+            opt.textContent = `${pl.name} (${pl.channels.length})`;
+            if(pl.id === currentPlaylistId) opt.selected = true;
+            playlistSelect.appendChild(opt);
+        });
     }
-}
-
-// ================= ฟังก์ชันอ่านและถอดรหัสเนื้อหาไฟล์ M3U =================
-function parseM3U(rawText) {
-    const lines = rawText.split('\n');
-    const stations = [];
-    
-    let currentStation = null;
-    let tempKeys = null;
-
-    for (let i = 0; i < lines.length; i++) {
-        let line = lines[i].trim();
-        if (!line) continue;
-
-        // ดักจับคู่ค่า ClearKey จากคำสั่ง #KODIPROP
-        if (line.startsWith('#KODIPROP:inputstream.adaptive.license_key=')) {
-            const keyString = line.split('=')[1];
-            if (keyString && keyString.includes(':')) {
-                const parts = keyString.split(':');
-                if (parts.length === 2) {
-                    if (!tempKeys) tempKeys = {};
-                    // บันทึกค่าลง Object { "kid": "key" } ตามมาตรฐาน ClearKey ของ Shaka
-                    tempKeys[parts[0].trim()] = parts[1].trim();
-                }
-            }
-        }
-
-        // อ่านบรรทัดระบุข้อมูลช่องสัญญาณสตรีม
-        if (line.startsWith('#EXTINF:')) {
-            currentStation = {};
-            
-            // ใช้ Regex ในการตัดแกะดึงค่า tvg-logo, group-title และชื่อช่อง
-            const logoMatch = line.match(/tvg-logo="([^"]+)"/);
-            const groupMatch = line.match(/group-title="([^"]+)"/);
-            
-            // หาชื่อช่องหลังเครื่องหมาย Comma (,) ตัวสุดท้ายของบรรทัด
-            const commaIndex = line.lastIndexOf(',');
-            let chName = "ไม่ระบุชื่อช่อง";
-            if (commaIndex !== -1) {
-                chName = line.substring(commaIndex + 1).trim();
-            }
-
-            currentStation.name = chName;
-            currentStation.image = logoMatch ? logoMatch[1] : 'https://placehold.co/100x100/1e293b/ffffff?text=IPTV';
-            currentStation.category = groupMatch ? groupMatch[1] : 'ทั่วไป';
-            
-            if (tempKeys) {
-                currentStation.key = tempKeys;
-            }
-        } 
-        // อ่านบรรทัดลิงก์ URL สตรีมมิงวิดีโอ (บรรทัดที่ไม่ขึ้นต้นด้วยเครื่องหมาย #)
-        else if (!line.startsWith('#') && currentStation) {
-            currentStation.url = line;
-            stations.push(currentStation);
-            
-            // รีเซ็ตตัวแปรเพื่อเตรียมรับข้อมูลช่องถัดไป
-            currentStation = null;
-            tempKeys = null;
+    function refreshCurrentPlaylist() {
+        const pl = playlists.find(p => p.id === currentPlaylistId);
+        if(pl) {
+            allChannels = pl.channels;
+            renderUI();
+        } else {
+            allChannels = [];
+            renderUI();
         }
     }
-    return stations;
-}
-
-// ================= ฟังก์ชันดาวน์โหลดและประมวลผลเพลย์ลิสต์ M3U =================
-async function loadPlaylist() {
-    try {
-        let finalUrl = PLAYLIST_URL + "?t=" + Date.now();
-        
-        // แนบสลับเส้นทางผ่าน CORS Proxy เพื่อช่วยทะลวงบล็อก
-        if (USE_CORS_PROXY) {
-            finalUrl = CORS_PROXY_URL + finalUrl;
-        }
-
-        const res = await fetch(finalUrl);
-        if (!res.ok) throw new Error(`HTTP Error Status: ${res.status}`);
-        
-        const rawText = await res.text();
-        const parsedStations = parseM3U(rawText);
-
-        data.stations = parsedStations;
-
-        renderTabs();
-        renderChannels();
-        console.log("ถอดข้อมูลเรียบร้อย พบจำนวนสถานีทั้งสิ้น:", data.stations.length, "ช่อง");
-    } catch (err) {
-        console.error("โหลดไฟล์เพลย์ลิสต์ M3U ไม่สำเร็จ:", err);
-        playlistEl.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: #ef4444; padding: 40px;">❌ โหลดเพลย์ลิสต์ไม่สำเร็จ กรุณาเช็คตัวแปรลิงก์หรือสลับตัวเชื่อม Proxy</div>`;
+    // ฟังก์ชัน Modal Playlist
+    function openPlaylistModal() {
+        const modal = document.getElementById('playlistModal');
+        const listDiv = document.getElementById('playlistList');
+        listDiv.innerHTML = '';
+        playlists.forEach(pl => {
+            const div = document.createElement('div');
+            div.className = 'playlist-item';
+            div.innerHTML = `
+                <div><strong>${escapeHtml(pl.name)}</strong> (${pl.channels.length})<br><span style="font-size:10px;">${pl.url ? pl.url.substring(0,40) : 'ไฟล์ local'}</span></div>
+                <div>
+                    <button class="btn-secondary" data-select="${pl.id}" style="font-size:11px;">เลือก</button>
+                    <button class="btn-secondary" data-edit="${pl.id}" style="font-size:11px;">📝</button>
+                    <button class="danger" data-del="${pl.id}" style="background:#ef4444; border:none; border-radius:20px; padding:4px 8px;">🗑️</button>
+                </div>
+            `;
+            listDiv.appendChild(div);
+        });
+        // event delegation
+        listDiv.querySelectorAll('[data-select]').forEach(btn => {
+            btn.onclick = () => { currentPlaylistId = parseInt(btn.dataset.select); saveData(); renderPlaylistDropdown(); refreshCurrentPlaylist(); closeModal(); };
+        });
+        listDiv.querySelectorAll('[data-edit]').forEach(btn => {
+            btn.onclick = () => { const id = parseInt(btn.dataset.edit); const pl = playlists.find(p=>p.id===id); if(pl) { document.getElementById('plName').value = pl.name; document.getElementById('plUrl').value = pl.url || ''; document.getElementById('savePlaylistBtn').dataset.editId = id; } };
+        });
+        listDiv.querySelectorAll('[data-del]').forEach(btn => {
+            btn.onclick = () => { if(confirm('ลบ Playlist นี้?')) { const id = parseInt(btn.dataset.del); playlists = playlists.filter(p=>p.id!==id); if(currentPlaylistId===id) currentPlaylistId=playlists[0]?.id||null; saveData(); renderPlaylistDropdown(); refreshCurrentPlaylist(); openPlaylistModal(); } };
+        });
+        modal.style.display = 'flex';
     }
-}
+    function closeModal() { document.getElementById('playlistModal').style.display = 'none'; }
+    function savePlaylistFromModal() {
+        const name = document.getElementById('plName').value.trim();
+        const url = document.getElementById('plUrl').value.trim();
+        if(!name) return alert('ต้องระบุชื่อ Playlist');
+        const editId = document.getElementById('savePlaylistBtn').dataset.editId;
+        if(editId) {
+            const pl = playlists.find(p=>p.id==editId);
+            if(pl) { pl.name = name; pl.url = url; if(url) { loadPlaylistFromUrl(url, name).then(()=>{ saveData(); renderPlaylistDropdown(); refreshCurrentPlaylist(); closeModal(); }); return; } }
+        } else {
+            const newId = Date.now();
+            playlists.push({ id: newId, name, url, channels: [] });
+            if(url) loadPlaylistFromUrl(url, name);
+        }
+        saveData();
+        renderPlaylistDropdown();
+        refreshCurrentPlaylist();
+        closeModal();
+        document.getElementById('plName').value = '';
+        document.getElementById('plUrl').value = '';
+        delete document.getElementById('savePlaylistBtn').dataset.editId;
+    }
 
-// ================= ฟังก์ชันจัดการและแสดงหมวดหมู่แท็บ (TABS) =================
-function renderTabs() {
-    const categories = [
-        "ทั้งหมด",
-        ...new Set(data.stations.map(ch => ch.category))
-    ];
-
-    tabsEl.innerHTML = "";
-
-    categories.forEach((cat, i) => {
-        const tab = document.createElement("button");
-        tab.className = "tab" + (i === 0 ? " active" : "");
-        tab.dataset.cat = cat;
-        tab.innerText = cat;
-
-        tab.onclick = () => {
-            document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
-            tab.classList.add("active");
-            renderChannels(cat);
-        };
-
-        tabsEl.appendChild(tab);
+    // ---------- Event Listeners ----------
+    playlistSelect.addEventListener('change', (e) => {
+        currentPlaylistId = parseInt(e.target.value);
+        saveData();
+        refreshCurrentPlaylist();
+        renderPlaylistDropdown();
     });
-}
-
-// ================= ฟังก์ชันแสดงรายชื่อและสลับการคลิกช่อง (CHANNELS) =================
-function renderChannels(category = "ทั้งหมด") {
-    playlistEl.innerHTML = "";
-
-    const filtered = category === "ทั้งหมด" 
-        ? data.stations 
-        : data.stations.filter(ch => ch.category === category);
-
-    if(filtered.length === 0) {
-        playlistEl.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: #aaa; padding: 20px;">ไม่มีข้อมูลช่องในหมวดหมู่นี้</div>`;
-        return;
-    }
-
-    filtered.forEach((ch, i) => {
-        const div = document.createElement("div");
-        div.className = "channel";
-        div.innerHTML = `
-            <img src="${ch.image}" onerror="this.onerror=null; this.src='https://placehold.co/100x100/1e293b/ffffff?text=IPTV';">
-            <span>${ch.name}</span>
-        `;
-
-        div.onclick = () => {
-            float.style.display = "block";
-
-            // แยกแยะว่าลิงก์เป็นเว็บสคริปต์ฝังตัว (Iframe) หรือสตรีมตรง
-            const isIframe = ch.url.includes(".php") || ch.url.includes("embed") || ch.url.includes("youtube");
-
-            videoPlayer.style.display = "none";
-            iframePlayer.style.display = "none";
-
-            if (isIframe) {
-                iframePlayer.style.display = "block";
-                iframePlayer.src = ch.url;
-                playerTitle.innerText = "กำลังรับชมภาพจำลอง: " + ch.name;
-            } else {
-                playVideo(ch);
-            }
-
-            document.querySelectorAll(".channel").forEach(c => c.classList.remove("active"));
-            div.classList.add("active");
-        };
-
-        playlistEl.appendChild(div);
+    document.getElementById('managePlaylistBtn').onclick = openPlaylistModal;
+    document.getElementById('closeModalBtn').onclick = closeModal;
+    document.getElementById('savePlaylistBtn').onclick = savePlaylistFromModal;
+    document.getElementById('fileInput').addEventListener('change', (e) => {
+        if(e.target.files.length) loadFromFile(e.target.files[0]);
     });
-}
+    searchInput.addEventListener('input', (e) => { searchKeyword = e.target.value; renderUI(); });
 
-// ================= ฟังก์ชันสำหรับปิดเครื่องเล่น (CLOSE) =================
-document.getElementById("closePlayer").onclick = async () => {
-    float.style.display = "none";
-    videoPlayer.pause();
-    videoPlayer.removeAttribute("src");
-    videoPlayer.load();
-    iframePlayer.src = "";
-
-    if (shakaPlayer) {
-        await shakaPlayer.destroy();
-        shakaPlayer = null;
+    // ---------- เริ่มต้น ----------
+    shaka.polyfill.installAll();
+    loadData();
+    renderPlaylistDropdown();
+    refreshCurrentPlaylist();
+    // ถ้า playlist ปัจจุบันมี url ให้โหลดอัตโนมัติ
+    const currentPl = playlists.find(p => p.id === currentPlaylistId);
+    if(currentPl && currentPl.url && currentPl.channels.length === 0) {
+        loadPlaylistFromUrl(currentPl.url, currentPl.name);
     }
-    playerTitle.innerText = "หรรมน้อย ออนไลน์  รอโหลด...สักครู่";
-};
-
-// ================= ปุ่มสั่งการถอยกลับหน้าหลัก (HOME) =================
-function goHome(){
-    window.location.href = "https://Hssmnoy.github.io/test/index.html";
-}
-
-// เริ่มต้นอ่านระบบครั้งแรกเมื่อเปิดตัวเพจ
-loadPlaylist();
 </script>
-
 </body>
 </html>
